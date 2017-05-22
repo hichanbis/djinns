@@ -1,0 +1,17 @@
+# Ignore .p4ignore files
+.p4ignore
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+sysinfo.txt
+Library
+Obj
+Temp
+Build
+ZZ_ToSort
+ZZ_ToSort.meta
