@@ -95,10 +95,10 @@ public class BattleUI : MonoBehaviour
     {
         Character playerChar = playerUnit.GetComponent<BattleScript>().Character;
 
-        Transform playerInfoTr = playersInfoPanel.transform.FindChild(playerUnit.name + "PlayerInfo").transform;
-        playerInfoTr.FindChild("PlayerName").transform.FindChild("PlayerNameText").GetComponent<Text>().text = playerChar.name;
-        playerInfoTr.FindChild("HpMp").transform.FindChild("Hp").transform.FindChild("HpText").GetComponent<Text>().text = playerChar.GetStat(StatName.hpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.hp).baseValue.ToString();
-        playerInfoTr.FindChild("HpMp").transform.FindChild("Mp").transform.FindChild("MpText").GetComponent<Text>().text = playerChar.GetStat(StatName.mpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.mp).baseValue.ToString();
+        Transform playerInfoTr = playersInfoPanel.transform.Find(playerUnit.name + "PlayerInfo").transform;
+        playerInfoTr.Find("PlayerName").transform.Find("PlayerNameText").GetComponent<Text>().text = playerChar.name;
+        playerInfoTr.Find("HpMp").transform.Find("Hp").transform.Find("HpText").GetComponent<Text>().text = playerChar.GetStat(StatName.hpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.hp).baseValue.ToString();
+        playerInfoTr.Find("HpMp").transform.Find("Mp").transform.Find("MpText").GetComponent<Text>().text = playerChar.GetStat(StatName.mpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.mp).baseValue.ToString();
     }
 
     void refreshPlayersInfo()
@@ -146,8 +146,8 @@ public class BattleUI : MonoBehaviour
     {
         GameObject magicActionButton = Instantiate(magicActionButtonTemplate, playerMagicsPanel.transform, false) as GameObject;
         magicActionButton.name = magic.name;
-        magicActionButton.transform.FindChild("MagicName").GetComponent<Text>().text = magic.name;
-        magicActionButton.transform.FindChild("MagicMpCost").GetComponent<Text>().text = magic.mpCost + "";
+        magicActionButton.transform.Find("MagicName").GetComponent<Text>().text = magic.name;
+        magicActionButton.transform.Find("MagicMpCost").GetComponent<Text>().text = magic.mpCost + "";
         magicActionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(magic));
         if (magic.targetType.Equals(TargetType.Same) || magic.targetType.Equals(TargetType.Opposite))
             magicActionButton.GetComponent<Button>().onClick.AddListener(() => DisplayTargetsPanel(magic.targetType));
@@ -157,7 +157,7 @@ public class BattleUI : MonoBehaviour
     {
         GameObject actionButton = Instantiate(actionButtonTemplate, playerActionsPanel.transform, false) as GameObject;
         actionButton.name = actionName;
-        actionButton.transform.FindChild("ActionName").GetComponent<Text>().text = actionName;
+        actionButton.transform.Find("ActionName").GetComponent<Text>().text = actionName;
 
         //Depending on the command
         if (actionName.Equals("Guard"))
@@ -270,7 +270,7 @@ public class BattleUI : MonoBehaviour
         {
             GameObject targetButton = Instantiate(targetButtonTemplate, targetsPanel.transform, false) as GameObject;
             targetButton.name = target.name;
-            targetButton.transform.FindChild("TargetName").GetComponent<Text>().text = target.name;
+            targetButton.transform.Find("TargetName").GetComponent<Text>().text = target.name;
             targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(target));
         }
         EventSystem.current.SetSelectedGameObject(targetsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject);
