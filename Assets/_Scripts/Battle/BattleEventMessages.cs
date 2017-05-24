@@ -3,12 +3,12 @@ using System;
 
 public enum EventMessages
 {
-    playerUnitsExist, 
+    playerUnitsExist,
     monsterUnitsExist,
     newTurn,
     playerChoiceExpected,
-    damageApplied, 
+    damageApplied,
     applyEndTurnStatus,
-    win, 
+    win,
     lose
 }

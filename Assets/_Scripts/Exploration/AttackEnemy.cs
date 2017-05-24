@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class AttackEnemy : MonoBehaviour {
+public class AttackEnemy : MonoBehaviour
+{
 
     private bool canAttack;
     private string enemyName;
@@ -12,13 +13,14 @@ public class AttackEnemy : MonoBehaviour {
         canAttack = false;
     }
 
-	void OnTriggerEnter(Collider other) {
-		if (other.tag == "Enemy")
-		{
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Enemy")
+        {
             canAttack = true;
             enemyName = other.name;
-		}
-	}
+        }
+    }
 
     void OnTriggerExit(Collider other)
     {
@@ -32,9 +34,9 @@ public class AttackEnemy : MonoBehaviour {
     {
         if (canAttack && Input.GetButtonDown("Submit"))
         {
-			canAttack = false;
+            canAttack = false;
             TransitionManager.Instance.LoadBattle(Advantage.Player, transform.position, enemyName);
 
         }
-    }	 
+    }
 }

@@ -23,40 +23,42 @@ public enum Advantage
 public class TransitionManager : MonoBehaviour
 {
     private static TransitionManager instance;
-	private SceneController sceneController;    // Reference to the SceneController to actually do the loading and unloading of scenes.
+    private SceneController sceneController;
+    // Reference to the SceneController to actually do the loading and unloading of scenes.
 
-	[SerializeField]
+    [SerializeField]
     public List<int> enemyIndexesToNotSpawn;
 
-	[SerializeField]
-	public Advantage advantage; //used in battle to give advantage to the player or enemy 
+    [SerializeField]
+    public Advantage advantage;
+    //used in battle to give advantage to the player or enemy
 
-	[SerializeField]
-	public bool isLoadingBattle = false;
+    [SerializeField]
+    public bool isLoadingBattle = false;
 
     public static TransitionManager Instance
     {
         get { return instance; }
     }
 
-	private void Awake()
-	{
-		if (instance != null && instance != this)
-		{
-			Destroy(gameObject);
-		}
-		else
-		{
-			instance = this;
-			DontDestroyOnLoad(gameObject);
-			enemyIndexesToNotSpawn = new List<int>();
-		}
-	}
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+            enemyIndexesToNotSpawn = new List<int>();
+        }
+    }
 
-	protected void Start()
-	{
-		sceneController = FindObjectOfType<SceneController> ();
-	}
+    protected void Start()
+    {
+        sceneController = FindObjectOfType<SceneController>();
+    }
 
 
     public List<int> EnemyIndexesToNotSpawn
@@ -74,18 +76,18 @@ public class TransitionManager : MonoBehaviour
 
     public void LoadBattle(Advantage advantage, Vector3 playerPosition, string enemyName)
     {
-		if (isLoadingBattle)
-			return;
+        if (isLoadingBattle)
+            return;
 		
-			isLoadingBattle = true;
-			DeclareBattlingEnemy (enemyName);
-			this.advantage = advantage;
-			Game.current.position = new Vector3Serializer (playerPosition);
-			sceneController.FadeAndLoadScene ("BattleTest");
-			isLoadingBattle = false;
+        isLoadingBattle = true;
+        DeclareBattlingEnemy(enemyName);
+        this.advantage = advantage;
+        Game.current.position = new Vector3Serializer(playerPosition);
+        sceneController.FadeAndLoadScene("BattleTest");
+        isLoadingBattle = false;
     }
 
-	//the enemy name ends with an int index corresponding to the spawn point index
+    //the enemy name ends with an int index corresponding to the spawn point index
     //Ex: Enemy12 corresponds to the spawn point 12
     public void DeclareBattlingEnemy(string enemyName)
     {
