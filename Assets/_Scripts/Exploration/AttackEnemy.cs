@@ -7,6 +7,7 @@ public class AttackEnemy : MonoBehaviour
 
     private bool canAttack;
     private string enemyName;
+    private int nbHit = 0;
 
     void Start()
     {
@@ -35,7 +36,10 @@ public class AttackEnemy : MonoBehaviour
         if (canAttack && Input.GetButtonDown("Submit"))
         {
             canAttack = false;
-            TransitionManager.Instance.LoadBattle(Advantage.Player, transform.position, enemyName);
+
+            if (nbHit == 0)
+                TransitionManager.Instance.LoadBattle(Advantage.Player, transform.position, enemyName);
+            nbHit++;
 
         }
     }

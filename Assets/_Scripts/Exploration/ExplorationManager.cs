@@ -17,14 +17,15 @@ public class ExplorationManager : MonoBehaviour
         }
 
     }
+
     void Start()
-	{
-		Character character;
-		if (Game.current.party.TryGetValue(0, out character))
-		{
-			this.player = Instantiate(Resources.Load("Explo" + character.name) as GameObject, Game.current.position.V3, Quaternion.identity) as GameObject;
-			this.player.name = character.name;
-		}
+    {
+        Character character;
+        if (Game.current.party.TryGetValue(0, out character))
+        {
+            this.player = Instantiate(Resources.Load("Explo" + character.name) as GameObject, Game.current.position.V3, Quaternion.identity) as GameObject;
+            this.player.name = character.name;
+        }
 
         List<GameObject> enemySpawnpoints = new List<GameObject>(GameObject.FindGameObjectsWithTag("EnemySpawnPoint"));
         for (int i = 0; i < enemySpawnpoints.Count; i++)

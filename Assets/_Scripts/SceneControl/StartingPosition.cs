@@ -4,28 +4,29 @@ using UnityEngine;
 // This script is used to mark a Transform as potential starting point for a scene.
 public class StartingPosition : MonoBehaviour
 {
-    public string startingPointName;        // The name that identifies this starting point in the scene.
+    public string startingPointName;
+    // The name that identifies this starting point in the scene.
 
 
-    private static List<StartingPosition> allStartingPositions =  new List<StartingPosition> ();
-                                            // This list contains all the StartingPositions that are currently active.
+    private static List<StartingPosition> allStartingPositions = new List<StartingPosition>();
+    // This list contains all the StartingPositions that are currently active.
 
 
-    private void OnEnable ()
+    private void OnEnable()
     {
         // When this is activated, add it to the list that contains all active StartingPositions.
-        allStartingPositions.Add (this);
+        allStartingPositions.Add(this);
     }
 
 
-    private void OnDisable ()
+    private void OnDisable()
     {
         // When this is deactivated, remove it from the list that contains all the active StartingPositions.
-        allStartingPositions.Remove (this);
+        allStartingPositions.Remove(this);
     }
 
 
-    public static Transform FindStartingPosition (string pointName)
+    public static Transform FindStartingPosition(string pointName)
     {
         // Go through all the currently active StartingPositions and return the one with the matching name.
         for (int i = 0; i < allStartingPositions.Count; i++)

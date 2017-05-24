@@ -26,7 +26,8 @@ public class CameraFollowPlayerPath : MonoBehaviour
     private float lastPercent = 0;
     private bool ignoreNormalise = false;
 
-    private int accuracy = 3;//the higher the more accurate by an order of magnitude but doesn't cost an order of magnitude! :o)
+    private int accuracy = 3;
+//the higher the more accurate by an order of magnitude but doesn't cost an order of magnitude! :o)
 
     //Set the initial position of the cam so we don't jump at the start of the demo
     void Start()
@@ -58,7 +59,7 @@ public class CameraFollowPlayerPath : MonoBehaviour
         }
     }
 
-    //Update the cam animation 
+    //Update the cam animation
     void LateUpdate()
     {
         float nearestPercent = path.GetNearestPoint(player.position, ignoreNormalise, accuracy);

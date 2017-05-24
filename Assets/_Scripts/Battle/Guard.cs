@@ -7,7 +7,7 @@ using System;
 public class Guard : Status
 {
     private int turnPresent = 0;
-    
+
     public Guard()
     {
         successRatePercent = 100;

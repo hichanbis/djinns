@@ -52,7 +52,7 @@ public class BattleStart : MonoBehaviour
             Stat intelligence = new Stat(StatName.intelligence, 10);
             Stat agility = new Stat(StatName.agility, 10);
             List<Stat> defaultStats = new List<Stat> { hp, hpNow, mp, mpNow, strength, defense, intelligence, agility };
-            Character character = new Character(enemy.name, Element.Fire, basicAbs, defaultStats,false);
+            Character character = new Character(enemy.name, Element.Fire, basicAbs, defaultStats, false);
             enemy.GetComponent<BattleScript>().Character = character;
             enemies.Add(enemy);
             xPos += spaceBetweenEnemies;

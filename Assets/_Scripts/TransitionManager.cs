@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
 
@@ -26,6 +26,8 @@ public class TransitionManager : MonoBehaviour
     private SceneController sceneController;
     // Reference to the SceneController to actually do the loading and unloading of scenes.
 
+    UnityEngine.Object lockObject = new UnityEngine.Object();
+
     [SerializeField]
     public List<int> enemyIndexesToNotSpawn;
 
@@ -34,7 +36,7 @@ public class TransitionManager : MonoBehaviour
     //used in battle to give advantage to the player or enemy
 
     [SerializeField]
-    public bool isLoadingBattle = false;
+    public bool advantageGiven = false;
 
     public static TransitionManager Instance
     {
@@ -76,15 +78,15 @@ public class TransitionManager : MonoBehaviour
 
     public void LoadBattle(Advantage advantage, Vector3 playerPosition, string enemyName)
     {
-        if (isLoadingBattle)
+        if (advantageGiven)
             return;
 		
-        isLoadingBattle = true;
+        advantageGiven = true;
         DeclareBattlingEnemy(enemyName);
         this.advantage = advantage;
         Game.current.position = new Vector3Serializer(playerPosition);
-        sceneController.FadeAndLoadScene("BattleTest");
-        isLoadingBattle = false;
+        sceneController.FadeAndLoadScene("BattleTest");   
+        advantageGiven = false;
     }
 
     //the enemy name ends with an int index corresponding to the spawn point index
