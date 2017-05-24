@@ -9,6 +9,14 @@ public class MainMenu : MonoBehaviour {
 		Continue
 	}
 
+	private SceneController sceneController;    // Reference to the SceneController to actually do the loading and unloading of scenes.
+
+
+	protected void Start()
+	{
+		sceneController = FindObjectOfType<SceneController> ();
+	}
+		
 	public Menu currentMenu;
 
 	void OnGUI () {
@@ -28,7 +36,7 @@ public class MainMenu : MonoBehaviour {
 				Game.current = new Game();
 				//Session.Save();
                 //Move on to game...
-                SceneManager.LoadScene(Game.current.currentScene);
+				sceneController.FadeAndLoadScene (Game.current.currentScene);
 			}
 
 			if(GUILayout.Button("Continue")) {
@@ -49,7 +57,7 @@ public class MainMenu : MonoBehaviour {
 			foreach(Game game in Session.savedGames) {
 				if(GUILayout.Button(game.getGameDesc())) {
 					Game.current = game;
-					SceneManager.LoadScene(game.currentScene);
+					sceneController.FadeAndLoadScene (Game.current.currentScene);
 				}
 
 			}

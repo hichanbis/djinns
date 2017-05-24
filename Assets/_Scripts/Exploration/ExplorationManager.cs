@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class ExplorationManager : MonoBehaviour
 {
     private GameObject player;
@@ -11,19 +12,20 @@ public class ExplorationManager : MonoBehaviour
         //Debug code during dev 
         if (Game.current == null)
         {
-            Debug.LogWarning("Aie pas de game j'en invente un pour le dev");
+            Debug.Log("MockupGame");
             Game.current = new Game("ExploTest");
         }
 
-        Character character;
-        if (Game.current.party.TryGetValue(0, out character))
-        {
-            this.player = Instantiate(Resources.Load("Explo" + character.name) as GameObject, Game.current.position.V3, Quaternion.identity) as GameObject;
-            this.player.name = character.name;
-        }
     }
     void Start()
-    {
+	{
+		Character character;
+		if (Game.current.party.TryGetValue(0, out character))
+		{
+			this.player = Instantiate(Resources.Load("Explo" + character.name) as GameObject, Game.current.position.V3, Quaternion.identity) as GameObject;
+			this.player.name = character.name;
+		}
+
         List<GameObject> enemySpawnpoints = new List<GameObject>(GameObject.FindGameObjectsWithTag("EnemySpawnPoint"));
         for (int i = 0; i < enemySpawnpoints.Count; i++)
         {

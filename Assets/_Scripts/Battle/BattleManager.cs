@@ -21,6 +21,9 @@ public class BattleManager : MonoBehaviour
     public bool restartBattle;
     public bool chosen;
     public bool victoryAcknowledged;
+	private bool battleEnd;
+
+	private SceneController sceneController;    // Reference to the SceneController to actually do the loading and unloading of scenes.
 
     public static BattleManager Instance
     {
@@ -33,11 +36,11 @@ public class BattleManager : MonoBehaviour
 
     public enum BattleStates
     {
-        START,
-        ACTIONCHOICE,
-        DAMAGE,
-        WIN,
-        LOSE
+        InitBattle,
+        ActionChoice,
+        Rage,
+        Victory,
+        Failure
     }
 
     void Awake()
@@ -54,7 +57,7 @@ public class BattleManager : MonoBehaviour
         //mockup game
         if (Game.current == null)
         {
-            Debug.LogWarning("Aie pas de game j'en invente un pour le dev");
+            Debug.Log("Dev mockup");
             Game.current = new Game("ExploTest");
         }
     }
@@ -62,25 +65,40 @@ public class BattleManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        restartBattle = false;
-        backToMainMenu = false;
-        victoryAcknowledged = false;
+		//TransitionManager.Instance.isLoadingBattle = false;
+		sceneController = FindObjectOfType<SceneController> ();
         StartCoroutine(FSM());
     }
 
     IEnumerator FSM()
     {
+		battleEnd = false;
+		restartBattle = false;
+		backToMainMenu = false;
+		victoryAcknowledged = false;
+
         //Enter the coroutine after Start
         yield return null;
-        currentState = BattleStates.START;
+        
+		currentState = BattleStates.InitBattle;
 
-        while (true)
+
+		while (!battleEnd)
         {
             yield return StartCoroutine(currentState.ToString());
         }
+
+		yield return null;
+
+		if (victoryAcknowledged)
+			sceneController.FadeAndLoadScene ("ExploTest");
+		else if (backToMainMenu) 
+			sceneController.FadeAndLoadScene ("MainMenu");
+		else if (restartBattle)
+			sceneController.FadeAndLoadScene (SceneManager.GetActiveScene().name);
     }
 
-    IEnumerator START()
+    IEnumerator InitBattle()
     {
         playerUnits = BattleStart.InstantiatePlayerParty();
         EventManager.TriggerEvent("playerUnitsExist");
@@ -89,15 +107,15 @@ public class BattleManager : MonoBehaviour
         EventManager.TriggerEvent("monsterUnitsExist");
 
         yield return new WaitForSeconds(1f);
-        currentState = BattleStates.ACTIONCHOICE;
+        currentState = BattleStates.ActionChoice;
     }
 
-    IEnumerator ACTIONCHOICE()
+    IEnumerator ActionChoice()
     {
         EventManager.TriggerEvent("newTurn");
         yield return null;
 
-        if (!currentState.Equals(BattleStates.ACTIONCHOICE))
+        if (!currentState.Equals(BattleStates.ActionChoice))
             yield break;
 
         turnActions = new List<BattleAction>();
@@ -141,10 +159,10 @@ public class BattleManager : MonoBehaviour
 
             yield return null;
         }
-        currentState = BattleStates.DAMAGE;
+        currentState = BattleStates.Rage;
     }
 
-    IEnumerator DAMAGE()
+    IEnumerator Rage()
     {
         yield return null;
         //turnActions.OrderByDescending(u => u.GetComponent<BattleCharacter>().Character.stats.speed).ToList();
@@ -190,11 +208,11 @@ public class BattleManager : MonoBehaviour
     private void SetBattleStateAfterDamage()
     {
         if (AreAllPlayersDead())
-            currentState = BattleStates.LOSE;
+            currentState = BattleStates.Failure;
         else if (AreAllEnemiesDead())
-            currentState = BattleStates.WIN;
+            currentState = BattleStates.Victory;
         else
-            currentState = BattleStates.ACTIONCHOICE;
+            currentState = BattleStates.ActionChoice;
     }
 
     private void ReassignTargetIfNeeded(BattleAction battleAction)
@@ -234,7 +252,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    IEnumerator WIN()
+    IEnumerator Victory()
     {
         yield return null;
         EventManager.TriggerEvent("win");
@@ -244,23 +262,11 @@ public class BattleManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        //Impact the hp to the game party ...
-        for (int i = 0; i < playerUnits.Count; i++)
-        {
-            if (playerUnits[i].GetComponent<BattleScript>().Character.GetStat(StatName.hpNow).baseValue == 0)
-                Game.current.party[i].GetStat(StatName.hpNow).baseValue = 1;
-            else
-            {
-                Game.current.party[i].GetStat(StatName.hpNow).baseValue = playerUnits[i].GetComponent<BattleScript>().Character.GetStat(StatName.hpNow).baseValue;
-                Game.current.party[i].GetStat(StatName.mpNow).baseValue = playerUnits[i].GetComponent<BattleScript>().Character.GetStat(StatName.mpNow).baseValue;
-            }
-        }
-        SceneManager.LoadScene(Game.current.currentScene);
-        yield return null;
+		battleEnd = true;
     }
 
 
-    IEnumerator LOSE()
+    IEnumerator Failure()
     {
         yield return null;
         EventManager.TriggerEvent("lose");
@@ -270,14 +276,22 @@ public class BattleManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        if (backToMainMenu)
-            SceneManager.LoadScene(0);
-        else if (restartBattle)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-        yield return null;
+		battleEnd = true;
     }
+
+	void ImpactHpMpAfterVictory(){
+		//Impact the hp to the game party ...
+		for (int i = 0; i < playerUnits.Count; i++)
+		{
+			if (playerUnits[i].GetComponent<BattleScript>().Character.GetStat(StatName.hpNow).baseValue == 0)
+				Game.current.party[i].GetStat(StatName.hpNow).baseValue = 1;
+			else
+			{
+				Game.current.party[i].GetStat(StatName.hpNow).baseValue = playerUnits[i].GetComponent<BattleScript>().Character.GetStat(StatName.hpNow).baseValue;
+				Game.current.party[i].GetStat(StatName.mpNow).baseValue = playerUnits[i].GetComponent<BattleScript>().Character.GetStat(StatName.mpNow).baseValue;
+			}
+		}
+	}
 
     bool IsGameObjectAPlayer(GameObject unit)
     {

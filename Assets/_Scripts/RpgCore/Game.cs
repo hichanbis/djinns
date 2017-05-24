@@ -68,7 +68,7 @@ public class Game
 
         currentScene = scene;
         GameObject spawnPoint = GameObject.Find("SpawnPoint");
-        Vector3 pos = new Vector3(0f, 0f, 0f);
+        Vector3 pos = new Vector3(10f, 0f, 10f);
         if (spawnPoint != null)
             pos = spawnPoint.transform.position;
         position = new Vector3Serializer(pos + new Vector3(2f, 0f, 2f));

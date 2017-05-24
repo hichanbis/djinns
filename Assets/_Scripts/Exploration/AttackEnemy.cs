@@ -32,7 +32,9 @@ public class AttackEnemy : MonoBehaviour {
     {
         if (canAttack && Input.GetButtonDown("Submit"))
         {
+			canAttack = false;
             TransitionManager.Instance.LoadBattle(Advantage.Player, transform.position, enemyName);
+
         }
     }	 
 }
