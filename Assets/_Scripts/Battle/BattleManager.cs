@@ -132,8 +132,10 @@ public class BattleManager : MonoBehaviour
             else if (!IsGameObjectAPlayer(currentUnit))
             {
                 List<GameObject> alivePlayerUnits = playerUnits.Where(p => !p.GetComponent<BattleScript>().Dead).ToList();
-                BattleAction action = new BattleAction(currentUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentUnit.GetComponent<BattleScript>().Character.getAbility("Attack"));
-                turnActions.Add(action);
+				if (alivePlayerUnits.Count > 0) {
+					BattleAction action = new BattleAction (currentUnit, new List<GameObject> () { alivePlayerUnits [Random.Range (0, alivePlayerUnits.Count)] }, currentUnit.GetComponent<BattleScript> ().Character.getAbility ("Attack"));
+					turnActions.Add (action);
+				} 
                 IncrementEnemyIndex();
             }
 
@@ -175,10 +177,11 @@ public class BattleManager : MonoBehaviour
             battleAction.fromUnit.GetComponent<BattleScript>().removeMp(battleAction.ability);
             yield return null;
         }
-
-        if (!AreAllPlayersDead() && !AreAllEnemiesDead())
-            EventManager.TriggerEvent("applyEndTurnStatus");
-        yield return null;
+			
+		if (!AreAllPlayersDead () && !AreAllEnemiesDead ()) {
+			EventManager.TriggerEvent ("applyEndTurnStatus");
+			yield return null;
+		}
 
         SetBattleStateAfterDamage();
         yield return null;
@@ -188,7 +191,7 @@ public class BattleManager : MonoBehaviour
     {
         if (AreAllPlayersDead())
             currentState = BattleStates.LOSE;
-        if (AreAllEnemiesDead())
+        else if (AreAllEnemiesDead())
             currentState = BattleStates.WIN;
         else
             currentState = BattleStates.ACTIONCHOICE;

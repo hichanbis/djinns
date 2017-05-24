@@ -12,10 +12,23 @@ public enum Advantage
     Enemy
 }
 
+/*
+ * Loads battle upon attack 
+ * Loads exploration upon battle
+ * Stores the battle initiator
+ * Stores enemy killed indexes to avoid respawning them in the current explo scene
+ * Persistent Object known by BattleManager and ExplorationManager
+ */
+
 public class TransitionManager : MonoBehaviour
 {
+	[SerializeField]
     private static TransitionManager instance;
+
+	[SerializeField]
     private List<int> enemyIndexesToNotSpawn;
+
+	[SerializeField]
     private Advantage advantage; //used in battle to give advantage to the player or enemy 
 
     public static TransitionManager Instance
