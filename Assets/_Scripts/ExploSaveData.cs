@@ -21,14 +21,13 @@ public enum Advantage
  * Persistent Object known by BattleManager and ExplorationManager
  */
 
-public class TransitionManager : MonoBehaviour
+public class ExploSaveData : MonoBehaviour
 {
-    private static TransitionManager instance;
+    private static ExploSaveData instance;
     private SceneController sceneController;
     private UnityAction battleLoadedListener;
     // Reference to the SceneController to actually do the loading and unloading of scenes.
 
-    UnityEngine.Object lockObject = new UnityEngine.Object();
 
     [SerializeField]
     public List<int> enemyIndexesToNotSpawn;
@@ -40,7 +39,7 @@ public class TransitionManager : MonoBehaviour
     [SerializeField]
     public bool advantageGiven = false;
 
-    public static TransitionManager Instance
+    public static ExploSaveData Instance
     {
         get { return instance; }
     }
@@ -61,7 +60,6 @@ public class TransitionManager : MonoBehaviour
 
     protected void Start()
     {
-        sceneController = FindObjectOfType<SceneController>();
         battleLoadedListener = new UnityAction(ResetAdvantage);
         EventManager.StartListening(BattleEventMessages.battleLoaded.ToString(), battleLoadedListener);
     }
@@ -84,16 +82,15 @@ public class TransitionManager : MonoBehaviour
         }
     }
 
-    public void LoadBattle(Advantage advantage, Vector3 playerPosition, string enemyName)
+    public bool InitiateBattle(Advantage advantage, string enemyName)
     {
         if (advantageGiven)
-            return;
+            return false;
         
         advantageGiven = true;
         DeclareBattlingEnemy(enemyName);
         this.advantage = advantage;
-        Game.current.position = new Vector3Serializer(playerPosition);
-        sceneController.FadeAndLoadScene("BattleTest");   
+        return true;
     }
 
     //the enemy name ends with an int index corresponding to the spawn point index

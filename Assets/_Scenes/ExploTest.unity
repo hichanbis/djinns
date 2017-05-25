@@ -4398,7 +4398,7 @@ MonoBehaviour:
   - 0.996655
   - 0.9985616
   - 1
-  _storedPointResolution: 0.10516823
+  _storedPointResolution: 0.10515417
   _storedValueArraySize: 1039
   _storedPathDirections:
   - {x: 0.9958317, y: -0.00027638962, z: 0.09120857}
@@ -5713,7 +5713,7 @@ MonoBehaviour:
   customName: 
   fullName: New Camera Path Tilt Point 2
   _percent: 0.6666667
-  _animationPercentage: 0.66720235
+  _animationPercentage: 0.6673895
   point: {fileID: 791806000}
   index: 2
   cpointA: {fileID: 0}
@@ -5738,7 +5738,7 @@ MonoBehaviour:
   customName: 
   fullName: New Camera Path Tilt Point 1
   _percent: 0.33333334
-  _animationPercentage: 0.32965586
+  _animationPercentage: 0.32984686
   point: {fileID: 791806001}
   index: 1
   cpointA: {fileID: 0}
@@ -5833,7 +5833,7 @@ MonoBehaviour:
   customName: 
   fullName: New Camera Path FOV Point 2
   _percent: 0.6666667
-  _animationPercentage: 0.66720235
+  _animationPercentage: 0.6673895
   point: {fileID: 791806000}
   index: 2
   cpointA: {fileID: 0}
@@ -5859,7 +5859,7 @@ MonoBehaviour:
   customName: 
   fullName: New Camera Path FOV Point 1
   _percent: 0.33333334
-  _animationPercentage: 0.32965586
+  _animationPercentage: 0.32984686
   point: {fileID: 791806001}
   index: 1
   cpointA: {fileID: 0}
@@ -5955,7 +5955,7 @@ MonoBehaviour:
   customName: 
   fullName: New Camera Path Orientation Point 2
   _percent: 0.6666667
-  _animationPercentage: 0.66720235
+  _animationPercentage: 0.6673895
   point: {fileID: 791806000}
   index: 2
   cpointA: {fileID: 0}
@@ -5981,7 +5981,7 @@ MonoBehaviour:
   customName: 
   fullName: New Camera Path Orientation Point 1
   _percent: 0.33333334
-  _animationPercentage: 0.32965586
+  _animationPercentage: 0.32984686
   point: {fileID: 791806001}
   index: 1
   cpointA: {fileID: 0}
@@ -6060,7 +6060,7 @@ MonoBehaviour:
   _pathDirection: {x: 0, y: 0, z: 1}
   index: 2
   percentage: 0.6666667
-  normalisedPercentage: 0.66720235
+  normalisedPercentage: 0.6673895
 --- !u!114 &791806001
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -6082,7 +6082,7 @@ MonoBehaviour:
   _pathDirection: {x: 0, y: 0, z: 1}
   index: 1
   percentage: 0.33333334
-  normalisedPercentage: 0.32965586
+  normalisedPercentage: 0.32984686
 --- !u!114 &791806002
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -6541,7 +6541,7 @@ GameObject:
   - component: {fileID: 1827722933}
   - component: {fileID: 1827722932}
   m_Layer: 0
-  m_Name: TransitionManager
+  m_Name: ExploSaveData
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6555,12 +6555,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1827722931}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ddc21c981426e74897e9d1091115af0, type: 3}
+  m_Script: {fileID: 11500000, guid: f351f5f4faa964be9a3e53f18463e19a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemyIndexesToNotSpawn: 
   advantage: 0
-  isLoadingBattle: 0
+  advantageGiven: 0
 --- !u!4 &1827722933
 Transform:
   m_ObjectHideFlags: 0

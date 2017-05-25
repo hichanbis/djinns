@@ -6,6 +6,11 @@ public class AttackPlayer : MonoBehaviour
 {
 
     int nbTriggered = 0;
+    private SceneController sceneController;
+
+    void Start(){
+        sceneController = FindObjectOfType<SceneController>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -23,7 +28,11 @@ public class AttackPlayer : MonoBehaviour
     {
         yield return null;
         yield return new WaitForSeconds(Random.Range(1f, 4f));
-        TransitionManager.Instance.LoadBattle(Advantage.Enemy, playerPosition, gameObject.name);
+        if (ExploSaveData.Instance.InitiateBattle(Advantage.Enemy, gameObject.name))
+        {
+            Game.current.position = new Vector3Serializer(playerPosition);
+            sceneController.FadeAndLoadScene("BattleTest");
+        } 
     }
 
     void Update()
