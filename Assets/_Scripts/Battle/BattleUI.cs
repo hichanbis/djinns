@@ -56,19 +56,19 @@ public class BattleUI : MonoBehaviour
         playerMagicsPanels = new Dictionary<string, GameObject>();
 
         playerUnitsExistListener = new UnityAction(InitializePlayerPanels);
-        EventManager.StartListening("playerUnitsExist", playerUnitsExistListener);
+        EventManager.StartListening(BattleEventMessages.playerUnitsExist.ToString(), playerUnitsExistListener);
 
         playerMustChooseAbilityListener = new UnityAction(ActivateCurrentPlayerActionsPanel);
-        EventManager.StartListening("playerChoiceExpected", playerMustChooseAbilityListener);
+        EventManager.StartListening(BattleEventMessages.playerChoiceExpected.ToString(), playerMustChooseAbilityListener);
 
         rageAppliedListener = new UnityAction(refreshPlayersInfo);
-        EventManager.StartListening("damageApplied", rageAppliedListener);
+        EventManager.StartListening(BattleEventMessages.damageApplied.ToString(), rageAppliedListener);
 
         winListener = new UnityAction(displayWinCanvas);
-        EventManager.StartListening("win", winListener);
+        EventManager.StartListening(BattleEventMessages.win.ToString(), winListener);
 
         loseListener = new UnityAction(displayGameOverCanvas);
-        EventManager.StartListening("lose", loseListener);
+        EventManager.StartListening(BattleEventMessages.lose.ToString(), loseListener);
     }
 
 

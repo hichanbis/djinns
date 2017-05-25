@@ -66,12 +66,11 @@ public class BattleManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        //TransitionManager.Instance.isLoadingBattle = false;
         sceneController = FindObjectOfType<SceneController>();
-        StartCoroutine(FSM());
+        StartCoroutine(BattleStateMachine());
     }
 
-    IEnumerator FSM()
+    IEnumerator BattleStateMachine()
     {
         battleEnd = false;
         restartBattle = false;
@@ -101,11 +100,13 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator InitBattle()
     {
+        EventManager.TriggerEvent(BattleEventMessages.battleLoaded.ToString());
+
         playerUnits = BattleStart.InstantiatePlayerParty();
-        EventManager.TriggerEvent("playerUnitsExist");
+        EventManager.TriggerEvent(BattleEventMessages.playerUnitsExist.ToString());
 
         monsterUnits = BattleStart.InstantiateMonsterParty();
-        EventManager.TriggerEvent("monsterUnitsExist");
+        EventManager.TriggerEvent(BattleEventMessages.monsterUnitsExist.ToString());
 
         yield return new WaitForSeconds(1f);
         currentState = BattleStates.ActionChoice;
@@ -113,7 +114,7 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator ActionChoice()
     {
-        EventManager.TriggerEvent("newTurn");
+        EventManager.TriggerEvent(BattleEventMessages.newTurn.ToString());
         yield return null;
 
         if (!currentState.Equals(BattleStates.ActionChoice))
@@ -129,7 +130,7 @@ public class BattleManager : MonoBehaviour
             if (IsGameObjectAPlayer(currentUnit) && !currentUnit.GetComponent<BattleScript>().Dead)
             {
                 currentUnitAction.fromUnit = currentUnit;
-                EventManager.TriggerEvent("playerChoiceExpected");
+                EventManager.TriggerEvent(BattleEventMessages.playerChoiceExpected.ToString());
                 bool choiceDone = false;
                 while (!choiceDone)
                 {
@@ -200,7 +201,7 @@ public class BattleManager : MonoBehaviour
 			
         if (!AreAllPlayersDead() && !AreAllEnemiesDead())
         {
-            EventManager.TriggerEvent("applyEndTurnStatus");
+            EventManager.TriggerEvent(BattleEventMessages.applyEndTurnStatus.ToString());
             yield return null;
         }
 
@@ -258,7 +259,7 @@ public class BattleManager : MonoBehaviour
     IEnumerator Victory()
     {
         yield return null;
-        EventManager.TriggerEvent("win");
+        EventManager.TriggerEvent(BattleEventMessages.win.ToString());
 
         while (!victoryAcknowledged)
         {
@@ -272,7 +273,7 @@ public class BattleManager : MonoBehaviour
     IEnumerator Failure()
     {
         yield return null;
-        EventManager.TriggerEvent("lose");
+        EventManager.TriggerEvent(BattleEventMessages.lose.ToString());
 
         while (!restartBattle && !backToMainMenu)
         {

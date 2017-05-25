@@ -1,8 +1,9 @@
 using UnityEngine;
 using System;
 
-public enum EventMessages
+public enum BattleEventMessages
 {
+    battleLoaded,
     playerUnitsExist,
     monsterUnitsExist,
     newTurn,

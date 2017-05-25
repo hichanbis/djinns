@@ -38,8 +38,10 @@ public class AttackEnemy : MonoBehaviour
             canAttack = false;
 
             if (nbHit == 0)
+            {
                 TransitionManager.Instance.LoadBattle(Advantage.Player, transform.position, enemyName);
-            nbHit++;
+                nbHit++;
+            }
 
         }
     }

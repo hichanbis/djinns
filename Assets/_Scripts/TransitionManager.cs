@@ -4,7 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public enum Advantage
 {
@@ -24,6 +25,7 @@ public class TransitionManager : MonoBehaviour
 {
     private static TransitionManager instance;
     private SceneController sceneController;
+    private UnityAction battleLoadedListener;
     // Reference to the SceneController to actually do the loading and unloading of scenes.
 
     UnityEngine.Object lockObject = new UnityEngine.Object();
@@ -60,6 +62,12 @@ public class TransitionManager : MonoBehaviour
     protected void Start()
     {
         sceneController = FindObjectOfType<SceneController>();
+        battleLoadedListener = new UnityAction(ResetAdvantage);
+        EventManager.StartListening(BattleEventMessages.battleLoaded.ToString(), battleLoadedListener);
+    }
+
+    void ResetAdvantage(){
+        advantageGiven = false;
     }
 
 
@@ -80,13 +88,12 @@ public class TransitionManager : MonoBehaviour
     {
         if (advantageGiven)
             return;
-		
+        
         advantageGiven = true;
         DeclareBattlingEnemy(enemyName);
         this.advantage = advantage;
         Game.current.position = new Vector3Serializer(playerPosition);
         sceneController.FadeAndLoadScene("BattleTest");   
-        advantageGiven = false;
     }
 
     //the enemy name ends with an int index corresponding to the spawn point index

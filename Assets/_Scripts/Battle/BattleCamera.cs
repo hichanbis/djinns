@@ -20,10 +20,10 @@ public class BattleCamera : MonoBehaviour
         battleManager = BattleManager.Instance;
 
         playerUnitsExistListener = new UnityAction(SetInitialCamPos);
-        EventManager.StartListening("playerUnitsExist", playerUnitsExistListener);
+        EventManager.StartListening(BattleEventMessages.playerUnitsExist.ToString(), playerUnitsExistListener);
 
         playerMustChooseAbilityListener = new UnityAction(MoveBehindPlayer);
-        EventManager.StartListening("playerChoiceExpected", playerMustChooseAbilityListener);
+        EventManager.StartListening(BattleEventMessages.playerChoiceExpected.ToString(), playerMustChooseAbilityListener);
     }
 
     void SetInitialCamPos()
