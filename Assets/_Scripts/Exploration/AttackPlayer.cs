@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
 
 public class AttackPlayer : MonoBehaviour
@@ -27,9 +29,15 @@ public class AttackPlayer : MonoBehaviour
     IEnumerator LaunchAttackOnPlayer(Vector3 playerPosition)
     {
         yield return null;
-        yield return new WaitForSeconds(Random.Range(1f, 4f));
-        if (ExploSaveData.Instance.InitiateBattle(Advantage.Enemy, gameObject.name))
+        yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 4f));
+        if (ExploSaveData.Instance.Advantage.Equals(BattleAdvantage.Unset))
         {
+            ExploSaveData.Instance.Advantage = BattleAdvantage.Enemy;
+
+            String resultIndex = Regex.Match(gameObject.name, @"\d+$").Value;
+            int index = Int32.Parse(resultIndex);
+            ExploSaveData.Instance.EnemyKilledIndexes.Add(index);
+
             Game.current.position = new Vector3Serializer(playerPosition);
             sceneController.FadeAndLoadScene("BattleTest");
         } 

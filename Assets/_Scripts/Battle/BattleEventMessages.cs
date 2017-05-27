@@ -11,5 +11,6 @@ public enum BattleEventMessages
     damageApplied,
     applyEndTurnStatus,
     win,
-    lose
+    lose,
+    battleEnded
 }

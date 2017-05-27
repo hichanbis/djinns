@@ -88,6 +88,7 @@ public class BattleManager : MonoBehaviour
             yield return StartCoroutine(currentState.ToString());
         }
 
+        EventManager.TriggerEvent(BattleEventMessages.battleEnded.ToString());
         yield return null;
 
         if (victoryAcknowledged)

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
 
 public class AttackEnemy : MonoBehaviour
@@ -42,8 +44,15 @@ public class AttackEnemy : MonoBehaviour
             //nbHit to make sur I don't call the methods twice
             if (nbHit == 0)
             {
-                if (ExploSaveData.Instance.InitiateBattle(Advantage.Player, enemyName))
+                if (ExploSaveData.Instance.Advantage.Equals(BattleAdvantage.Unset))
                 {
+                    ExploSaveData.Instance.Advantage = BattleAdvantage.Player;
+
+                    String resultIndex = Regex.Match(enemyName, @"\d+$").Value;
+                    int index = Int32.Parse(resultIndex);
+                    ExploSaveData.Instance.EnemyKilledIndexes.Add(index);
+
+                    //This should be in ExploSaveData also!
                     Game.current.position = new Vector3Serializer(transform.position);
                     nbHit++;
                     sceneController.FadeAndLoadScene("BattleTest");   
