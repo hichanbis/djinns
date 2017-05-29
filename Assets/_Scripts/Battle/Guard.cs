@@ -24,6 +24,7 @@ public class Guard : Status
     public override void Add(Character character)
     {
         //Add +50% modifier
+        character.status.Add(this);
         character.GetStat(StatName.defense).modifiers.Add(50);
     }
 
@@ -36,6 +37,7 @@ public class Guard : Status
     {
         //Remove modifiers
         character.GetStat(StatName.defense).modifiers.Remove(50);
+        character.status.Remove(this);
         //Remove effet visuel icone son whatever (ou alors dans le battlescript ca)
     }
 

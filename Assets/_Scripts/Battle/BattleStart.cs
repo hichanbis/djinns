@@ -47,8 +47,8 @@ public class BattleStart : MonoBehaviour
             Stat hpNow = new Stat(StatName.hpNow, 100);
             Stat mp = new Stat(StatName.mp, 35);
             Stat mpNow = new Stat(StatName.mpNow, 35);
-            Stat strength = new Stat(StatName.strength, 20);
-            Stat defense = new Stat(StatName.defense, 20);
+            Stat strength = new Stat(StatName.strength, 10);
+            Stat defense = new Stat(StatName.defense, 10);
             Stat intelligence = new Stat(StatName.intelligence, 10);
             Stat agility = new Stat(StatName.agility, 10);
             List<Stat> defaultStats = new List<Stat> { hp, hpNow, mp, mpNow, strength, defense, intelligence, agility };

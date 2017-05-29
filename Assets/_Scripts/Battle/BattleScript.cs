@@ -11,8 +11,9 @@ public class BattleScript : MonoBehaviour
 
     void Start()
     {
+        //on devrait retrieve ici le character dans la party ou si enemy creation d'un character
         dead = false;
-        endTurnStatusListener = new UnityAction(ApplyStatusEffects);
+        endTurnStatusListener = new UnityAction(ApplyEndTurnStatusEffects);
         EventManager.StartListening("applyEndTurnStatus", endTurnStatusListener);
     }
 
@@ -41,7 +42,7 @@ public class BattleScript : MonoBehaviour
     }
 
     //on end turn
-    public void ApplyStatusEffects()
+    public void ApplyEndTurnStatusEffects()
     {
         for (int i = 0; i < character.status.Count; i++)
         {
@@ -49,10 +50,10 @@ public class BattleScript : MonoBehaviour
             status.ApplyEndTurn(character);
             AfterDamage();
 
-            if (status.Finished)
+            if (status.Finished) //
             {
                 status.Remove(character);
-                character.status.Remove(status);
+                //character.status.Remove(status);
                 status = null;
             }
         }
@@ -76,7 +77,7 @@ public class BattleScript : MonoBehaviour
         else //if opposite dmg = rawDmg with defense reduction
             dmg = Mathf.CeilToInt(rawDmg / (character.GetStat(StatName.defense).GetValue() * 2));
 
-        character.GetStat(StatName.hpNow).baseValue = Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue + dmg, 0, character.GetStat(StatName.hp).baseValue);
+        character.GetStat(StatName.hpNow).baseValue = Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue + dmg, 0, character.GetStat(StatName.hp).GetValue());
 
         AfterDamage();
     }
@@ -87,7 +88,7 @@ public class BattleScript : MonoBehaviour
         //Applied if not already present and depending on success rate of the status
         if (!character.status.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.SuccessRatePercent))
         {
-            character.status.Add(status);
+            //character.status.Add(status);
             status.Add(character);
             Debug.Log(gameObject + " status applied to me: " + status.GetType());
         }

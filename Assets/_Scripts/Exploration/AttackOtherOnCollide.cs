@@ -84,11 +84,11 @@ public class AttackOtherOnCollide : MonoBehaviour
         {
             ExploSaveData.Instance.Advantage = battleAdvantage;
             exploSaveData.Save("advantage", battleAdvantage.ToString());
-            exploSaveData.Save("advantageObj", battleAdvantage);
 
             String resultIndex = Regex.Match(enemyName, @"\d+$").Value;
             int index = Int32.Parse(resultIndex);
             ExploSaveData.Instance.EnemyKilledIndexes.Add(index);
+            exploSaveData.Save("Enemy" + index + "Dead", true);
 
             Game.current.position = new Vector3Serializer(playerPosition);
             sceneController.FadeAndLoadScene("BattleTest");

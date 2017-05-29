@@ -8,7 +8,10 @@ public class Poison : Status
 {
     private int turnPresent = 0;
     private int hpPercentToRemove = 10;
-    int successRatePercent = 100;
+   
+    public Poison(){
+        successRatePercent = 100;
+    }
 
 
     public override bool Finished
@@ -22,6 +25,7 @@ public class Poison : Status
     public override void Add(Character character)
     {
         //effet visuel icone son whatever (ou alors dans le battlescript ca)
+        character.status.Add(this);
     }
 
     public override void ApplyEndTurn(Character character)
@@ -34,6 +38,7 @@ public class Poison : Status
     public override void Remove(Character character)
     {
         //Remove effet visuel icone son whatever (ou alors dans le battlescript ca)
+        character.status.Remove(this);
     }
 
 }

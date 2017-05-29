@@ -31,7 +31,9 @@ public class ExplorationManager : MonoBehaviour
         List<GameObject> enemySpawnpoints = new List<GameObject>(GameObject.FindGameObjectsWithTag("EnemySpawnPoint"));
         for (int i = 0; i < enemySpawnpoints.Count; i++)
         {
-            if (!ExploSaveData.Instance.EnemyKilledIndexes.Contains(i))
+            bool enemyDead = false;
+            if (!exploSaveData.Load("Enemy" + i + "Dead", ref enemyDead))
+            //if (!ExploSaveData.Instance.EnemyKilledIndexes.Contains(i))
             {
                 GameObject enemy = Instantiate(Resources.Load("ExploEnemy") as GameObject, enemySpawnpoints[i].transform.position, Quaternion.identity) as GameObject;
                 enemy.name = "enemy" + i;

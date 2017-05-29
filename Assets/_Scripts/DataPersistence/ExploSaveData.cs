@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-[Serializable]
+[System.Serializable]
 public enum BattleAdvantage
 {
     Unset,
@@ -18,9 +18,9 @@ public enum BattleAdvantage
 /*
  * Stores the battle initiator
  * Stores enemy killed indexes to avoid respawning them in the current explo scene
- * Persistent Object known by BattleManager and ExplorationManager
  */
 
+[System.Serializable]
 public class ExploSaveData
 {
     private static ExploSaveData instance;

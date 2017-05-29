@@ -8,7 +8,10 @@ public class Toxic : Status
 {
     private int timeApplied = 0;
     private int hpPercentToRemove = 20;
-    private int successRatePercent = 30;
+
+    public Toxic(){
+        successRatePercent = 30;
+    }
 
     public override bool Finished
     {
@@ -20,6 +23,7 @@ public class Toxic : Status
 
     public override void Add(Character character)
     {
+        character.status.Add(this);
         //effet visuel icone son whatever (ou alors dans le battlescript ca)
     }
 
@@ -33,6 +37,7 @@ public class Toxic : Status
     public override void Remove(Character character)
     {
         //Remove effet visuel icone son whatever (ou alors dans le battlescript ca)
+        character.status.Remove(this);
     }
 
 }

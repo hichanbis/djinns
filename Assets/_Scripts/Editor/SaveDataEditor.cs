@@ -11,8 +11,6 @@ public class SaveDataEditor : Editor
     private Action<string> stringSpecificGUI;           // Delegate for the GUI that represents string values.
     private Action<Vector3> vector3SpecificGUI;         // Delegate for the GUI that represents Vector3 values.
     private Action<Quaternion> quaternionSpecificGUI;   // Delegate for the GUI that represents Quaternion values.
-    private Action<System.Object> serializableOjectToStringSpecificGUI;   // Delegate for the GUI that represents Quaternion values.
-
 
     private void OnEnable ()
     {
@@ -25,7 +23,6 @@ public class SaveDataEditor : Editor
         stringSpecificGUI = value => { EditorGUILayout.LabelField (value); };
         vector3SpecificGUI = value => { EditorGUILayout.Vector3Field (GUIContent.none, value); };
         quaternionSpecificGUI = value => { EditorGUILayout.Vector3Field (GUIContent.none, value.eulerAngles); };
-        serializableOjectToStringSpecificGUI = value => {EditorGUILayout.LabelField (value.ToString()); };
     }
 
 
@@ -37,7 +34,6 @@ public class SaveDataEditor : Editor
         KeyValuePairListsGUI ("Strings", saveData.stringKeyValuePairLists, stringSpecificGUI);
         KeyValuePairListsGUI ("Vector3s", saveData.vector3KeyValuePairLists, vector3SpecificGUI);
         KeyValuePairListsGUI ("Quaternions", saveData.quaternionKeyValuePairLists, quaternionSpecificGUI);
-        KeyValuePairListsGUI ("Serializable Classes", saveData.customKeyValuePairLists, serializableOjectToStringSpecificGUI);
     }
 
 
