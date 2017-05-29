@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class ExplorationManager : MonoBehaviour
 {
+    public SaveData exploSaveData;
     private GameObject player;
 
     void Awake()

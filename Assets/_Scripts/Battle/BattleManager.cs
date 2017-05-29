@@ -298,12 +298,11 @@ public class BattleManager : MonoBehaviour
             }
         }
     }
-
+        
     bool IsGameObjectAPlayer(GameObject unit)
     {
         return (System.Enum.IsDefined(typeof(PlayerName), unit.name));
     }
-
 
     bool AreAllPlayersDead()
     {

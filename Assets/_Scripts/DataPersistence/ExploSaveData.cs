@@ -60,7 +60,7 @@ public class ExploSaveData
     private void ResetFull()
     {
         advantage = BattleAdvantage.Unset;
-        enemyKilledIndexes.Clear();
+        enemyKilledIndexes = new List<int>();
     }
 
     private void ResetPostBattle()
