@@ -111,8 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c5aca7a7243cb4597697649357c47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nbTriggered: 0
-  sceneController: {fileID: 0}
+  exploSaveData: {fileID: 11400000, guid: 0c6bc94ed2926408f8cab54289e30e58, type: 2}
 --- !u!135 &13570218
 SphereCollider:
   m_ObjectHideFlags: 1

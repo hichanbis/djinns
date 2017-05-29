@@ -145,7 +145,7 @@ public class BattleManager : MonoBehaviour
                                 choiceDone = true;
                         }
                     }
-                    yield return new WaitForSeconds(0.1f);
+                    yield return null;
                 }
                 turnActions.Add(currentUnitAction);
                 IncrementPlayerIndex();
@@ -264,8 +264,9 @@ public class BattleManager : MonoBehaviour
 
         while (!victoryAcknowledged)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return null;
         }
+        ImpactHpMpAfterVictory();
 
         battleEnd = true;
     }
@@ -278,7 +279,7 @@ public class BattleManager : MonoBehaviour
 
         while (!restartBattle && !backToMainMenu)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return null;
         }
 
         battleEnd = true;

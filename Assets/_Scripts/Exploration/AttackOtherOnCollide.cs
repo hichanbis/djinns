@@ -6,9 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class AttackOtherOnCollide : MonoBehaviour
 {
-    //public SaveData exploSaveData;
+    public SaveData exploSaveData;
     //public string uniqueIdentifier;             // A unique string set by a scene designer to identify what is being saved.
-    //protected string key;
+    //private string key;
     private bool canAttack;
     private string enemyName;
     private int nbTriggered = 0;
@@ -83,6 +83,7 @@ public class AttackOtherOnCollide : MonoBehaviour
         if (ExploSaveData.Instance.Advantage.Equals(BattleAdvantage.Unset))
         {
             ExploSaveData.Instance.Advantage = battleAdvantage;
+            exploSaveData.Save("advantage", battleAdvantage.ToString());
 
             String resultIndex = Regex.Match(enemyName, @"\d+$").Value;
             int index = Int32.Parse(resultIndex);
