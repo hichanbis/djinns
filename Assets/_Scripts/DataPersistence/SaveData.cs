@@ -77,7 +77,7 @@ public class SaveData : ResettableScriptableObject
     public KeyValuePairLists<string> stringKeyValuePairLists = new KeyValuePairLists<string>();
     public KeyValuePairLists<Vector3> vector3KeyValuePairLists = new KeyValuePairLists<Vector3>();
     public KeyValuePairLists<Quaternion> quaternionKeyValuePairLists = new KeyValuePairLists<Quaternion>();
-
+    public KeyValuePairLists<System.Object> customKeyValuePairLists = new KeyValuePairLists<System.Object>();
 
     public override void Reset ()
     {
@@ -86,6 +86,7 @@ public class SaveData : ResettableScriptableObject
         stringKeyValuePairLists.Clear ();
         vector3KeyValuePairLists.Clear ();
         quaternionKeyValuePairLists.Clear ();
+        customKeyValuePairLists.Clear ();
     }
 
 
@@ -109,6 +110,13 @@ public class SaveData : ResettableScriptableObject
     public void Save (string key, bool value)
     {
         Save(boolKeyValuePairLists, key, value);
+    }
+
+    // This is a public overload for the Save function that specifically
+    // chooses the generic type and calls the generic version.
+    public void Save (string key, System.Object value)
+    {
+        Save(customKeyValuePairLists, key, value);
     }
 
 
@@ -142,6 +150,15 @@ public class SaveData : ResettableScriptableObject
     {
         return Load(boolKeyValuePairLists, key, ref value);
     }
+
+
+    // This works the same as the public Save overloads except
+    // it calls the generic Load function.
+    public bool Load (string key, ref System.Object value)
+    {
+        return Load(customKeyValuePairLists, key, ref value);
+    }
+
 
 
     public bool Load (string key, ref int value)

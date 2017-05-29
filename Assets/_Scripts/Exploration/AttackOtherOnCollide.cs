@@ -84,6 +84,7 @@ public class AttackOtherOnCollide : MonoBehaviour
         {
             ExploSaveData.Instance.Advantage = battleAdvantage;
             exploSaveData.Save("advantage", battleAdvantage.ToString());
+            exploSaveData.Save("advantageObj", battleAdvantage);
 
             String resultIndex = Regex.Match(enemyName, @"\d+$").Value;
             int index = Int32.Parse(resultIndex);
