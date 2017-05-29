@@ -19,9 +19,14 @@ public class BattleStart : MonoBehaviour
             Character character;
             if (Game.current.party.TryGetValue(i, out character))
             {
-                GameObject unitPlayer = Instantiate(Resources.Load("Battle" + character.name) as GameObject, new Vector3(xPos, 0.5f, zPos), Quaternion.identity) as GameObject;
+                GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, new Vector3(xPos, 0.5f, zPos), Quaternion.identity) as GameObject;
+                unitPlayer.GetComponent<Movement>().enabled = false;
+                unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
+
                 unitPlayer.name = character.name;
                 unitPlayer.GetComponent<BattleScript>().Character = ObjectCopier.Clone<Character>(character);
+                unitPlayer.GetComponent<BattleScript>().enabled = true;
+                
                 players.Add(unitPlayer);
             }
             xPos += 10f;
@@ -39,7 +44,8 @@ public class BattleStart : MonoBehaviour
 
         for (int i = 0; i < nbEnemies; i++)
         {
-            GameObject enemy = Instantiate(Resources.Load("BattleEnemy") as GameObject, new Vector3(xPos, 0.5f, zPos), Quaternion.identity) as GameObject;
+            GameObject enemy = Instantiate(Resources.Load("Enemy") as GameObject, new Vector3(xPos, 0.5f, zPos), Quaternion.identity) as GameObject;
+            enemy.GetComponent<AttackOtherOnCollide>().enabled = false;
             enemy.name = "Enemy" + i;
             List<Ability> basicAbs = new List<Ability>();
             basicAbs.Add(AbilityCollection.Instance.FindAbilityFromId("Attack"));

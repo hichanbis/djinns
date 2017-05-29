@@ -68,6 +68,9 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         sceneController = FindObjectOfType<SceneController>();
+
+        InitBattle();
+
         StartCoroutine(BattleStateMachine());
     }
 
@@ -79,9 +82,9 @@ public class BattleManager : MonoBehaviour
         victoryAcknowledged = false;
 
         //Enter the coroutine after Start
-        yield return null;
+        //yield return null;
         
-        currentState = BattleStates.InitBattle;
+        //currentState = BattleStates.InitBattle;
 
 
         while (!battleEnd)
@@ -100,7 +103,7 @@ public class BattleManager : MonoBehaviour
             sceneController.FadeAndLoadScene(SceneManager.GetActiveScene().name);
     }
 
-    IEnumerator InitBattle()
+    void InitBattle()
     {
         EventManager.TriggerEvent(BattleEventMessages.battleLoaded.ToString());
 
@@ -110,7 +113,7 @@ public class BattleManager : MonoBehaviour
         monsterUnits = BattleStart.InstantiateMonsterParty();
         EventManager.TriggerEvent(BattleEventMessages.monsterUnitsExist.ToString());
 
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitForSeconds(1f);
         currentState = BattleStates.ActionChoice;
     }
 

@@ -649,8 +649,9 @@ GameObject:
   - component: {fileID: 5472686}
   - component: {fileID: 13636110}
   - component: {fileID: 135000014087167100}
+  - component: {fileID: 114226630773618326}
   m_Layer: 0
-  m_Name: ExploShamal
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2876,6 +2877,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exploSaveData: {fileID: 11400000, guid: 0c6bc94ed2926408f8cab54289e30e58, type: 2}
+--- !u!114 &114226630773618326
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 154994}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8511da6e3bf539d4b96d35b10a16af6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135000014087167100
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -24,7 +24,7 @@ public class ExplorationManager : MonoBehaviour
         Character character;
         if (Game.current.party.TryGetValue(0, out character))
         {
-            this.player = Instantiate(Resources.Load("Explo" + character.name) as GameObject, Game.current.position.V3, Quaternion.identity) as GameObject;
+            this.player = Instantiate(Resources.Load("Player") as GameObject, Game.current.position.V3, Quaternion.identity) as GameObject;
             this.player.name = character.name;
         }
 
@@ -35,7 +35,7 @@ public class ExplorationManager : MonoBehaviour
             if (!exploSaveData.Load("Enemy" + i + "Dead", ref enemyDead))
             //if (!ExploSaveData.Instance.EnemyKilledIndexes.Contains(i))
             {
-                GameObject enemy = Instantiate(Resources.Load("ExploEnemy") as GameObject, enemySpawnpoints[i].transform.position, Quaternion.identity) as GameObject;
+                GameObject enemy = Instantiate(Resources.Load("Enemy") as GameObject, enemySpawnpoints[i].transform.position, Quaternion.identity) as GameObject;
                 enemy.name = "enemy" + i;
             }
         }
