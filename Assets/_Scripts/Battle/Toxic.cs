@@ -7,7 +7,7 @@ using System;
 public class Toxic : Status
 {
     private int timeApplied = 0;
-    private int hpPercentToRemove = 20;
+    private int hpPercentToRemove = 15;
 
     public Toxic(){
         successRatePercent = 30;

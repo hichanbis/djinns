@@ -12,7 +12,8 @@ public class BattleManager : MonoBehaviour
     public List<GameObject> playerUnits;
     public List<GameObject> monsterUnits;
 
-    public GameObject currentUnit;
+    public GameObject currentActingUnit;
+    public GameObject currentTargetUnit;
     public BattleAction currentUnitAction;
     private List<BattleAction> turnActions;
     public int currentPlayerIndex = 0;
@@ -126,11 +127,11 @@ public class BattleManager : MonoBehaviour
 
         for (int i = 0; i < battlingUnits.Count; i++)
         {
-            currentUnit = battlingUnits[i];
+            currentActingUnit = battlingUnits[i];
             currentUnitAction = new BattleAction();
-            if (IsGameObjectAPlayer(currentUnit) && !currentUnit.GetComponent<BattleScript>().Dead)
+            if (IsGameObjectAPlayer(currentActingUnit) && !currentActingUnit.GetComponent<BattleScript>().Dead)
             {
-                currentUnitAction.fromUnit = currentUnit;
+                currentUnitAction.fromUnit = currentActingUnit;
                 EventManager.TriggerEvent(BattleEventMessages.playerChoiceExpected.ToString());
                 bool choiceDone = false;
                 while (!choiceDone)
@@ -150,12 +151,12 @@ public class BattleManager : MonoBehaviour
                 turnActions.Add(currentUnitAction);
                 IncrementPlayerIndex();
             }
-            else if (!IsGameObjectAPlayer(currentUnit))
+            else if (!IsGameObjectAPlayer(currentActingUnit))
             {
                 List<GameObject> alivePlayerUnits = playerUnits.Where(p => !p.GetComponent<BattleScript>().Dead).ToList();
                 if (alivePlayerUnits.Count > 0)
                 {
-                    BattleAction action = new BattleAction(currentUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentUnit.GetComponent<BattleScript>().Character.getAbility("Attack"));
+                    BattleAction action = new BattleAction(currentActingUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentActingUnit.GetComponent<BattleScript>().Character.getAbility("Attack"));
                     turnActions.Add(action);
                 } 
                 IncrementEnemyIndex();
@@ -183,6 +184,7 @@ public class BattleManager : MonoBehaviour
 
             ReassignTargetIfNeeded(battleAction);
             Debug.Log(battleAction);
+
             foreach (GameObject target in battleAction.targets.ToList())
             {
                 target.GetComponent<BattleScript>().ApplyActionImpact(battleAction.fromUnit, battleAction.ability);
@@ -388,6 +390,11 @@ public class BattleManager : MonoBehaviour
     public GameObject GetCurrentEnemy()
     {
         return monsterUnits[currentEnemyIndex];
+    }
+
+    public void SetCurrentTargetFromName(string targetName){
+        List<GameObject> allUnits = playerUnits.Concat(monsterUnits).ToList();
+        currentTargetUnit = allUnits.Find(u => u.name.Equals(targetName));
     }
 
 }

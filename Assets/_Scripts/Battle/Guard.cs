@@ -6,7 +6,7 @@ using System;
 [System.Serializable]
 public class Guard : Status
 {
-    private int turnPresent = 0;
+    private int timeApplied = 0;
 
     public Guard()
     {
@@ -17,7 +17,7 @@ public class Guard : Status
     {
         get
         {
-            return turnPresent == 1;
+            return timeApplied == 1;
         }
     }
 
@@ -30,7 +30,7 @@ public class Guard : Status
 
     public override void ApplyEndTurn(Character character)
     {
-        turnPresent++;
+        timeApplied++;
     }
 
     public override void Remove(Character character)

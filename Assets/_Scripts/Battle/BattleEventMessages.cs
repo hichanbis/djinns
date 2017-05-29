@@ -8,6 +8,7 @@ public enum BattleEventMessages
     monsterUnitsExist,
     newTurn,
     playerChoiceExpected,
+    targetsPanelDisplayed,
     damageApplied,
     applyEndTurnStatus,
     win,

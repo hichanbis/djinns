@@ -6,11 +6,11 @@ using System;
 [System.Serializable]
 public class Poison : Status
 {
-    private int turnPresent = 0;
+    private int timeApplied = 0;
     private int hpPercentToRemove = 10;
    
     public Poison(){
-        successRatePercent = 100;
+        successRatePercent = 30;
     }
 
 
@@ -18,7 +18,7 @@ public class Poison : Status
     {
         get
         {
-            return turnPresent == 5;
+            return timeApplied == 3;
         }
     }
 
@@ -32,7 +32,7 @@ public class Poison : Status
     {
         float damage = character.GetStat(StatName.hp).baseValue * ((float)hpPercentToRemove / 100);
         character.GetStat(StatName.hpNow).baseValue = Mathf.RoundToInt(Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue - damage, 0, character.GetStat(StatName.hp).baseValue));
-        turnPresent++;
+        timeApplied++;
     }
 
     public override void Remove(Character character)

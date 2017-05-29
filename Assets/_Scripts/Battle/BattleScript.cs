@@ -84,13 +84,12 @@ public class BattleScript : MonoBehaviour
 
     public void TryAddStatus(Status status)
     {
-        Debug.Log(gameObject + " status try: " + status.SuccessRatePercent);
         //Applied if not already present and depending on success rate of the status
         if (!character.status.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.SuccessRatePercent))
         {
             //character.status.Add(status);
             status.Add(character);
-            Debug.Log(gameObject + " status applied to me: " + status.GetType());
+            Debug.Log(gameObject + " status added to me: " + status.GetType());
         }
     }
 
