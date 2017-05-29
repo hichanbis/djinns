@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
+[Serializable]
 public enum BattleAdvantage
 {
     Unset,
