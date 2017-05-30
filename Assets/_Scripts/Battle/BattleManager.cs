@@ -62,6 +62,10 @@ public class BattleManager : MonoBehaviour
             Debug.Log("Dev mockup");
             Game.current = new Game("ExploTest");
         }
+        else
+        {
+            Debug.Log(Game.current);
+        }
     }
 
     // Use this for initialization

@@ -16,7 +16,7 @@ public class BattleCamera : MonoBehaviour
     private bool lookAtEnemy = false;
 
     private UnityAction playerUnitsExistListener;
-    private UnityAction playerMustChooseAbilityListener;
+    private UnityAction playerChoiceExpectedListener;
     private UnityAction targetsPanelDisplayedListener;
 
     // Use this for initialization
@@ -27,8 +27,8 @@ public class BattleCamera : MonoBehaviour
         playerUnitsExistListener = new UnityAction(SetInitialCamPos);
         EventManager.StartListening(BattleEventMessages.playerUnitsExist.ToString(), playerUnitsExistListener);
 
-        playerMustChooseAbilityListener = new UnityAction(MoveBehindPlayer);
-        EventManager.StartListening(BattleEventMessages.playerChoiceExpected.ToString(), playerMustChooseAbilityListener);
+        playerChoiceExpectedListener = new UnityAction(MoveBehindPlayer);
+        EventManager.StartListening(BattleEventMessages.playerChoiceExpected.ToString(), playerChoiceExpectedListener);
 
         targetsPanelDisplayedListener = new UnityAction(LookAtTarget);
         EventManager.StartListening(BattleEventMessages.targetsPanelDisplayed.ToString(), targetsPanelDisplayedListener);
