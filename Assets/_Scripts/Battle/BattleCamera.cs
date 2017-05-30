@@ -62,7 +62,8 @@ public class BattleCamera : MonoBehaviour
         {
             Vector3 offset = new Vector3(xOffset, yOffset, zOffset);
             float desiredAngle = battleManager.currentActingUnit.transform.eulerAngles.y;
-            Quaternion rotation = Quaternion.Euler(0, desiredAngle, 0);
+            //Quaternion rotation = Quaternion.Euler(0, desiredAngle, 0);
+            Quaternion rotation = Quaternion.Euler(0, 0, 0);
             transform.position = battleManager.currentActingUnit.transform.position + (rotation * offset);
         }
     }

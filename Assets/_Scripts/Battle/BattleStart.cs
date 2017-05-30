@@ -19,7 +19,7 @@ public class BattleStart : MonoBehaviour
             Character character;
             if (Game.current.party.TryGetValue(i, out character))
             {
-                GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, new Vector3(xPos, 0.5f, zPos), Quaternion.identity) as GameObject;
+                GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, new Vector3(xPos, 0f, zPos), Quaternion.identity) as GameObject;
                 unitPlayer.GetComponent<Movement>().enabled = false;
                 unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
 
