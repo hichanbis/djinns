@@ -56,6 +56,13 @@ public class BattleManager : MonoBehaviour
             instance = this;
         }
 
+        if (FindObjectOfType(typeof(EventManager)) == null)
+        {
+            StartCoroutine(LoadDebugPersistentScene());
+            Debug.Log("Ok loaded debug persistent scene");
+        }
+
+
         //mockup game
         if (Game.current == null)
         {
@@ -66,6 +73,11 @@ public class BattleManager : MonoBehaviour
         {
             Debug.Log(Game.current);
         }
+    }
+
+    IEnumerator LoadDebugPersistentScene()
+    {
+        yield return SceneManager.LoadSceneAsync("Persistent", LoadSceneMode.Additive);
     }
 
     // Use this for initialization
