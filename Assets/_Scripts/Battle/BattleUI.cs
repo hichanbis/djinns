@@ -336,7 +336,7 @@ public class BattleUI : MonoBehaviour
         if (currentActionPanel != null && currentActionPanel.Equals("targets"))
         {
             //WTF I have to debug for gravity to work
-            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+            //Debug.Log(EventSystem.current.currentSelectedGameObject.name);
             battleManager.SetCurrentTargetFromName(EventSystem.current.currentSelectedGameObject.name);
         }
 

@@ -87,9 +87,8 @@ public class BattleScript : MonoBehaviour
         //Applied if not already present and depending on success rate of the status
         if (!character.status.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.SuccessRatePercent))
         {
-            //character.status.Add(status);
             status.Add(character);
-            Debug.Log(gameObject + " status added to me: " + status.GetType());
+            //Debug.Log(gameObject + " status added to me: " + status.GetType());
         }
     }
 
@@ -105,10 +104,9 @@ public class BattleScript : MonoBehaviour
 
     void AfterDamage()
     {
-        if (!AmIAPlayer())
-        {
-            Debug.Log(gameObject + " remaining hp: " + character.GetStat(StatName.hpNow).baseValue);
-        }
+        //if (!AmIAPlayer())
+            //Debug.Log(gameObject + " remaining hp: " + character.GetStat(StatName.hpNow).baseValue);
+        
 
         EventManager.TriggerEvent("damageApplied");
         if (character.GetStat(StatName.hpNow).baseValue == 0)

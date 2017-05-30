@@ -16,6 +16,10 @@ public class ExplorationManager : MonoBehaviour
             Debug.Log("MockupGame");
             Game.current = new Game("ExploTest");
         }
+        else
+        {
+            Debug.Log(Game.current);
+        }
 
     }
 

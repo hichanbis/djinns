@@ -96,7 +96,10 @@ public class BattleManager : MonoBehaviour
         yield return null;
 
         if (victoryAcknowledged)
+        {
+            //ImpactHpMpAfterVictory();
             sceneController.FadeAndLoadScene("ExploTest");
+        }
         else if (backToMainMenu)
             sceneController.FadeAndLoadScene("MainMenu");
         else if (restartBattle)
@@ -109,9 +112,11 @@ public class BattleManager : MonoBehaviour
 
         playerUnits = BattleStart.InstantiatePlayerParty();
         EventManager.TriggerEvent(BattleEventMessages.playerUnitsExist.ToString());
+        currentActingUnit = playerUnits[0];
 
         monsterUnits = BattleStart.InstantiateMonsterParty();
         EventManager.TriggerEvent(BattleEventMessages.monsterUnitsExist.ToString());
+        currentTargetUnit = monsterUnits[0];
 
         //yield return new WaitForSeconds(1f);
         currentState = BattleStates.ActionChoice;
@@ -186,7 +191,7 @@ public class BattleManager : MonoBehaviour
                 continue;
 
             ReassignTargetIfNeeded(battleAction);
-            Debug.Log(battleAction);
+            //Debug.Log(battleAction);
 
             foreach (GameObject target in battleAction.targets.ToList())
             {
@@ -271,6 +276,7 @@ public class BattleManager : MonoBehaviour
         {
             yield return null;
         }
+
         ImpactHpMpAfterVictory();
 
         battleEnd = true;
@@ -290,21 +296,25 @@ public class BattleManager : MonoBehaviour
         battleEnd = true;
     }
 
+    //Impact the hp to the game party ...
     void ImpactHpMpAfterVictory()
     {
-        //Impact the hp to the game party ...
         for (int i = 0; i < playerUnits.Count; i++)
         {
-            if (playerUnits[i].GetComponent<BattleScript>().Character.GetStat(StatName.hpNow).baseValue == 0)
+            Character player = playerUnits[i].GetComponent<BattleScript>().Character;
+
+
+            if (player.GetStat(StatName.hpNow).baseValue == 0)
                 Game.current.party[i].GetStat(StatName.hpNow).baseValue = 1;
             else
             {
-                Game.current.party[i].GetStat(StatName.hpNow).baseValue = playerUnits[i].GetComponent<BattleScript>().Character.GetStat(StatName.hpNow).baseValue;
-                Game.current.party[i].GetStat(StatName.mpNow).baseValue = playerUnits[i].GetComponent<BattleScript>().Character.GetStat(StatName.mpNow).baseValue;
+                Game.current.party[i].GetStat(StatName.hpNow).baseValue = player.GetStat(StatName.hpNow).baseValue;
+                Game.current.party[i].GetStat(StatName.mpNow).baseValue = player.GetStat(StatName.mpNow).baseValue;
             }
         }
+
     }
-        
+
     bool IsGameObjectAPlayer(GameObject unit)
     {
         return (System.Enum.IsDefined(typeof(PlayerName), unit.name));
@@ -395,7 +405,8 @@ public class BattleManager : MonoBehaviour
         return monsterUnits[currentEnemyIndex];
     }
 
-    public void SetCurrentTargetFromName(string targetName){
+    public void SetCurrentTargetFromName(string targetName)
+    {
         List<GameObject> allUnits = playerUnits.Concat(monsterUnits).ToList();
         currentTargetUnit = allUnits.Find(u => u.name.Equals(targetName));
     }

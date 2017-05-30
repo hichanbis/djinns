@@ -5,14 +5,15 @@ using System;
 
 public class BattleCamera : MonoBehaviour
 {
-    public float xOffset;
-    public float yOffset;
-    public float zOffset;
+    public float xOffset = 0f;
+    public float yOffset = 4f;
+    public float zOffset = -5.5f;
 
     private BattleManager battleManager;
     private bool lookAtTarget = false;
     private bool lookAtActingUnit = false;
     private bool moveBehindPlayer = false;
+    private bool lookAtEnemy = false;
 
     private UnityAction playerUnitsExistListener;
     private UnityAction playerMustChooseAbilityListener;
@@ -41,14 +42,16 @@ public class BattleCamera : MonoBehaviour
     void MoveBehindPlayer()
     {
         moveBehindPlayer = true;
-        lookAtActingUnit = true;
+        lookAtActingUnit = false;
         lookAtTarget = false;
+        lookAtEnemy = true;
     }
 
     void LookAtTarget()
     {
         lookAtActingUnit = false;
         lookAtTarget = true;
+        lookAtEnemy = false;
     }
 
     void LateUpdate()
@@ -57,14 +60,17 @@ public class BattleCamera : MonoBehaviour
             transform.LookAt(battleManager.currentTargetUnit.transform);
         else if (lookAtActingUnit && battleManager.currentActingUnit != null)
             transform.LookAt(battleManager.currentActingUnit.transform);
+        else if (lookAtEnemy && battleManager.GetCurrentEnemy() != null)
+            transform.LookAt(battleManager.GetCurrentEnemy().transform);
 
         if (moveBehindPlayer && battleManager.currentActingUnit != null)
         {
             Vector3 offset = new Vector3(xOffset, yOffset, zOffset);
-            float desiredAngle = battleManager.currentActingUnit.transform.eulerAngles.y;
+            //float desiredAngle = battleManager.currentActingUnit.transform.eulerAngles.y;
             //Quaternion rotation = Quaternion.Euler(0, desiredAngle, 0);
             Quaternion rotation = Quaternion.Euler(0, 0, 0);
             transform.position = battleManager.currentActingUnit.transform.position + (rotation * offset);
+            moveBehindPlayer = false;
         }
     }
 }

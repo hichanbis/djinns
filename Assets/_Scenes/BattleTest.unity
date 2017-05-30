@@ -801,7 +801,8 @@ MonoBehaviour:
   currentState: 0
   playerUnits: []
   monsterUnits: []
-  currentUnit: {fileID: 0}
+  currentActingUnit: {fileID: 0}
+  currentTargetUnit: {fileID: 0}
   currentUnitAction:
     fromUnit: {fileID: 0}
     targets: []
@@ -1293,8 +1294,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xOffset: 0
-  yOffset: 4
-  zOffset: -6
+  yOffset: 3
+  zOffset: -5
 --- !u!81 &1889171445
 AudioListener:
   m_ObjectHideFlags: 0
