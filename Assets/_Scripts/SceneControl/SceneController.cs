@@ -31,8 +31,10 @@ public class SceneController : MonoBehaviour
         // Write the initial starting position to the playerSaveData so it can be loaded by the player when the first scene is loaded.
         //
         
-        // Start the first scene loading and wait for it to finish.
-        yield return StartCoroutine(LoadSceneAndSetActive(startingSceneName));
+        // Start the first scene loading and wait for it to finish only if persistentScene is the current scene
+        //otherwise it means we're in debug
+        if (SceneManager.GetActiveScene().name.Equals("Persistent"))
+            yield return StartCoroutine(LoadSceneAndSetActive(startingSceneName));
 
         // Once the scene is finished loading, start fading in.
         StartCoroutine(Fade(0f));

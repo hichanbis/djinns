@@ -58,8 +58,9 @@ public class BattleManager : MonoBehaviour
 
         if (FindObjectOfType(typeof(EventManager)) == null)
         {
+            Debug.Log("No EventManager found, it is likely the persistent scene is unloaded so it is debug mode");
             StartCoroutine(LoadDebugPersistentScene());
-            Debug.Log("Ok loaded debug persistent scene");
+            Debug.Log("Ok persistent scene loaded go debug");
         }
 
 
