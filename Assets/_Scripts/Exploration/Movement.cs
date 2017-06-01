@@ -20,7 +20,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         movementDirection = Vector2.zero;
         facingDirection = Vector2.zero;
     }
@@ -33,7 +33,7 @@ public class Movement : MonoBehaviour
 
     void FixedUpdate()
     {
-        KeepPlayerOnGround();
+        //KeepPlayerOnGround();
 
         screenMovementSpace = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
         screenMovementForward = screenMovementSpace * Vector3.forward;

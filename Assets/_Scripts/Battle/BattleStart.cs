@@ -10,9 +10,9 @@ public class BattleStart : MonoBehaviour
         int nbPlayers = Game.current.party.Count;
         if (nbPlayers > 3)
             nbPlayers = 3;
-        float spaceBetweenPlayers = 10f;
+        float spaceBetweenPlayers = 5f;
         float xPos = -spaceBetweenPlayers / 2 * (nbPlayers - 1);
-        float zPos = -10f;
+        float zPos = -5f;
 
         for (int i = 0; i < nbPlayers; i++)
         {
@@ -29,7 +29,7 @@ public class BattleStart : MonoBehaviour
                 
                 players.Add(unitPlayer);
             }
-            xPos += 10f;
+            xPos += spaceBetweenPlayers;
         }
         return players;
     }
@@ -38,9 +38,9 @@ public class BattleStart : MonoBehaviour
     {
         List<GameObject> enemies = new List<GameObject>();
         int nbEnemies = Random.Range(2, 6);
-        float spaceBetweenEnemies = 10f;
+        float spaceBetweenEnemies = 5;
         float xPos = -spaceBetweenEnemies / 2 * (nbEnemies - 1);
-        float zPos = 10f;
+        float zPos = 5f;
 
         for (int i = 0; i < nbEnemies; i++)
         {

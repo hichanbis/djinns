@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 
 public class ExplorationManager : MonoBehaviour
@@ -21,6 +22,18 @@ public class ExplorationManager : MonoBehaviour
             Debug.Log(Game.current);
         }
 
+        if (FindObjectOfType(typeof(EventManager)) == null)
+        {
+            Debug.Log("No EventManager found, it is likely the persistent scene is unloaded so it is debug mode");
+            StartCoroutine(LoadDebugPersistentScene());
+            Debug.Log("Ok persistent scene loaded go debug");
+        }
+
+    }
+
+    IEnumerator LoadDebugPersistentScene()
+    {
+        yield return SceneManager.LoadSceneAsync("Persistent", LoadSceneMode.Additive);
     }
 
     void Start()
@@ -29,7 +42,7 @@ public class ExplorationManager : MonoBehaviour
         if (Game.current.party.TryGetValue(0, out character))
         {
             this.player = Instantiate(Resources.Load("Player") as GameObject, Game.current.position.V3, Quaternion.identity) as GameObject;
-            this.player.name = character.name;
+            this.player.name = "Player";
         }
 
         List<GameObject> enemySpawnpoints = new List<GameObject>(GameObject.FindGameObjectsWithTag("EnemySpawnPoint"));

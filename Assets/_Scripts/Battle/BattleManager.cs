@@ -85,8 +85,7 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         sceneController = FindObjectOfType<SceneController>();
-
-        InitBattle();
+        LoadUnits();
 
         StartCoroutine(BattleStateMachine());
     }
@@ -98,11 +97,7 @@ public class BattleManager : MonoBehaviour
         backToMainMenu = false;
         victoryAcknowledged = false;
 
-        //Enter the coroutine after Start
-        //yield return null;
-        
-        //currentState = BattleStates.InitBattle;
-
+        currentState = BattleStates.InitBattle;
 
         while (!battleEnd)
         {
@@ -113,20 +108,20 @@ public class BattleManager : MonoBehaviour
         yield return null;
 
         if (victoryAcknowledged)
-        {
-            //ImpactHpMpAfterVictory();
             sceneController.FadeAndLoadScene("ExploTest");
-        }
         else if (backToMainMenu)
             sceneController.FadeAndLoadScene("MainMenu");
         else if (restartBattle)
             sceneController.FadeAndLoadScene(SceneManager.GetActiveScene().name);
     }
 
-    void InitBattle()
-    {
-        EventManager.TriggerEvent(BattleEventMessages.battleLoaded.ToString());
+    IEnumerator InitBattle(){
+        yield return new WaitForSeconds(3f);
+        currentState = BattleStates.ActionChoice;
+    }
 
+    void LoadUnits()
+    {
         playerUnits = BattleStart.InstantiatePlayerParty();
         EventManager.TriggerEvent(BattleEventMessages.playerUnitsExist.ToString());
         currentActingUnit = playerUnits[0];
@@ -135,8 +130,8 @@ public class BattleManager : MonoBehaviour
         EventManager.TriggerEvent(BattleEventMessages.monsterUnitsExist.ToString());
         currentTargetUnit = monsterUnits[0];
 
-        //yield return new WaitForSeconds(1f);
-        currentState = BattleStates.ActionChoice;
+        EventManager.TriggerEvent(BattleEventMessages.unitsLoaded.ToString());
+
     }
 
     IEnumerator ActionChoice()

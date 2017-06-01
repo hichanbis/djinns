@@ -29,7 +29,7 @@ public class Game
         currentScene = "ExploTest";
 
         Vector3 pos = new Vector3(10f, 0f, 10f);
-        position = new Vector3Serializer(pos + new Vector3(2f, 0f, 2f));
+        position = new Vector3Serializer(pos + new Vector3(2f, 2f, 2f));
     }
 
     //Debug constructor for Dev only
@@ -61,7 +61,7 @@ public class Game
         Vector3 pos = new Vector3(10f, 0f, 10f);
         if (spawnPoint != null)
             pos = spawnPoint.transform.position;
-        position = new Vector3Serializer(pos + new Vector3(2f, 0f, 2f));
+        position = new Vector3Serializer(pos + new Vector3(2f, 2f, 2f));
     }
 
     private List<Stat> GenerateDefaultStats()
