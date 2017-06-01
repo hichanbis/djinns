@@ -205,6 +205,9 @@ public class BattleManager : MonoBehaviour
             ReassignTargetIfNeeded(battleAction);
             //Debug.Log(battleAction);
 
+
+            //LA faut demander à fromUnit d'envoyer l'anim qui correspond à l'ability !!!!
+
             foreach (GameObject target in battleAction.targets.ToList())
             {
                 target.GetComponent<BattleScript>().ApplyActionImpact(battleAction.fromUnit, battleAction.ability);

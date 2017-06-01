@@ -7,14 +7,23 @@ public class BattleScript : MonoBehaviour
     private Character character;
     private bool dead;
     private UnityAction endTurnStatusListener;
+    private UnityAction unitsLoadedListener;
+    private Animator anim;
 
 
     void Start()
     {
-        //on devrait retrieve ici le character dans la party ou si enemy creation d'un character
+        anim = GetComponentInChildren<Animator>();
         dead = false;
         endTurnStatusListener = new UnityAction(ApplyEndTurnStatusEffects);
-        EventManager.StartListening("applyEndTurnStatus", endTurnStatusListener);
+        EventManager.StartListening(BattleEventMessages.applyEndTurnStatus.ToString(), endTurnStatusListener);
+        unitsLoadedListener = new UnityAction(InitAnim);
+        EventManager.StartListening(BattleEventMessages.unitsLoaded.ToString(), unitsLoadedListener);
+    }
+
+    void InitAnim()
+    {
+        anim.SetBool("inBattle", true); 
     }
 
     public Character Character
@@ -105,7 +114,7 @@ public class BattleScript : MonoBehaviour
     void AfterDamage()
     {
         //if (!AmIAPlayer())
-            //Debug.Log(gameObject + " remaining hp: " + character.GetStat(StatName.hpNow).baseValue);
+        //Debug.Log(gameObject + " remaining hp: " + character.GetStat(StatName.hpNow).baseValue);
         
 
         EventManager.TriggerEvent("damageApplied");
