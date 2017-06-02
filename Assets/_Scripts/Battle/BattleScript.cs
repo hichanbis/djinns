@@ -15,21 +15,20 @@ public class BattleScript : MonoBehaviour
 
     void Start()
     {
-        if (AmIAPlayer())
-        {
-            anim = GetComponentInChildren<Animator>();
-            anim.runtimeAnimatorController = battleAnimController;
-        }
+        //ça pète pour les ennemis, normal
+        anim = GetComponentInChildren<Animator>();
+        anim.runtimeAnimatorController = battleAnimController;
 
         endTurnStatusListener = new UnityAction(ApplyEndTurnStatusEffects);
         EventManager.StartListening(BattleEventMessages.applyEndTurnStatus.ToString(), endTurnStatusListener);
         unitsLoadedListener = new UnityAction(InitAnim);
-        EventManager.StartListening(BattleEventMessages.unitsLoaded.ToString(), unitsLoadedListener);
+        EventManager.StartListening(BattleEventMessages.taunt.ToString(), unitsLoadedListener);
     }
 
     //launch anim battleTaunt
     void InitAnim()
     {
+        Debug.Log("Setting the trigger yeah");
         anim.SetTrigger("Taunt");
     }
 

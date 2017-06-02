@@ -116,7 +116,9 @@ public class BattleManager : MonoBehaviour
     }
 
     IEnumerator InitBattle(){
+        
         yield return new WaitForSeconds(3f);
+        EventManager.TriggerEvent(BattleEventMessages.taunt.ToString());
         currentState = BattleStates.ActionChoice;
     }
 
@@ -129,8 +131,6 @@ public class BattleManager : MonoBehaviour
         monsterUnits = BattleStart.InstantiateMonsterParty();
         EventManager.TriggerEvent(BattleEventMessages.monsterUnitsExist.ToString());
         currentTargetUnit = monsterUnits[0];
-
-        EventManager.TriggerEvent(BattleEventMessages.unitsLoaded.ToString());
 
     }
 

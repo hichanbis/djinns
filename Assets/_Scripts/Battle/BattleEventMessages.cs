@@ -3,7 +3,7 @@ using System;
 
 public enum BattleEventMessages
 {
-    unitsLoaded,
+    taunt,
     playerUnitsExist,
     monsterUnitsExist,
     newTurn,
