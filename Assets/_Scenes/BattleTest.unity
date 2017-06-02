@@ -1516,7 +1516,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967263
-  m_RenderingPath: -1
+  m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -1655,19 +1655,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4430776651575610, guid: 6255ec8e196c2944ba9ee7be6f2034dc, type: 2}
       propertyPath: m_LocalRotation.x
-      value: -0.36198035
+      value: -0.36198038
       objectReference: {fileID: 0}
     - target: {fileID: 4430776651575610, guid: 6255ec8e196c2944ba9ee7be6f2034dc, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0.33849183
+      value: 0.33849186
       objectReference: {fileID: 0}
     - target: {fileID: 4430776651575610, guid: 6255ec8e196c2944ba9ee7be6f2034dc, type: 2}
       propertyPath: m_LocalRotation.z
-      value: -0.5364998
+      value: -0.53649986
       objectReference: {fileID: 0}
     - target: {fileID: 4430776651575610, guid: 6255ec8e196c2944ba9ee7be6f2034dc, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 0.683053
+      value: 0.6830531
+      objectReference: {fileID: 0}
+    - target: {fileID: 154994, guid: 6255ec8e196c2944ba9ee7be6f2034dc, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6255ec8e196c2944ba9ee7be6f2034dc, type: 2}

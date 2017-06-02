@@ -4,26 +4,33 @@ using UnityEngine.Events;
 
 public class BattleScript : MonoBehaviour
 {
+    public RuntimeAnimatorController battleAnimController;
+
     private Character character;
-    private bool dead;
+    private bool dead = false;
+    private Animator anim;
     private UnityAction endTurnStatusListener;
     private UnityAction unitsLoadedListener;
-    private Animator anim;
 
 
     void Start()
     {
-        anim = GetComponentInChildren<Animator>();
-        dead = false;
+        if (AmIAPlayer())
+        {
+            anim = GetComponentInChildren<Animator>();
+            anim.runtimeAnimatorController = battleAnimController;
+        }
+
         endTurnStatusListener = new UnityAction(ApplyEndTurnStatusEffects);
         EventManager.StartListening(BattleEventMessages.applyEndTurnStatus.ToString(), endTurnStatusListener);
         unitsLoadedListener = new UnityAction(InitAnim);
         EventManager.StartListening(BattleEventMessages.unitsLoaded.ToString(), unitsLoadedListener);
     }
 
+    //launch anim battleTaunt
     void InitAnim()
     {
-        anim.SetBool("inBattle", true); 
+        //anim.SetTrigger("Taunt");
     }
 
     public Character Character
