@@ -110,6 +110,52 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &75797687
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 468074, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 468074, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 468074, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 468074, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 468074, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 468074, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 468074, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 468074, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 129516, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 1a9547d577986044eb174a0094870a76, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &118464837
 Prefab:
   m_ObjectHideFlags: 0
@@ -1445,6 +1491,7 @@ GameObject:
   - component: {fileID: 1889171446}
   - component: {fileID: 1889171445}
   - component: {fileID: 1889171444}
+  - component: {fileID: 1889171450}
   m_Layer: 0
   m_Name: BattleCamera
   m_TagString: MainCamera
@@ -1539,7 +1586,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 33.4, y: 51.88, z: 0}
+  m_LocalEulerAnglesHint: {x: 146.20134, y: 308.65228, z: 180}
+--- !u!111 &1889171450
+Animation:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1889171443}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: ef343b5ed40f9d84198603a3ac3fa260, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: ef343b5ed40f9d84198603a3ac3fa260, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1947545960
 GameObject:
   m_ObjectHideFlags: 0

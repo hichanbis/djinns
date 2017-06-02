@@ -116,21 +116,21 @@ public class BattleManager : MonoBehaviour
     }
 
     IEnumerator InitBattle(){
-        
-        yield return new WaitForSeconds(3f);
-        EventManager.TriggerEvent(BattleEventMessages.taunt.ToString());
+        yield return null;
+        EventManager.TriggerEvent(BattleEventMessages.beginFight.ToString());
+        yield return new WaitForSeconds(5f);
+
         currentState = BattleStates.ActionChoice;
     }
 
     void LoadUnits()
     {
         playerUnits = BattleStart.InstantiatePlayerParty();
-        EventManager.TriggerEvent(BattleEventMessages.playerUnitsExist.ToString());
         currentActingUnit = playerUnits[0];
-
         monsterUnits = BattleStart.InstantiateMonsterParty();
-        EventManager.TriggerEvent(BattleEventMessages.monsterUnitsExist.ToString());
         currentTargetUnit = monsterUnits[0];
+
+        EventManager.TriggerEvent(BattleEventMessages.unitsLoaded.ToString());
 
     }
 

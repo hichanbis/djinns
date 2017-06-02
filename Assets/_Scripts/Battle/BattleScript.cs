@@ -10,7 +10,7 @@ public class BattleScript : MonoBehaviour
     private bool dead = false;
     private Animator anim;
     private UnityAction endTurnStatusListener;
-    private UnityAction unitsLoadedListener;
+    private UnityAction launchTaunt;
 
 
     void Start()
@@ -21,12 +21,12 @@ public class BattleScript : MonoBehaviour
 
         endTurnStatusListener = new UnityAction(ApplyEndTurnStatusEffects);
         EventManager.StartListening(BattleEventMessages.applyEndTurnStatus.ToString(), endTurnStatusListener);
-        unitsLoadedListener = new UnityAction(InitAnim);
-        EventManager.StartListening(BattleEventMessages.taunt.ToString(), unitsLoadedListener);
+        launchTaunt = new UnityAction(battleTaunt);
+        EventManager.StartListening(BattleEventMessages.beginFight.ToString(), launchTaunt);
     }
 
     //launch anim battleTaunt
-    void InitAnim()
+    void battleTaunt()
     {
         Debug.Log("Setting the trigger yeah");
         anim.SetTrigger("Taunt");

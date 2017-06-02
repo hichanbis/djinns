@@ -44,7 +44,8 @@ public class BattleStart : MonoBehaviour
 
         for (int i = 0; i < nbEnemies; i++)
         {
-            GameObject enemy = Instantiate(Resources.Load("Enemy") as GameObject, new Vector3(xPos, 0.5f, zPos), Quaternion.identity) as GameObject;
+            Vector3 spawnPosition = new Vector3(xPos, 0.5f, zPos);
+            GameObject enemy = Instantiate(Resources.Load("Enemy") as GameObject, spawnPosition, Quaternion.identity) as GameObject;
             enemy.GetComponent<AttackOtherOnCollide>().enabled = false;
             enemy.name = "Enemy" + i;
             List<Ability> basicAbs = new List<Ability>();

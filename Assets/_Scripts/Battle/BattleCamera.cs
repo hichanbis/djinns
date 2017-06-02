@@ -18,6 +18,8 @@ public class BattleCamera : MonoBehaviour
     private UnityAction playerUnitsExistListener;
     private UnityAction playerChoiceExpectedListener;
     private UnityAction targetsPanelDisplayedListener;
+    private UnityAction unitsLoadedListener;
+
 
     // Use this for initialization
     void Start()
@@ -25,18 +27,26 @@ public class BattleCamera : MonoBehaviour
         battleManager = BattleManager.Instance;
 
         playerUnitsExistListener = new UnityAction(SetInitialCamPos);
-        EventManager.StartListening(BattleEventMessages.playerUnitsExist.ToString(), playerUnitsExistListener);
+        EventManager.StartListening(BattleEventMessages.unitsLoaded.ToString(), playerUnitsExistListener);
 
         playerChoiceExpectedListener = new UnityAction(MoveBehindPlayer);
         EventManager.StartListening(BattleEventMessages.playerChoiceExpected.ToString(), playerChoiceExpectedListener);
 
         targetsPanelDisplayedListener = new UnityAction(LookAtTarget);
         EventManager.StartListening(BattleEventMessages.targetsPanelDisplayed.ToString(), targetsPanelDisplayedListener);
+
+        unitsLoadedListener = new UnityAction(RotateAnim);
+        EventManager.StartListening(BattleEventMessages.beginFight.ToString(), unitsLoadedListener);
     }
 
     void SetInitialCamPos()
     {
 
+    }
+
+    void RotateAnim()
+    {
+        GetComponent<Animation>().Play();
     }
 
     void MoveBehindPlayer()

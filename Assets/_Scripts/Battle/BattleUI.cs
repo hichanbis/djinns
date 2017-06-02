@@ -56,7 +56,7 @@ public class BattleUI : MonoBehaviour
         playerMagicsPanels = new Dictionary<string, GameObject>();
 
         playerUnitsExistListener = new UnityAction(InitializePlayerPanels);
-        EventManager.StartListening(BattleEventMessages.playerUnitsExist.ToString(), playerUnitsExistListener);
+        EventManager.StartListening(BattleEventMessages.unitsLoaded.ToString(), playerUnitsExistListener);
 
         playerMustChooseAbilityListener = new UnityAction(ActivateCurrentPlayerActionsPanel);
         EventManager.StartListening(BattleEventMessages.playerChoiceExpected.ToString(), playerMustChooseAbilityListener);
