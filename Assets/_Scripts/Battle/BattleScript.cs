@@ -30,7 +30,7 @@ public class BattleScript : MonoBehaviour
     //launch anim battleTaunt
     void InitAnim()
     {
-        //anim.SetTrigger("Taunt");
+        anim.SetTrigger("Taunt");
     }
 
     public Character Character
