@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
+using System.Collections.Generic;
 
 public class BattleScript : MonoBehaviour
 {
@@ -15,7 +17,6 @@ public class BattleScript : MonoBehaviour
 
     void Start()
     {
-        //ça pète pour les ennemis, normal
         anim = GetComponentInChildren<Animator>();
         anim.runtimeAnimatorController = battleAnimController;
 
@@ -28,9 +29,56 @@ public class BattleScript : MonoBehaviour
     //launch anim battleTaunt
     void battleTaunt()
     {
-        Debug.Log("Setting the trigger yeah");
         anim.SetTrigger("Taunt");
     }
+
+    public IEnumerator ExecuteBattleAnim(Ability ability, List<GameObject> targets)
+    {
+        
+        Vector3 initPos = transform.position;
+
+        if (targets.Count == 1 && ability.targetType.Equals(TargetType.Opposite))
+            yield return StartCoroutine(MoveOverSpeed(gameObject, targets[0].transform.position, 20f));
+        
+        anim.SetTrigger(ability.name);
+        //depends on ability duration we should wait for exec
+        yield return new WaitForSeconds(1f);
+
+        if (targets.Count == 1 && ability.targetType.Equals(TargetType.Opposite))
+            yield return StartCoroutine(MoveOverSeconds(gameObject, initPos, 1f)); 
+
+    }
+
+    public IEnumerator MoveOverSpeed(GameObject objectToMove, Vector3 end, float speed)
+    {
+
+        Vector3 diff = end - objectToMove.transform.position;
+        float totalDist = diff.magnitude;
+
+        // speed should be 1 unit per second
+        while ((end - objectToMove.transform.position).magnitude > (totalDist * 0.1))
+        {
+
+
+            objectToMove.transform.position = Vector3.MoveTowards(objectToMove.transform.position, end, speed * Time.deltaTime);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public IEnumerator MoveOverSeconds(GameObject objectToMove, Vector3 end, float seconds)
+    {
+        float elapsedTime = 0;
+        Vector3 startingPos = objectToMove.transform.position;
+        while (elapsedTime < seconds)
+        {
+            objectToMove.transform.position = Vector3.Lerp(startingPos, end, (elapsedTime / seconds));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+    }
+
+
 
     public Character Character
     {

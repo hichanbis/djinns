@@ -19,7 +19,9 @@ public class BattleStart : MonoBehaviour
             Character character;
             if (Game.current.party.TryGetValue(i, out character))
             {
-                GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, new Vector3(xPos, 0f, zPos), Quaternion.identity) as GameObject;
+                Vector3 spawnPosition = new Vector3(xPos, 0f, zPos);
+                Quaternion rotation = Quaternion.LookRotation(new Vector3(0, 0, 0) - spawnPosition);
+                GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, spawnPosition, Quaternion.identity) as GameObject;
                 unitPlayer.GetComponent<Movement>().enabled = false;
                 unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
 
@@ -44,8 +46,9 @@ public class BattleStart : MonoBehaviour
 
         for (int i = 0; i < nbEnemies; i++)
         {
-            Vector3 spawnPosition = new Vector3(xPos, 0.5f, zPos);
-            GameObject enemy = Instantiate(Resources.Load("Enemy") as GameObject, spawnPosition, Quaternion.identity) as GameObject;
+            Vector3 spawnPosition = new Vector3(xPos, 0f, zPos);
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(0, 0, 0) - spawnPosition);
+            GameObject enemy = Instantiate(Resources.Load("Enemy") as GameObject, spawnPosition, rotation) as GameObject;
             enemy.GetComponent<AttackOtherOnCollide>().enabled = false;
             enemy.name = "Enemy" + i;
             List<Ability> basicAbs = new List<Ability>();

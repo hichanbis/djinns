@@ -116,7 +116,7 @@ public class BattleManager : MonoBehaviour
     }
 
     IEnumerator InitBattle(){
-        yield return null;
+        yield return new WaitForSeconds(1f);
         EventManager.TriggerEvent(BattleEventMessages.beginFight.ToString());
         yield return new WaitForSeconds(5f);
 
@@ -165,6 +165,8 @@ public class BattleManager : MonoBehaviour
                             if (currentUnitAction.targets != null)
                                 choiceDone = true;
                         }
+
+                        //launch anim for attack preparation here (guard or magic focus)!
                     }
                     yield return null;
                 }
@@ -193,7 +195,7 @@ public class BattleManager : MonoBehaviour
         //turnActions.OrderByDescending(u => u.GetComponent<BattleCharacter>().Character.stats.speed).ToList();
         foreach (BattleAction battleAction in turnActions)
         {
-            yield return null;
+            
 
             if (AreAllPlayersDead() || AreAllEnemiesDead())
                 break;
@@ -206,7 +208,9 @@ public class BattleManager : MonoBehaviour
             //Debug.Log(battleAction);
 
 
-            //LA faut demander à fromUnit d'envoyer l'anim qui correspond à l'ability !!!!
+
+            //Launch anim!
+            yield return battleAction.fromUnit.GetComponent<BattleScript>().ExecuteBattleAnim(battleAction.ability, battleAction.targets);
 
             foreach (GameObject target in battleAction.targets.ToList())
             {
@@ -222,7 +226,8 @@ public class BattleManager : MonoBehaviour
             }
 
             battleAction.fromUnit.GetComponent<BattleScript>().removeMp(battleAction.ability);
-            yield return null;
+
+            yield return new WaitForSeconds(1f);
         }
 			
         if (!AreAllPlayersDead() && !AreAllEnemiesDead())
