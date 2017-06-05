@@ -5459,7 +5459,7 @@ MonoBehaviour:
   hermiteTension: 0
   hermiteBias: 0
   editorPreview: {fileID: 0}
-  selectedPoint: 3
+  selectedPoint: 2
   pointMode: 0
   addPointAtPercent: 0
   _aspect: 1.7778
@@ -6130,7 +6130,7 @@ MonoBehaviour:
   fixedPosition: {x: 0, y: 0, z: 0}
   normalised: 1
   _dynamicNormalisation: 0
-  editorPercentage: 0.812
+  editorPercentage: 0
   _pathTime: 10
   _pathSpeed: 10
   nearestOffset: 0

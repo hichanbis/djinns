@@ -402,7 +402,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   faderCanvasGroup: {fileID: 2074346597}
   fadeDuration: 1
-  startingSceneName: BattleTest
+  startingSceneName: ExploTest
   initialStartingPositionName: init
 --- !u!4 &1892431646
 Transform:

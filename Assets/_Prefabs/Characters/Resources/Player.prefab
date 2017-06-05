@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 13636110}
   - component: {fileID: 135000014087167100}
   - component: {fileID: 114226630773618326}
+  - component: {fileID: 54419472666608090}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3795,7 +3796,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1475123756568506}
-  m_LocalRotation: {x: -0.36198035, y: 0.33849183, z: -0.5364998, w: 0.683053}
+  m_LocalRotation: {x: -0.36198038, y: 0.33849186, z: -0.53649986, w: 0.6830531}
   m_LocalPosition: {x: -0.052565955, y: -0.031900786, z: 0.044483114}
   m_LocalScale: {x: 1, y: 0.99999994, z: 1}
   m_Children: []
@@ -5185,6 +5186,21 @@ Transform:
   m_Father: {fileID: 4863606330502314}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 1.9550999, y: -178.9904, z: -91.445}
+--- !u!54 &54419472666608090
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 154994}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!95 &95275744407008716
 Animator:
   serializedVersion: 3

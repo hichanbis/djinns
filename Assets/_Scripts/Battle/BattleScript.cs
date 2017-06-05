@@ -34,15 +34,25 @@ public class BattleScript : MonoBehaviour
 
     public IEnumerator ExecuteBattleAnim(Ability ability, List<GameObject> targets)
     {
-        
+        if (targets.Count == 1 && ability.targetType.Equals(TargetType.Opposite))
+            transform.LookAt(targets[0].transform);
+
+        //il vaudrait mieux faire anim de course, lerp puis anim d'attaque puis anim de saut et lerp
+
+        anim.SetTrigger(ability.name);
+        //depends on ability duration we should wait for exec
+        yield return null;
+
         Vector3 initPos = transform.position;
 
         if (targets.Count == 1 && ability.targetType.Equals(TargetType.Opposite))
-            yield return StartCoroutine(MoveOverSpeed(gameObject, targets[0].transform.position, 20f));
-        
-        anim.SetTrigger(ability.name);
-        //depends on ability duration we should wait for exec
-        yield return new WaitForSeconds(1f);
+            yield return StartCoroutine(MoveOverSpeed(gameObject, targets[0].transform.position, 10f));
+
+
+       
+        anim.SetTrigger("JumpBack");
+        //GetComponent<Rigidbody>().
+        yield return new WaitForSeconds(1.2f);
 
         if (targets.Count == 1 && ability.targetType.Equals(TargetType.Opposite))
             yield return StartCoroutine(MoveOverSeconds(gameObject, initPos, 1f)); 
