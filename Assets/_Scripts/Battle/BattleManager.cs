@@ -85,13 +85,23 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         sceneController = FindObjectOfType<SceneController>();
-        LoadUnits();
+
+        playerUnits = BattleStart.InstantiatePlayerParty();
+        currentActingUnit = playerUnits[0];
+        monsterUnits = BattleStart.InstantiateMonsterParty();
+        currentTargetUnit = monsterUnits[0];
 
         StartCoroutine(BattleStateMachine());
     }
 
     IEnumerator BattleStateMachine()
     {
+        yield return null;
+
+        //init UI and rotate anim and wait for it to finish
+        EventManager.TriggerEvent(BattleEventMessages.unitsLoaded.ToString());
+       
+
         battleEnd = false;
         restartBattle = false;
         backToMainMenu = false;
@@ -115,24 +125,18 @@ public class BattleManager : MonoBehaviour
             sceneController.FadeAndLoadScene(SceneManager.GetActiveScene().name);
     }
 
-    IEnumerator InitBattle(){
-        yield return new WaitForSeconds(1f);
-        EventManager.TriggerEvent(BattleEventMessages.beginFight.ToString());
-        yield return new WaitForSeconds(5f);
+    IEnumerator InitBattle()
+    {
+        //wait 3 sec before taunt (during rotate anim) 
+        yield return new WaitForSeconds(3f);
+        EventManager.TriggerEvent(BattleEventMessages.taunt.ToString());
+
+        //wait for rotate and taunt to finish before action choice
+        yield return new WaitForSeconds(3f);
 
         currentState = BattleStates.ActionChoice;
     }
 
-    void LoadUnits()
-    {
-        playerUnits = BattleStart.InstantiatePlayerParty();
-        currentActingUnit = playerUnits[0];
-        monsterUnits = BattleStart.InstantiateMonsterParty();
-        currentTargetUnit = monsterUnits[0];
-
-        EventManager.TriggerEvent(BattleEventMessages.unitsLoaded.ToString());
-
-    }
 
     IEnumerator ActionChoice()
     {
@@ -195,8 +199,6 @@ public class BattleManager : MonoBehaviour
         //turnActions.OrderByDescending(u => u.GetComponent<BattleCharacter>().Character.stats.speed).ToList();
         foreach (BattleAction battleAction in turnActions)
         {
-            
-
             if (AreAllPlayersDead() || AreAllEnemiesDead())
                 break;
 
@@ -205,16 +207,38 @@ public class BattleManager : MonoBehaviour
                 continue;
 
             ReassignTargetIfNeeded(battleAction);
-            //Debug.Log(battleAction);
+            Debug.Log(battleAction);
+
+            Vector3 initPos = battleAction.fromUnit.transform.position;
+            if (battleAction.ability.distance.Equals(Distance.Close))
+                yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().RunToTarget(battleAction.targets[0]));
 
 
+            yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAndWaitAnim(battleAction.ability.id));
 
-            //Launch anim!
-            yield return battleAction.fromUnit.GetComponent<BattleScript>().ExecuteBattleAnim(battleAction.ability, battleAction.targets);
+            //battleManager calculates the damage and send it to targets who withstand the impact
 
             foreach (GameObject target in battleAction.targets.ToList())
             {
-                target.GetComponent<BattleScript>().ApplyActionImpact(battleAction.fromUnit, battleAction.ability);
+                Ability ab = battleAction.ability;
+                int rawDmg = 0;
+                int dmg = 0;
+
+                int multiplyingStat = 0;
+                if (ab.abilityType.Equals(AbilityType.Magic))
+                    multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.intelligence).GetValue();
+                else
+                    multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.strength).GetValue();
+
+                rawDmg = ab.power * multiplyingStat * 6;
+
+                if (ab.targetType.Equals(TargetType.Self) || ab.targetType.Equals(TargetType.Same) || ab.targetType.Equals(TargetType.AllSame))
+                    dmg = rawDmg;
+                else //if opposite dmg = rawDmg with defense reduction
+                    dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().Character.GetStat(StatName.defense).GetValue() * 2));
+
+                target.GetComponent<BattleScript>().TakeDamage(dmg);
+
                 foreach (string statusClass in battleAction.ability.status)
                 {
                     Status status = (Status)System.Reflection.Assembly.GetExecutingAssembly().CreateInstance(statusClass);
@@ -226,6 +250,11 @@ public class BattleManager : MonoBehaviour
             }
 
             battleAction.fromUnit.GetComponent<BattleScript>().removeMp(battleAction.ability);
+
+
+            if (battleAction.ability.distance.Equals(Distance.Close))
+                battleAction.fromUnit.transform.position = initPos; 
+
 
             yield return new WaitForSeconds(1f);
         }

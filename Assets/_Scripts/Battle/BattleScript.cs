@@ -23,7 +23,7 @@ public class BattleScript : MonoBehaviour
         endTurnStatusListener = new UnityAction(ApplyEndTurnStatusEffects);
         EventManager.StartListening(BattleEventMessages.applyEndTurnStatus.ToString(), endTurnStatusListener);
         launchTaunt = new UnityAction(battleTaunt);
-        EventManager.StartListening(BattleEventMessages.beginFight.ToString(), launchTaunt);
+        EventManager.StartListening(BattleEventMessages.taunt.ToString(), launchTaunt);
     }
 
     //launch anim battleTaunt
@@ -32,60 +32,67 @@ public class BattleScript : MonoBehaviour
         anim.SetTrigger("Taunt");
     }
 
-    public IEnumerator ExecuteBattleAnim(Ability ability, List<GameObject> targets)
+
+    //only for the melee attack so far
+    public IEnumerator ExecuteAttackAnim(GameObject target)
     {
-        if (targets.Count == 1 && ability.targetType.Equals(TargetType.Opposite))
-            transform.LookAt(targets[0].transform);
-
-        //il vaudrait mieux faire anim de course, lerp puis anim d'attaque puis anim de saut et lerp
-
-        anim.SetTrigger(ability.name);
-        //depends on ability duration we should wait for exec
-        yield return null;
-
-        Vector3 initPos = transform.position;
-
-        if (targets.Count == 1 && ability.targetType.Equals(TargetType.Opposite))
-            yield return StartCoroutine(MoveOverSpeed(gameObject, targets[0].transform.position, 10f));
-
-
-       
-        anim.SetTrigger("JumpBack");
-        //GetComponent<Rigidbody>().
-        yield return new WaitForSeconds(1.2f);
-
-        if (targets.Count == 1 && ability.targetType.Equals(TargetType.Opposite))
-            yield return StartCoroutine(MoveOverSeconds(gameObject, initPos, 1f)); 
+        yield return RunToTarget(target);
+        yield return LaunchAndWaitAnim("Attack");
 
     }
 
-    public IEnumerator MoveOverSpeed(GameObject objectToMove, Vector3 end, float speed)
+    public IEnumerator LaunchAndWaitAnim(String trigger)
+    {
+        anim.SetTrigger(trigger);
+        //wait for anim to start
+        while (!anim.GetCurrentAnimatorStateInfo(0).IsName(trigger))
+        {
+            yield return null;
+        }
+
+        //wait for anim to finish
+        while (anim.GetCurrentAnimatorStateInfo(0).IsName(trigger))
+        {
+            yield return null;
+        }
+    }
+
+
+    public IEnumerator RunToTarget(GameObject target)
+    {
+        yield return StartCoroutine(RotateTowardsPoint(gameObject, target.transform.position, 15f));
+        StartCoroutine(RotateTowardsPoint(target, transform.position, 20f));
+
+        anim.SetTrigger("Run");
+        while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
+        {
+            yield return null;
+        }
+        yield return StartCoroutine(MoveToPositionPercentDistance(gameObject, target.transform.position, 10f, 85));
+
+    }
+
+    public IEnumerator RotateTowardsPoint(GameObject objectToMove, Vector3 target, float speed)
+    {
+        while (objectToMove.transform.rotation != Quaternion.LookRotation(target - objectToMove.transform.position))
+        {
+            objectToMove.transform.rotation = Quaternion.Lerp(objectToMove.transform.rotation, Quaternion.LookRotation(target - objectToMove.transform.position), Time.deltaTime * speed);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public IEnumerator MoveToPositionPercentDistance(GameObject objectToMove, Vector3 target, float speed, int distancePercent)
     {
 
-        Vector3 diff = end - objectToMove.transform.position;
+        Vector3 diff = target - objectToMove.transform.position;
         float totalDist = diff.magnitude;
 
         // speed should be 1 unit per second
-        while ((end - objectToMove.transform.position).magnitude > (totalDist * 0.1))
+        while ((target - objectToMove.transform.position).magnitude > (totalDist * (100 - distancePercent) / 100))
         {
-
-
-            objectToMove.transform.position = Vector3.MoveTowards(objectToMove.transform.position, end, speed * Time.deltaTime);
+            objectToMove.transform.position = Vector3.MoveTowards(objectToMove.transform.position, target, speed * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
-    }
-
-    public IEnumerator MoveOverSeconds(GameObject objectToMove, Vector3 end, float seconds)
-    {
-        float elapsedTime = 0;
-        Vector3 startingPos = objectToMove.transform.position;
-        while (elapsedTime < seconds)
-        {
-            objectToMove.transform.position = Vector3.Lerp(startingPos, end, (elapsedTime / seconds));
-            elapsedTime += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-
     }
 
 
@@ -121,7 +128,7 @@ public class BattleScript : MonoBehaviour
         {
             Status status = character.status[i];
             status.ApplyEndTurn(character);
-            AfterDamage();
+            SetToDeadIfNeed();
 
             if (status.Finished) //
             {
@@ -132,27 +139,31 @@ public class BattleScript : MonoBehaviour
         }
     }
 
-    public void ApplyActionImpact(GameObject fromUnit, Ability ab)
+    public void TakeDamage(int dmg)
     {
-        int rawDmg = 0;
-        int dmg = 0;
-
-        int multiplyingStat = 0;
-        if (ab.abilityType.Equals(AbilityType.Magic))
-            multiplyingStat = fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.intelligence).GetValue();
-        else
-            multiplyingStat = fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.strength).GetValue();
-
-        rawDmg = ab.power * multiplyingStat * 6;
-
-        if (ab.targetType.Equals(TargetType.Self) || ab.targetType.Equals(TargetType.Same) || ab.targetType.Equals(TargetType.AllSame))
-            dmg = rawDmg;
-        else //if opposite dmg = rawDmg with defense reduction
-            dmg = Mathf.CeilToInt(rawDmg / (character.GetStat(StatName.defense).GetValue() * 2));
-
         character.GetStat(StatName.hpNow).baseValue = Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue + dmg, 0, character.GetStat(StatName.hp).GetValue());
 
-        AfterDamage();
+        EventManager.TriggerEvent(BattleEventMessages.damageApplied.ToString());
+        //anim de je prends un coup
+
+
+        SetToDeadIfNeed();
+
+
+    }
+
+    private void SetToDeadIfNeed()
+    {
+        if (character.GetStat(StatName.hpNow).baseValue == 0)
+        {
+            dead = true;
+            if (!AmIAPlayer())
+            {
+                BattleManager.Instance.monsterUnits.Remove(gameObject);
+                Destroy(gameObject);
+            }
+        }
+
     }
 
     public void TryAddStatus(Status status)
@@ -173,24 +184,6 @@ public class BattleScript : MonoBehaviour
     bool AmIAPlayer()
     {
         return (System.Enum.IsDefined(typeof(PlayerName), this.name));
-    }
-
-    void AfterDamage()
-    {
-        //if (!AmIAPlayer())
-        //Debug.Log(gameObject + " remaining hp: " + character.GetStat(StatName.hpNow).baseValue);
-        
-
-        EventManager.TriggerEvent("damageApplied");
-        if (character.GetStat(StatName.hpNow).baseValue == 0)
-        {
-            dead = true;
-            if (!AmIAPlayer())
-            {
-                BattleManager.Instance.monsterUnits.Remove(gameObject);
-                Destroy(gameObject);
-            }
-        }
     }
 
     public bool KnowsMagic()

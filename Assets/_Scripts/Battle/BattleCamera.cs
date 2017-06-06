@@ -26,9 +26,6 @@ public class BattleCamera : MonoBehaviour
     {
         battleManager = BattleManager.Instance;
 
-        playerUnitsExistListener = new UnityAction(SetInitialCamPos);
-        EventManager.StartListening(BattleEventMessages.unitsLoaded.ToString(), playerUnitsExistListener);
-
         playerChoiceExpectedListener = new UnityAction(MoveBehindPlayer);
         EventManager.StartListening(BattleEventMessages.playerChoiceExpected.ToString(), playerChoiceExpectedListener);
 
@@ -36,7 +33,7 @@ public class BattleCamera : MonoBehaviour
         EventManager.StartListening(BattleEventMessages.targetsPanelDisplayed.ToString(), targetsPanelDisplayedListener);
 
         unitsLoadedListener = new UnityAction(RotateAnim);
-        EventManager.StartListening(BattleEventMessages.beginFight.ToString(), unitsLoadedListener);
+        EventManager.StartListening(BattleEventMessages.unitsLoaded.ToString(), unitsLoadedListener);
     }
 
     void SetInitialCamPos()
