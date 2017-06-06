@@ -43,6 +43,15 @@ public class BattleScript : MonoBehaviour
 
     public IEnumerator LaunchAndWaitAnim(String trigger)
     {
+        AnimatorControllerParameter[] animParams = anim.parameters;
+
+       
+        if (!Array.Exists(animParams, animParam => animParam.name.Equals(trigger)))
+        {
+            Debug.LogError(trigger + " parameter missing in the battle controller. Won't launch the animation");
+            yield break;
+        }
+
         anim.SetTrigger(trigger);
         //wait for anim to start
         while (!anim.GetCurrentAnimatorStateInfo(0).IsName(trigger))

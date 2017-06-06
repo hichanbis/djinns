@@ -162,16 +162,14 @@ public class BattleManager : MonoBehaviour
                 {
                     if (currentUnitAction.ability != null)
                     {
-                        if (currentUnitAction.ability.targetType.Equals(TargetType.Self) || currentUnitAction.ability.targetType.Equals(TargetType.AllSame) || currentUnitAction.ability.targetType.Equals(TargetType.AllOpposite))
+                        if (currentUnitAction.ability.targetType.Equals(TargetType.Self))
                             choiceDone = true;
-                        else if (currentUnitAction.ability.targetType.Equals(TargetType.Same) || currentUnitAction.ability.targetType.Equals(TargetType.Opposite))
-                        {
-                            if (currentUnitAction.targets != null)
-                                choiceDone = true;
-                        }
-
-                        //launch anim for attack preparation here (guard or magic focus)!
+                        else if (currentUnitAction.targets != null)
+                            choiceDone = true;
                     }
+
+                    //launch anim for attack preparation here (guard or magic focus)!
+                    
                     yield return null;
                 }
                 turnActions.Add(currentUnitAction);
@@ -207,7 +205,6 @@ public class BattleManager : MonoBehaviour
                 continue;
 
             ReassignTargetIfNeeded(battleAction);
-            Debug.Log(battleAction);
 
             Vector3 initPos = battleAction.fromUnit.transform.position;
             if (battleAction.ability.distance.Equals(Distance.Close))
@@ -255,7 +252,7 @@ public class BattleManager : MonoBehaviour
             if (battleAction.ability.distance.Equals(Distance.Close))
                 battleAction.fromUnit.transform.position = initPos; 
 
-
+            //little delay before next action
             yield return new WaitForSeconds(1f);
         }
 			
@@ -457,7 +454,8 @@ public class BattleManager : MonoBehaviour
     public void SetCurrentTargetFromName(string targetName)
     {
         List<GameObject> allUnits = playerUnits.Concat(monsterUnits).ToList();
-        currentTargetUnit = allUnits.Find(u => u.name.Equals(targetName));
+        if (!targetName.Equals("All"))
+            currentTargetUnit = allUnits.Find(u => u.name.Equals(targetName));
     }
 
 }

@@ -21,6 +21,36 @@ public class BattleCamera : MonoBehaviour
     private UnityAction unitsLoadedListener;
 
 
+    // EXPECTED BEHAVIOUR
+
+    // INIT
+    // Units Loaded - 1 overview apres load pendant le taunt
+
+    // ACTIONCHOICE
+    // Player Choice Expected - move devant player - player au centre écran
+    // Target Choice Expected - move devant target pendant choice target (target au centre écran)
+    // Targets Choice Players - move devant les players
+    // Targets Choice Monsters - move devant les monsters
+    // Action Choice All Done - montre battlefield de derriere les joueurs pendant 1 sec apres choice
+
+    // RAGE
+    // Melee attack - 
+    // Attaque melee
+    // Dans un premier temps 
+    // simple vue de coté par rapport à acting unit (en follow et look at acting puis target)
+    // Phase 2
+    // move derriere player et follow début rage juska attak quand acting est joueur et target unique
+    // move devant enemy et follow juska moitié attak puis vue de coté pendant rage quand acting est enemy et target unique
+
+    // Si pas melee
+    // Other Attack - move devant player pendant anim de cast
+
+    // Take Damage - move devant target quand affiche damage si target est unique
+    // Take Damage All - move dans les targets quand affiche damage si multiple
+
+    // VICTORY OU FAILURE
+    // Battle Ended - move devant les players quand battle finished
+
     // Use this for initialization
     void Start()
     {

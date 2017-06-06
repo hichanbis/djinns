@@ -149,8 +149,9 @@ public class BattleUI : MonoBehaviour
         magicActionButton.transform.Find("MagicName").GetComponent<Text>().text = magic.name;
         magicActionButton.transform.Find("MagicMpCost").GetComponent<Text>().text = magic.mpCost + "";
         magicActionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(magic));
-        if (magic.targetType.Equals(TargetType.Same) || magic.targetType.Equals(TargetType.Opposite))
+        if (!magic.targetType.Equals(TargetType.Self))
             magicActionButton.GetComponent<Button>().onClick.AddListener(() => DisplayTargetsPanel(magic.targetType));
+        
     }
 
     void AddActionButtonToTheActionsPanel(string actionName, GameObject playerActionsPanel)
@@ -164,7 +165,7 @@ public class BattleUI : MonoBehaviour
             actionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(AbilityCollection.Instance.FindAbilityFromId("Guard")));
         else if (actionName.Equals("Magic"))
             actionButton.GetComponent<Button>().onClick.AddListener(() => DisplayMagicsPanel());
-        else
+        else if (actionName.Equals("Attack"))
         {
             actionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(AbilityCollection.Instance.FindAbilityFromId("Attack")));
             actionButton.GetComponent<Button>().onClick.AddListener(() => DisplayTargetsPanel(TargetType.Opposite));
@@ -263,17 +264,43 @@ public class BattleUI : MonoBehaviour
         EventManager.TriggerEvent(BattleEventMessages.targetsPanelDisplayed.ToString());
     }
 
+    //if all on grise le tout mais on attend le submit quand même
     void InstantiateTargetsPanel(TargetType targetType)
     {
         targetsPanel = Instantiate(targetsPanelTemplate, battleCanvas.transform, false) as GameObject;
-        List<GameObject> targets = targetType.Equals(TargetType.Opposite) ? battleManager.monsterUnits : battleManager.playerUnits;
+        List<GameObject> targets = null;
+
+        if (targetType.Equals(TargetType.Opposite) || targetType.Equals(TargetType.AllOpposite))
+            targets = battleManager.monsterUnits;
+        else
+            targets = battleManager.playerUnits;
+
+        if (targetType.Equals(TargetType.AllOpposite) || targetType.Equals(TargetType.AllSame))
+        {
+            GameObject targetButton = Instantiate(targetButtonTemplate, targetsPanel.transform, false) as GameObject;
+            targetButton.name = "All";
+            targetButton.transform.Find("TargetName").GetComponent<Text>().text = "All";
+            targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(targets));
+            targetButton.GetComponent<Button>().Select();
+        }
+
         foreach (GameObject target in targets)
         {
             GameObject targetButton = Instantiate(targetButtonTemplate, targetsPanel.transform, false) as GameObject;
             targetButton.name = target.name;
             targetButton.transform.Find("TargetName").GetComponent<Text>().text = target.name;
-            targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(target));
+            if (targetType.Equals(TargetType.Opposite) || targetType.Equals(TargetType.Same))
+                targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(target));
+            else if (targetType.Equals(TargetType.AllOpposite) || targetType.Equals(TargetType.AllSame))
+                targetButton.GetComponent<Button>().interactable = false;
         }
+
+        /*if (targetType.Equals(TargetType.AllOpposite) || targetType.Equals(TargetType.AllSame))
+        {
+            currentActionTargets = targets;
+            targetsPanel.GetComponent<CanvasGroup>().interactable = false;
+        }
+        else*/
         EventSystem.current.SetSelectedGameObject(targetsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject);
     }
 
@@ -283,6 +310,14 @@ public class BattleUI : MonoBehaviour
         currentActionPanel = null;
         battleManager.currentUnitAction.targets = new List<GameObject>() { targetUnit };
     }
+
+    private void ClickedTarget(List<GameObject> targetUnits)
+    {
+        Destroy(targetsPanel);
+        currentActionPanel = null;
+        battleManager.currentUnitAction.targets = targetUnits;
+    }
+
 
     private void ClickedAbility(Ability ability)
     {
@@ -335,10 +370,11 @@ public class BattleUI : MonoBehaviour
     {
         if (currentActionPanel != null && currentActionPanel.Equals("targets"))
         {
-            //WTF I have to debug for gravity to work
-            //Debug.Log(EventSystem.current.currentSelectedGameObject.name);
-            battleManager.SetCurrentTargetFromName(EventSystem.current.currentSelectedGameObject.name);
+            if (EventSystem.current.currentSelectedGameObject != null)
+                battleManager.SetCurrentTargetFromName(EventSystem.current.currentSelectedGameObject.name);
         }
+
+     
 
         if (Input.GetButtonDown("Cancel") && currentActionPanel != null)
         {
