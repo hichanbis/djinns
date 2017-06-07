@@ -128,13 +128,14 @@ public class BattleManager : MonoBehaviour
     IEnumerator InitBattle()
     {
         //wait 3 sec before taunt (during rotate anim) 
-        yield return new WaitForSeconds(3f);
-        EventManager.TriggerEvent(BattleEventMessages.taunt.ToString());
+        //yield return new WaitForSeconds(3f);
+        //EventManager.TriggerEvent(BattleEventMessages.taunt.ToString());
 
         //wait for rotate and taunt to finish before action choice
-        yield return new WaitForSeconds(3f);
+        //yield return new WaitForSeconds(3f);
 
         currentState = BattleStates.ActionChoice;
+        yield return null;
     }
 
 
@@ -234,7 +235,7 @@ public class BattleManager : MonoBehaviour
                 else //if opposite dmg = rawDmg with defense reduction
                     dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().Character.GetStat(StatName.defense).GetValue() * 2));
 
-                target.GetComponent<BattleScript>().TakeDamage(dmg);
+                StartCoroutine(target.GetComponent<BattleScript>().TakeDamage(dmg));
 
                 foreach (string statusClass in battleAction.ability.status)
                 {
@@ -255,6 +256,8 @@ public class BattleManager : MonoBehaviour
             //little delay before next action
             yield return new WaitForSeconds(1f);
         }
+
+
 			
         if (!AreAllPlayersDead() && !AreAllEnemiesDead())
         {

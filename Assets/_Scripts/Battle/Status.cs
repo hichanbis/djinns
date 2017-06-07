@@ -1,11 +1,13 @@
-public abstract class Status
+using UnityEngine;
+
+public abstract class Status : MonoBehaviour
 {
     protected int successRatePercent;
 
     public abstract bool Finished { get; }
-    public abstract void Add(Character character);
-    public abstract void Remove(Character character);
-    public abstract void ApplyEndTurn(Character character);
+    public abstract void Add(GameObject unit);
+    public abstract void Remove(GameObject unit);
+    public abstract void ApplyEndTurn(GameObject unit);
     public int SuccessRatePercent
     {
         get

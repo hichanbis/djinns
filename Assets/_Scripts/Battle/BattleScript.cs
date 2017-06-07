@@ -33,14 +33,6 @@ public class BattleScript : MonoBehaviour
     }
 
 
-    //only for the melee attack so far
-    public IEnumerator ExecuteAttackAnim(GameObject target)
-    {
-        yield return RunToTarget(target);
-        yield return LaunchAndWaitAnim("Attack");
-
-    }
-
     public IEnumerator LaunchAndWaitAnim(String trigger)
     {
         AnimatorControllerParameter[] animParams = anim.parameters;
@@ -136,43 +128,46 @@ public class BattleScript : MonoBehaviour
         for (int i = 0; i < character.status.Count; i++)
         {
             Status status = character.status[i];
-            status.ApplyEndTurn(character);
-            SetToDeadIfNeed();
-
+            status.ApplyEndTurn(gameObject);
+           
             if (status.Finished) //
             {
-                status.Remove(character);
+                status.Remove(gameObject);
                 //character.status.Remove(status);
                 status = null;
             }
         }
     }
 
-    public void TakeDamage(int dmg)
+    public IEnumerator TakeDamage(int dmg)
     {
         character.GetStat(StatName.hpNow).baseValue = Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue + dmg, 0, character.GetStat(StatName.hp).GetValue());
-
         EventManager.TriggerEvent(BattleEventMessages.damageApplied.ToString());
-        //anim de je prends un coup
 
-
-        SetToDeadIfNeed();
-
-
-    }
-
-    private void SetToDeadIfNeed()
-    {
+        //if (dmg > 0)
+        //  anim.SetTrigger("Healed");
+        //else
+        //{
         if (character.GetStat(StatName.hpNow).baseValue == 0)
         {
+            anim.SetTrigger("Die");
             dead = true;
             if (!AmIAPlayer())
-            {
                 BattleManager.Instance.monsterUnits.Remove(gameObject);
-                Destroy(gameObject);
-            }
-        }
+            
+            while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+                yield return null;
+            while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+                yield return null;
 
+            if (!AmIAPlayer())
+                Destroy(gameObject);
+        }
+        else
+            anim.SetTrigger("Hit");
+        //}
+            
+        yield return null;
     }
 
     public void TryAddStatus(Status status)
@@ -180,7 +175,7 @@ public class BattleScript : MonoBehaviour
         //Applied if not already present and depending on success rate of the status
         if (!character.status.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.SuccessRatePercent))
         {
-            status.Add(character);
+            status.Add(gameObject);
             //Debug.Log(gameObject + " status added to me: " + status.GetType());
         }
     }

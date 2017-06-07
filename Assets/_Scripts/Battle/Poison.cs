@@ -22,23 +22,23 @@ public class Poison : Status
         }
     }
 
-    public override void Add(Character character)
+    public override void Add(GameObject unit)
     {
         //effet visuel icone son whatever (ou alors dans le battlescript ca)
-        character.status.Add(this);
+        unit.GetComponent<BattleScript>().Character.status.Add(this);
     }
 
-    public override void ApplyEndTurn(Character character)
+    public override void ApplyEndTurn(GameObject unit)
     {
-        float damage = character.GetStat(StatName.hp).baseValue * ((float)hpPercentToRemove / 100);
-        character.GetStat(StatName.hpNow).baseValue = Mathf.RoundToInt(Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue - damage, 0, character.GetStat(StatName.hp).baseValue));
+        float damage = unit.GetComponent<BattleScript>().Character.GetStat(StatName.hp).baseValue * ((float)hpPercentToRemove / 100);
+        StartCoroutine(unit.GetComponent<BattleScript>().TakeDamage(Mathf.RoundToInt(damage)));
         timeApplied++;
     }
 
-    public override void Remove(Character character)
+    public override void Remove(GameObject unit)
     {
         //Remove effet visuel icone son whatever (ou alors dans le battlescript ca)
-        character.status.Remove(this);
+        unit.GetComponent<BattleScript>().Character.status.Remove(this);
     }
 
 }

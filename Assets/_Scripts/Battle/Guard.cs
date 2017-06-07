@@ -21,23 +21,23 @@ public class Guard : Status
         }
     }
 
-    public override void Add(Character character)
+    public override void Add(GameObject unit)
     {
         //Add +50% modifier
-        character.status.Add(this);
-        character.GetStat(StatName.defense).modifiers.Add(50);
+        unit.GetComponent<BattleScript>().Character.status.Add(this);
+        unit.GetComponent<BattleScript>().Character.GetStat(StatName.defense).modifiers.Add(50);
     }
 
-    public override void ApplyEndTurn(Character character)
+    public override void ApplyEndTurn(GameObject unit)
     {
         timeApplied++;
     }
 
-    public override void Remove(Character character)
+    public override void Remove(GameObject unit)
     {
         //Remove modifiers
-        character.GetStat(StatName.defense).modifiers.Remove(50);
-        character.status.Remove(this);
+        unit.GetComponent<BattleScript>().Character.GetStat(StatName.defense).modifiers.Remove(50);
+        unit.GetComponent<BattleScript>().Character.status.Remove(this);
         //Remove effet visuel icone son whatever (ou alors dans le battlescript ca)
     }
 
