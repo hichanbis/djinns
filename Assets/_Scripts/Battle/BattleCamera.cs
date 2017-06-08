@@ -108,6 +108,7 @@ public class BattleCamera : MonoBehaviour
             Quaternion rotation = Quaternion.Euler(0, 0, 0);
             transform.position = battleManager.currentActingUnit.transform.position + (rotation * offset);
             moveBehindPlayer = false;
+            lookAtEnemy = false;
         }
     }
 }

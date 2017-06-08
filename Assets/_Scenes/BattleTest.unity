@@ -1085,6 +1085,7 @@ MonoBehaviour:
   restartBattle: 0
   chosen: 0
   victoryAcknowledged: 0
+  attackLaunched: 0
 --- !u!4 &829642756
 Transform:
   m_ObjectHideFlags: 0

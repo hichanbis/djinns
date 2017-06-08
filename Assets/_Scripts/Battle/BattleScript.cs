@@ -14,6 +14,13 @@ public class BattleScript : MonoBehaviour
     private UnityAction endTurnStatusListener;
     private UnityAction launchTaunt;
 
+    public Animator Anim
+    {
+        get
+        {
+            return anim;
+        }
+    }
 
     void Start()
     {
@@ -51,18 +58,14 @@ public class BattleScript : MonoBehaviour
             yield return null;
         }
 
-        //wait for anim to finish
-        while (anim.GetCurrentAnimatorStateInfo(0).IsName(trigger))
-        {
-            yield return null;
-        }
+
     }
 
 
     public IEnumerator RunToTarget(GameObject target)
     {
-        yield return StartCoroutine(RotateTowardsPoint(gameObject, target.transform.position, 15f));
-        StartCoroutine(RotateTowardsPoint(target, transform.position, 20f));
+        yield return StartCoroutine(RotateTowardsPoint(gameObject, target.transform.position, 100f));
+        StartCoroutine(RotateTowardsPoint(target, transform.position, 200f));
 
         anim.SetTrigger("Run");
         while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
@@ -75,10 +78,17 @@ public class BattleScript : MonoBehaviour
 
     public IEnumerator RotateTowardsPoint(GameObject objectToMove, Vector3 target, float speed)
     {
-        while (objectToMove.transform.rotation != Quaternion.LookRotation(target - objectToMove.transform.position))
+        while (true)
         {
-            objectToMove.transform.rotation = Quaternion.Lerp(objectToMove.transform.rotation, Quaternion.LookRotation(target - objectToMove.transform.position), Time.deltaTime * speed);
-            yield return new WaitForEndOfFrame();
+            Vector3 dir = (target - objectToMove.transform.position).normalized;
+            Quaternion rotTo = Quaternion.LookRotation(dir); 
+
+            objectToMove.transform.rotation = Quaternion.RotateTowards(objectToMove.transform.rotation, rotTo, Time.deltaTime * speed);
+
+            if(Vector3.Angle(objectToMove.transform.forward, dir) < 1)
+                break;
+
+            yield return null;
         }
     }
 
@@ -195,4 +205,7 @@ public class BattleScript : MonoBehaviour
         return character.abilities.FindIndex(a => a.abilityType.Equals(AbilityType.Magic)) >= 0;
     }
 
+    public void RegisterAttackLaunched(){
+        BattleManager.Instance.attackLaunched = true;
+    }
 }

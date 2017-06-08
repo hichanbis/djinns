@@ -1831,6 +1831,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4195547126971880}
   - component: {fileID: 95275744407008716}
+  - component: {fileID: 114853853134705736}
   m_Layer: 0
   m_Name: Fighter
   m_TagString: Untagged
@@ -3796,7 +3797,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1475123756568506}
-  m_LocalRotation: {x: -0.36198038, y: 0.33849186, z: -0.53649986, w: 0.6830531}
+  m_LocalRotation: {x: -0.36198035, y: 0.33849183, z: -0.5364998, w: 0.683053}
   m_LocalPosition: {x: -0.052565955, y: -0.031900786, z: 0.044483114}
   m_LocalScale: {x: 1, y: 0.99999994, z: 1}
   m_Children: []
@@ -5243,6 +5244,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleAnimController: {fileID: 9100000, guid: f65e2ac52f3d04d79b4ae02f1d9b6a10,
     type: 2}
+--- !u!114 &114853853134705736
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693182698959500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e3171016bccc4187910ed7066aea72d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135000014087167100
 SphereCollider:
   m_ObjectHideFlags: 1

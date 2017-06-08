@@ -9,13 +9,13 @@ public class BattleManager : MonoBehaviour
     private static BattleManager instance;
 
     public BattleStates currentState;
-    public List<GameObject> playerUnits;
-    public List<GameObject> monsterUnits;
+    public List<GameObject> playerUnits = new List<GameObject>();
+    public List<GameObject> monsterUnits = new List<GameObject>();
 
     public GameObject currentActingUnit;
     public GameObject currentTargetUnit;
     public BattleAction currentUnitAction;
-    private List<BattleAction> turnActions;
+    public List<BattleAction> turnActions = new List<BattleAction>();
     public int currentPlayerIndex = 0;
     public int currentEnemyIndex = 0;
     public bool backToMainMenu;
@@ -23,6 +23,7 @@ public class BattleManager : MonoBehaviour
     public bool chosen;
     public bool victoryAcknowledged;
     private bool battleEnd;
+    public bool attackLaunched;
 
     private SceneController sceneController;
     // Reference to the SceneController to actually do the loading and unloading of scenes.
@@ -192,6 +193,7 @@ public class BattleManager : MonoBehaviour
         currentState = BattleStates.Rage;
     }
 
+
     IEnumerator Rage()
     {
         yield return null;
@@ -211,30 +213,32 @@ public class BattleManager : MonoBehaviour
             if (battleAction.ability.distance.Equals(Distance.Close))
                 yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().RunToTarget(battleAction.targets[0]));
 
-
-            yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAndWaitAnim(battleAction.ability.id));
+            attackLaunched = false;
+            StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAndWaitAnim(battleAction.ability.id));
 
             //battleManager calculates the damage and send it to targets who withstand the impact
 
             foreach (GameObject target in battleAction.targets.ToList())
             {
-                Ability ab = battleAction.ability;
                 int rawDmg = 0;
                 int dmg = 0;
 
                 int multiplyingStat = 0;
-                if (ab.abilityType.Equals(AbilityType.Magic))
+                if (battleAction.ability.abilityType.Equals(AbilityType.Magic))
                     multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.intelligence).GetValue();
                 else
                     multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.strength).GetValue();
 
-                rawDmg = ab.power * multiplyingStat * 6;
+                rawDmg = battleAction.ability.power * multiplyingStat * 6;
 
-                if (ab.targetType.Equals(TargetType.Self) || ab.targetType.Equals(TargetType.Same) || ab.targetType.Equals(TargetType.AllSame))
+                if (battleAction.ability.targetType.Equals(TargetType.Self) || battleAction.ability.targetType.Equals(TargetType.Same) || battleAction.ability.targetType.Equals(TargetType.AllSame))
                     dmg = rawDmg;
                 else //if opposite dmg = rawDmg with defense reduction
                     dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().Character.GetStat(StatName.defense).GetValue() * 2));
 
+                //se mettre en attente d'un bool et à appeler dans un animEvent
+                while (!attackLaunched)
+                    yield return null;
                 StartCoroutine(target.GetComponent<BattleScript>().TakeDamage(dmg));
 
                 foreach (string statusClass in battleAction.ability.status)
@@ -249,6 +253,11 @@ public class BattleManager : MonoBehaviour
 
             battleAction.fromUnit.GetComponent<BattleScript>().removeMp(battleAction.ability);
 
+            //wait for battle anim to finish before moving on
+            while (battleAction.fromUnit.GetComponent<BattleScript>().Anim.GetCurrentAnimatorStateInfo(0).IsName(battleAction.ability.id))
+            {
+                yield return null;
+            }
 
             if (battleAction.ability.distance.Equals(Distance.Close))
                 battleAction.fromUnit.transform.position = initPos; 
@@ -302,14 +311,15 @@ public class BattleManager : MonoBehaviour
             if (IsGameObjectAPlayer(battleAction.fromUnit))
                 battleAction.targets = new List<GameObject>() { monsterUnits.First() };
             else
-                battleAction.targets = new List<GameObject>() { playerUnits.First() };
+                battleAction.targets = new List<GameObject>() { playerUnits.Where(p => !p.GetComponent<BattleScript>().Dead).ToList().First() }; 
         }
         else if (battleAction.ability.targetType.Equals(TargetType.Same) && (battleAction.targets == null || battleAction.targets[0] == null || battleAction.targets[0].GetComponent<BattleScript>().Dead))
         {
             if (IsGameObjectAPlayer(battleAction.fromUnit))
             {
                 if (!battleAction.ability.id.Equals("Revive"))
-                    battleAction.targets = new List<GameObject>() { playerUnits.First() };
+                    battleAction.targets = new List<GameObject>() { playerUnits.Where(p => !p.GetComponent<BattleScript>().Dead).ToList().First() }; 
+                
             }
             else
                 battleAction.targets = new List<GameObject>() { monsterUnits.First() };

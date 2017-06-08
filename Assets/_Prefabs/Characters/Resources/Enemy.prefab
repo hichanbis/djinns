@@ -843,6 +843,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4341697438645240}
   - component: {fileID: 95092277022650550}
+  - component: {fileID: 114399926165388782}
   m_Layer: 0
   m_Name: Maw_J_Laygo
   m_TagString: Untagged
@@ -1798,6 +1799,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114399926165388782
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1932492977050288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e3171016bccc4187910ed7066aea72d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114659785458598802
 MonoBehaviour:
   m_ObjectHideFlags: 1
