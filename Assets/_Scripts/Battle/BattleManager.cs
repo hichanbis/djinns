@@ -220,21 +220,7 @@ public class BattleManager : MonoBehaviour
 
             foreach (GameObject target in battleAction.targets.ToList())
             {
-                int rawDmg = 0;
-                int dmg = 0;
-
-                int multiplyingStat = 0;
-                if (battleAction.ability.abilityType.Equals(AbilityType.Magic))
-                    multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.intelligence).GetValue();
-                else
-                    multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.strength).GetValue();
-
-                rawDmg = battleAction.ability.power * multiplyingStat * 6;
-
-                if (battleAction.ability.targetType.Equals(TargetType.Self) || battleAction.ability.targetType.Equals(TargetType.Same) || battleAction.ability.targetType.Equals(TargetType.AllSame))
-                    dmg = rawDmg;
-                else //if opposite dmg = rawDmg with defense reduction
-                    dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().Character.GetStat(StatName.defense).GetValue() * 2));
+                int dmg =  CalculateDamage(battleAction, target);
 
                 //se mettre en attente d'un bool et à appeler dans un animEvent
                 while (!attackLaunched)
@@ -253,7 +239,7 @@ public class BattleManager : MonoBehaviour
 
             battleAction.fromUnit.GetComponent<BattleScript>().removeMp(battleAction.ability);
 
-            //wait for battle anim to finish before moving on
+            //wait for attack anim to finish before moving on
             while (battleAction.fromUnit.GetComponent<BattleScript>().Anim.GetCurrentAnimatorStateInfo(0).IsName(battleAction.ability.id))
             {
                 yield return null;
@@ -286,6 +272,24 @@ public class BattleManager : MonoBehaviour
             currentState = BattleStates.Victory;
         else
             currentState = BattleStates.ActionChoice;
+    }
+
+    private int CalculateDamage(BattleAction battleAction, GameObject target)
+    {
+        int rawDmg = 0;
+        int dmg = 0;
+        int multiplyingStat = 0;
+        if (battleAction.ability.abilityType.Equals(AbilityType.Magic))
+            multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.intelligence).GetValue();
+        else
+            multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.strength).GetValue();
+        rawDmg = battleAction.ability.power * multiplyingStat * 6;
+        if (battleAction.ability.targetType.Equals(TargetType.Self) || battleAction.ability.targetType.Equals(TargetType.Same) || battleAction.ability.targetType.Equals(TargetType.AllSame))
+            dmg = rawDmg;
+        else
+            //if opposite dmg = rawDmg with defense reduction
+            dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().Character.GetStat(StatName.defense).GetValue() * 2));
+        return dmg;
     }
 
     private void ReassignTargetIfNeeded(BattleAction battleAction)
