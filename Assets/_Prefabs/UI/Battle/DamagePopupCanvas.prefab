@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114147953908368576}
   - component: {fileID: 95548581514341118}
   - component: {fileID: 114996350289441030}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: DamagePopupCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 222792449105020686}
   - component: {fileID: 114501843335493432}
   - component: {fileID: 114954137143865044}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 60
+  m_Text: 120
 --- !u!114 &114664847255075284
 MonoBehaviour:
   m_ObjectHideFlags: 1
