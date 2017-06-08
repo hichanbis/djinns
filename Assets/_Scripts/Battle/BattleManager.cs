@@ -239,7 +239,7 @@ public class BattleManager : MonoBehaviour
                 //se mettre en attente d'un bool et à appeler dans un animEvent
                 while (!attackLaunched)
                     yield return null;
-                StartCoroutine(target.GetComponent<BattleScript>().TakeDamage(dmg));
+                yield return StartCoroutine(target.GetComponent<BattleScript>().TakeDamage(dmg));
 
                 foreach (string statusClass in battleAction.ability.status)
                 {

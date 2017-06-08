@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ public class BattleScript : MonoBehaviour
     private Animator anim;
     private UnityAction endTurnStatusListener;
     private UnityAction launchTaunt;
+    public GameObject damagePopUpPrefab;
 
     public Animator Anim
     {
@@ -158,6 +160,12 @@ public class BattleScript : MonoBehaviour
         //  anim.SetTrigger("Healed");
         //else
         //{
+
+        Debug.Log(gameObject.name + " takes " + dmg);
+        damagePopUpPrefab.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
+        Instantiate(damagePopUpPrefab, transform);
+        //damagePopUpPrefab.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
+
         if (character.GetStat(StatName.hpNow).baseValue == 0)
         {
             anim.SetTrigger("Die");

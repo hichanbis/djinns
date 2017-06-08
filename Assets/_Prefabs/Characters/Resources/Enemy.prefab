@@ -1823,6 +1823,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleAnimController: {fileID: 9100000, guid: f65e2ac52f3d04d79b4ae02f1d9b6a10,
     type: 2}
+  damagePopUpPrefab: {fileID: 1733827680770478, guid: 75dea17b618bf430fa5d721d31b54e74,
+    type: 2}
 --- !u!136 &136922435824476908
 CapsuleCollider:
   m_ObjectHideFlags: 1
