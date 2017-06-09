@@ -101,7 +101,7 @@ public class BattleManager : MonoBehaviour
 
         //init UI and rotate anim and wait for it to finish
         EventManager.TriggerEvent(BattleEventMessages.unitsLoaded.ToString());
-       
+
 
         battleEnd = false;
         restartBattle = false;
@@ -171,7 +171,7 @@ public class BattleManager : MonoBehaviour
                     }
 
                     //launch anim for attack preparation here (guard or magic focus)!
-                    
+
                     yield return null;
                 }
                 turnActions.Add(currentUnitAction);
@@ -184,7 +184,7 @@ public class BattleManager : MonoBehaviour
                 {
                     BattleAction action = new BattleAction(currentActingUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentActingUnit.GetComponent<BattleScript>().Character.getAbility("Attack"));
                     turnActions.Add(action);
-                } 
+                }
                 IncrementEnemyIndex();
             }
 
@@ -220,12 +220,12 @@ public class BattleManager : MonoBehaviour
 
             foreach (GameObject target in battleAction.targets.ToList())
             {
-                int dmg =  CalculateDamage(battleAction, target);
+                int dmg = CalculateDamage(battleAction, target);
 
                 //se mettre en attente d'un bool et à appeler dans un animEvent
                 while (!attackLaunched)
                     yield return null;
-                yield return StartCoroutine(target.GetComponent<BattleScript>().TakeDamage(dmg));
+                StartCoroutine(target.GetComponent<BattleScript>().TakeDamage(dmg));
 
                 foreach (string statusClass in battleAction.ability.status)
                 {
@@ -246,14 +246,14 @@ public class BattleManager : MonoBehaviour
             }
 
             if (battleAction.ability.distance.Equals(Distance.Close))
-                battleAction.fromUnit.transform.position = initPos; 
+                battleAction.fromUnit.transform.position = initPos;
 
             //little delay before next action
             yield return new WaitForSeconds(1f);
         }
 
 
-			
+
         if (!AreAllPlayersDead() && !AreAllEnemiesDead())
         {
             EventManager.TriggerEvent(BattleEventMessages.applyEndTurnStatus.ToString());
@@ -285,7 +285,7 @@ public class BattleManager : MonoBehaviour
             multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.strength).GetValue();
         rawDmg = battleAction.ability.power * multiplyingStat * 6;
         if (battleAction.ability.targetType.Equals(TargetType.Self) || battleAction.ability.targetType.Equals(TargetType.Same) || battleAction.ability.targetType.Equals(TargetType.AllSame))
-            dmg = rawDmg;
+            dmg = Mathf.CeilToInt(rawDmg / 10); // or reduce ally magic power....
         else
             //if opposite dmg = rawDmg with defense reduction
             dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().Character.GetStat(StatName.defense).GetValue() * 2));
@@ -315,15 +315,15 @@ public class BattleManager : MonoBehaviour
             if (IsGameObjectAPlayer(battleAction.fromUnit))
                 battleAction.targets = new List<GameObject>() { monsterUnits.First() };
             else
-                battleAction.targets = new List<GameObject>() { playerUnits.Where(p => !p.GetComponent<BattleScript>().Dead).ToList().First() }; 
+                battleAction.targets = new List<GameObject>() { playerUnits.Where(p => !p.GetComponent<BattleScript>().Dead).ToList().First() };
         }
         else if (battleAction.ability.targetType.Equals(TargetType.Same) && (battleAction.targets == null || battleAction.targets[0] == null || battleAction.targets[0].GetComponent<BattleScript>().Dead))
         {
             if (IsGameObjectAPlayer(battleAction.fromUnit))
             {
                 if (!battleAction.ability.id.Equals("Revive"))
-                    battleAction.targets = new List<GameObject>() { playerUnits.Where(p => !p.GetComponent<BattleScript>().Dead).ToList().First() }; 
-                
+                    battleAction.targets = new List<GameObject>() { playerUnits.Where(p => !p.GetComponent<BattleScript>().Dead).ToList().First() };
+
             }
             else
                 battleAction.targets = new List<GameObject>() { monsterUnits.First() };

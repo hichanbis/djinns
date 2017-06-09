@@ -46,10 +46,11 @@ public class BattleScript : MonoBehaviour
     {
         AnimatorControllerParameter[] animParams = anim.parameters;
 
-       
+
         if (!Array.Exists(animParams, animParam => animParam.name.Equals(trigger)))
         {
             Debug.LogError(trigger + " parameter missing in the battle controller. Won't launch the animation");
+            BattleManager.Instance.attackLaunched = true;
             yield break;
         }
 
@@ -83,11 +84,11 @@ public class BattleScript : MonoBehaviour
         while (true)
         {
             Vector3 dir = (target - objectToMove.transform.position).normalized;
-            Quaternion rotTo = Quaternion.LookRotation(dir); 
+            Quaternion rotTo = Quaternion.LookRotation(dir);
 
             objectToMove.transform.rotation = Quaternion.RotateTowards(objectToMove.transform.rotation, rotTo, Time.deltaTime * speed);
 
-            if(Vector3.Angle(objectToMove.transform.forward, dir) < 1)
+            if (Vector3.Angle(objectToMove.transform.forward, dir) < 1)
                 break;
 
             yield return null;
@@ -141,7 +142,7 @@ public class BattleScript : MonoBehaviour
         {
             Status status = character.status[i];
             status.ApplyEndTurn(gameObject);
-           
+
             if (status.Finished) //
             {
                 status.Remove(gameObject);
@@ -172,7 +173,7 @@ public class BattleScript : MonoBehaviour
             dead = true;
             if (!AmIAPlayer())
                 BattleManager.Instance.monsterUnits.Remove(gameObject);
-            
+
             while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
                 yield return null;
             while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
@@ -181,10 +182,10 @@ public class BattleScript : MonoBehaviour
             if (!AmIAPlayer())
                 Destroy(gameObject);
         }
-        else
+        else if (dmg < 0)
             anim.SetTrigger("Hit");
         //}
-            
+
         yield return null;
     }
 
@@ -213,7 +214,8 @@ public class BattleScript : MonoBehaviour
         return character.abilities.FindIndex(a => a.abilityType.Equals(AbilityType.Magic)) >= 0;
     }
 
-    public void RegisterAttackLaunched(){
+    public void RegisterAttackLaunched()
+    {
         BattleManager.Instance.attackLaunched = true;
     }
 }
