@@ -5,15 +5,14 @@ using System;
 
 public class BattleCamera : MonoBehaviour
 {
-    public float xOffset = 0f;
-    public float yOffset = 4f;
-    public float zOffset = -5.5f;
+    
 
     private BattleManager battleManager;
     private bool lookAtTarget = false;
     private bool lookAtActingUnit = false;
-    private bool moveBehindPlayer = false;
+    private bool cutToLeftPlayer = false;
     private bool lookAtEnemy = false;
+    private bool lookAtPlayer = false;
 
     private UnityAction playerUnitsExistListener;
     private UnityAction playerChoiceExpectedListener;
@@ -21,42 +20,39 @@ public class BattleCamera : MonoBehaviour
     private UnityAction unitsLoadedListener;
 
 
-    // EXPECTED BEHAVIOUR
+    // EXPECTED BEHAVIOUR related to Battle MESSAGES
+
+    // Start Camera default anim voir décor
 
     // INIT
-    // Units Loaded - 1 overview apres load pendant le taunt
+    // Units Loaded - (Après init anim) cut droite players et lerp juska derriere PlayerZone pour voir ennemis
 
     // ACTIONCHOICE
-    // Player Choice Expected - move devant player - player au centre écran
-    // Target Choice Expected - move devant target pendant choice target (target au centre écran)
-    // Targets Choice Players - move devant les players
-    // Targets Choice Monsters - move devant les monsters
-    // Action Choice All Done - montre battlefield de derriere les joueurs pendant 1 sec apres choice
+    // Player Choice Expected - cut gauche player, lookAtPlayer
+    // Target Choice Expected - cut devant target, lookAtTarget
+    // Target Choice All Players - cut centre, lookAtPlayerZone
+    // Target Choice All Monsters - cut centre, lookAtEnemyZone
+    // Action Choice Phase Done - cut derriere les joueurs, lookAtEnemyZone
 
     // RAGE
-    // Melee attack - 
-    // Attaque melee
-    // Dans un premier temps 
-    // simple vue de coté par rapport à acting unit (en follow et look at acting puis target)
-    // Phase 2
-    // move derriere player et follow début rage juska attak quand acting est joueur et target unique
-    // move devant enemy et follow juska moitié attak puis vue de coté pendant rage quand acting est enemy et target unique
+    // Melee Player Run - Cut derriere player dans la direction Player -> Enemy, lookAtTarget, follow
+    // Melee Player Attack -  look atTarget, Stop follow player
+    // Melee Enemy Run - Cut devant enemy dans la direction Enemy -> Player, lookAtActing, follow
+    // Melee Enemy Attack - Cut droite ennemi, lookatTarget
 
-    // Si pas melee
-    // Other Attack - move devant player pendant anim de cast
-
-    // Take Damage - move devant target quand affiche damage si target est unique
-    // Take Damage All - move dans les targets quand affiche damage si multiple
+    // Magic attack - Cut devant acting lookAtActing
+    // Magic attack launched Single - cut devant target
+    // Magic attack launched All - cut devant targets, lookAt Centre TargetZone
 
     // VICTORY OU FAILURE
-    // Battle Ended - move devant les players quand battle finished
+    // Battle Ended - cut devant players, lookAt Centre PlayerZone
 
     // Use this for initialization
     void Start()
     {
         battleManager = BattleManager.Instance;
 
-        playerChoiceExpectedListener = new UnityAction(MoveBehindPlayer);
+        playerChoiceExpectedListener = new UnityAction(CutLeftToPlayer);
         EventManager.StartListening(BattleEventMessages.playerChoiceExpected.ToString(), playerChoiceExpectedListener);
 
         targetsPanelDisplayedListener = new UnityAction(LookAtTarget);
@@ -73,15 +69,16 @@ public class BattleCamera : MonoBehaviour
 
     void RotateAnim()
     {
-        GetComponent<Animation>().Play();
+        
     }
 
-    void MoveBehindPlayer()
+    void CutLeftToPlayer()
     {
-        moveBehindPlayer = true;
+        cutToLeftPlayer = true;
         lookAtActingUnit = false;
+        lookAtPlayer = true;
         lookAtTarget = false;
-        lookAtEnemy = true;
+        lookAtEnemy = false;
     }
 
     void LookAtTarget()
@@ -99,16 +96,30 @@ public class BattleCamera : MonoBehaviour
             transform.LookAt(battleManager.currentActingUnit.transform);
         else if (lookAtEnemy && battleManager.GetCurrentEnemy() != null)
             transform.LookAt(battleManager.GetCurrentEnemy().transform);
-
-        if (moveBehindPlayer && battleManager.currentActingUnit != null)
+        else if (lookAtPlayer && battleManager.GetCurrentPlayer() != null)
         {
-            Vector3 offset = new Vector3(xOffset, yOffset, zOffset);
-            //float desiredAngle = battleManager.currentActingUnit.transform.eulerAngles.y;
-            //Quaternion rotation = Quaternion.Euler(0, desiredAngle, 0);
-            Quaternion rotation = Quaternion.Euler(0, 0, 0);
-            transform.position = battleManager.currentActingUnit.transform.position + (rotation * offset);
-            moveBehindPlayer = false;
-            lookAtEnemy = false;
+            
+            //Vector3 playerPos = battleManager.GetCurrentPlayer().transform.position;
+            //Vector3 offset = new Vector3(0f, 1.5f, 0f);
+            //transform.LookAt(new Vector3(playerPos.x, playerPos.y + 1, playerPos.z));
+        }
+        
+        if (cutToLeftPlayer && battleManager.currentActingUnit != null)
+        {
+            Vector3 playerPos = battleManager.GetCurrentPlayer().transform.position;
+            float playerVerticalSize = battleManager.GetCurrentPlayer().GetComponent<CapsuleCollider>().height;
+            float playerChestHeight = playerVerticalSize - 0.5f;
+
+            float leftPlayerXOffset = -0.7f;
+            float leftPlayerYOffset = playerChestHeight;
+            float leftPlayerZOffset = 0.5f;
+
+            Vector3 offset = new Vector3(leftPlayerXOffset, leftPlayerYOffset, leftPlayerZOffset);
+            transform.position = playerPos + offset;
+
+            transform.LookAt(battleManager.GetCurrentPlayer().transform.position + new Vector3(0f, playerChestHeight, 0.3f));
+
+            cutToLeftPlayer = false;
         }
     }
 }

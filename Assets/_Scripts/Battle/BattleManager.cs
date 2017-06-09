@@ -133,7 +133,7 @@ public class BattleManager : MonoBehaviour
         //EventManager.TriggerEvent(BattleEventMessages.taunt.ToString());
 
         //wait for rotate and taunt to finish before action choice
-        //yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
 
         currentState = BattleStates.ActionChoice;
         yield return null;

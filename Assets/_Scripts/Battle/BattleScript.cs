@@ -75,6 +75,7 @@ public class BattleScript : MonoBehaviour
         {
             yield return null;
         }
+        //plutot que pourcentage je devrais m'arreter à distance de bras vers l'extremité de la cible (a optimiser plus tard)
         yield return StartCoroutine(MoveToPositionPercentDistance(gameObject, target.transform.position, 10f, 85));
 
     }
@@ -162,9 +163,8 @@ public class BattleScript : MonoBehaviour
         //else
         //{
 
-        Debug.Log(gameObject.name + " takes " + dmg);
-        damagePopUpPrefab.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
-        Instantiate(damagePopUpPrefab, transform);
+        GameObject damagePopup = Instantiate(damagePopUpPrefab, transform);
+        damagePopup.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
         //damagePopUpPrefab.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
 
         if (character.GetStat(StatName.hpNow).baseValue == 0)

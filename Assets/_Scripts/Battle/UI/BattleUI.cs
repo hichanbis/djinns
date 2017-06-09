@@ -382,11 +382,13 @@ public class BattleUI : MonoBehaviour
             {
                 DeActivateCurrentPlayerMagicsPanel();
                 ActivateCurrentPlayerActionsPanel();
+                EventManager.TriggerEvent(BattleEventMessages.playerChoiceExpected.ToString());
             }
             else if (currentActionPanel.Equals("targets"))
             {
                 Destroy(targetsPanel);
                 ActivateCurrentPlayerActionsPanel();
+                EventManager.TriggerEvent(BattleEventMessages.playerChoiceExpected.ToString());
                 if (battleManager.currentUnitAction.ability.abilityType.Equals(AbilityType.Magic))
                     DisplayMagicsPanel();
                 battleManager.currentUnitAction.ability = null;
