@@ -9,7 +9,7 @@ public class Character
 	public List<Ability> abilities;
 	public List<Stat> stats;
     public bool canSummon;
-    public List<Status> status;
+    public List<Status> listStatus;
     
     public Character (string name, Element element, List<Ability> abilities, List<Stat> stats, bool canSummon)
 	{
@@ -18,7 +18,7 @@ public class Character
 		this.abilities = abilities;
 		this.stats = stats;
         this.canSummon = canSummon;
-        this.status = new List<Status>() {};
+        this.listStatus = new List<Status>() {};
     }
 
      public List<Ability> Abilities {

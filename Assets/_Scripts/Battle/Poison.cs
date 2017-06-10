@@ -8,9 +8,20 @@ public class Poison : Status
 {
     private int timeApplied = 0;
     private int hpPercentToRemove = 10;
-   
-    public Poison(){
-        successRatePercent = 30;
+    private int damage;
+
+    public Poison()
+    {
+        successRatePercent = 100;
+        type = "damage";
+    }
+
+    public int Damage
+    {
+        get
+        {
+            return damage;
+        }
     }
 
 
@@ -24,21 +35,22 @@ public class Poison : Status
 
     public override void Add(GameObject unit)
     {
+        this.unit = unit;
         //effet visuel icone son whatever (ou alors dans le battlescript ca)
-        unit.GetComponent<BattleScript>().Character.status.Add(this);
+        unit.GetComponent<BattleScript>().Character.listStatus.Add(this);
     }
 
-    public override void ApplyEndTurn(GameObject unit)
+
+    public override void Apply()
     {
-        float damage = unit.GetComponent<BattleScript>().Character.GetStat(StatName.hp).baseValue * ((float)hpPercentToRemove / 100);
-        StartCoroutine(unit.GetComponent<BattleScript>().TakeDamage(Mathf.RoundToInt(damage)));
+        damage = Mathf.RoundToInt(unit.GetComponent<BattleScript>().Character.GetStat(StatName.hp).baseValue * ((float)hpPercentToRemove / 100));
         timeApplied++;
     }
 
-    public override void Remove(GameObject unit)
+    public override void Remove()
     {
         //Remove effet visuel icone son whatever (ou alors dans le battlescript ca)
-        unit.GetComponent<BattleScript>().Character.status.Remove(this);
+        unit.GetComponent<BattleScript>().Character.listStatus.Remove(this);
     }
 
 }

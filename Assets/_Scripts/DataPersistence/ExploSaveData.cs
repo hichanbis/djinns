@@ -54,7 +54,7 @@ public class ExploSaveData
     {
         ResetFull();
         battleEndedListener = new UnityAction(ResetPostBattle);
-        EventManager.StartListening(BattleEventMessages.battleEnded.ToString(), battleEndedListener);
+        EventManager.StartListening(BattleEventMessages.BattleEnded.ToString(), battleEndedListener);
     }
 
  

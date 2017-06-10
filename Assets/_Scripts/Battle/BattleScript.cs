@@ -12,9 +12,10 @@ public class BattleScript : MonoBehaviour
     private Character character;
     private bool dead = false;
     private Animator anim;
-    private UnityAction endTurnStatusListener;
+    private UnityAction endRageStatusListener;
     private UnityAction launchTaunt;
     public GameObject damagePopUpPrefab;
+    public bool damageTaken;
 
     public Animator Anim
     {
@@ -29,10 +30,10 @@ public class BattleScript : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         anim.runtimeAnimatorController = battleAnimController;
 
-        endTurnStatusListener = new UnityAction(ApplyEndTurnStatusEffects);
-        EventManager.StartListening(BattleEventMessages.applyEndTurnStatus.ToString(), endTurnStatusListener);
+        endRageStatusListener = new UnityAction(ApplyEndRageStatusEffects);
+        EventManager.StartListening(BattleEventMessages.EndRage.ToString(), endRageStatusListener);
         launchTaunt = new UnityAction(battleTaunt);
-        EventManager.StartListening(BattleEventMessages.taunt.ToString(), launchTaunt);
+        EventManager.StartListening(BattleEventMessages.Taunt.ToString(), launchTaunt);
     }
 
     //launch anim battleTaunt
@@ -42,7 +43,7 @@ public class BattleScript : MonoBehaviour
     }
 
 
-    public IEnumerator LaunchAndWaitAnim(String trigger)
+    public IEnumerator LaunchAbilityAnim(String trigger)
     {
         AnimatorControllerParameter[] animParams = anim.parameters;
 
@@ -50,7 +51,7 @@ public class BattleScript : MonoBehaviour
         if (!Array.Exists(animParams, animParam => animParam.name.Equals(trigger)))
         {
             Debug.LogError(trigger + " parameter missing in the battle controller. Won't launch the animation");
-            BattleManager.Instance.attackLaunched = true;
+            BattleManager.Instance.targetImpactReached = true;
             yield break;
         }
 
@@ -137,16 +138,28 @@ public class BattleScript : MonoBehaviour
     }
 
     //on end turn
-    public void ApplyEndTurnStatusEffects()
+    public void ApplyEndRageStatusEffects()
     {
-        for (int i = 0; i < character.status.Count; i++)
+       
+        for (int i = 0; i < character.listStatus.Count; i++)
         {
-            Status status = character.status[i];
-            status.ApplyEndTurn(gameObject);
+            damageTaken = false;
+            Status status = character.listStatus[i];
+
+            status.Apply();
+            if (status.Type.Equals("damage"))
+            {
+                //add a bool and sync BattleManager to all units who have poison... maybe not a message.
+                // applyendturn as coroutine serait mieux
+                Poison pois = status as Poison;
+                StartCoroutine(TakeDamage(pois.Damage));
+                damageTaken = true;
+            }
+            
 
             if (status.Finished) //
             {
-                status.Remove(gameObject);
+                status.Remove();
                 //character.status.Remove(status);
                 status = null;
             }
@@ -156,24 +169,26 @@ public class BattleScript : MonoBehaviour
     public IEnumerator TakeDamage(int dmg)
     {
         character.GetStat(StatName.hpNow).baseValue = Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue + dmg, 0, character.GetStat(StatName.hp).GetValue());
-        EventManager.TriggerEvent(BattleEventMessages.damageApplied.ToString());
-
-        //if (dmg > 0)
-        //  anim.SetTrigger("Healed");
-        //else
-        //{
-
-        GameObject damagePopup = Instantiate(damagePopUpPrefab, transform);
-        damagePopup.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
-        //damagePopUpPrefab.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
-
         if (character.GetStat(StatName.hpNow).baseValue == 0)
         {
-            anim.SetTrigger("Die");
             dead = true;
             if (!AmIAPlayer())
                 BattleManager.Instance.monsterUnits.Remove(gameObject);
+        }
+        
+        GameObject damagePopup = Instantiate(damagePopUpPrefab, transform);
+        damagePopup.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
 
+        EventManager.TriggerEvent(BattleEventMessages.DamageApplied.ToString());
+
+        if (dmg > 0)
+            Debug.Log("should launch heal anim");
+        else if (dmg == 0)
+            Debug.Log("no dmg");
+        //  anim.SetTrigger("Healed");
+        else if (dmg < 0 && character.GetStat(StatName.hpNow).baseValue == 0)
+        {
+            anim.SetTrigger("Die");
             while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
                 yield return null;
             while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
@@ -182,9 +197,8 @@ public class BattleScript : MonoBehaviour
             if (!AmIAPlayer())
                 Destroy(gameObject);
         }
-        else if (dmg < 0)
+        else
             anim.SetTrigger("Hit");
-        //}
 
         yield return null;
     }
@@ -192,7 +206,7 @@ public class BattleScript : MonoBehaviour
     public void TryAddStatus(Status status)
     {
         //Applied if not already present and depending on success rate of the status
-        if (!character.status.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.SuccessRatePercent))
+        if (!character.listStatus.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.SuccessRatePercent))
         {
             status.Add(gameObject);
             //Debug.Log(gameObject + " status added to me: " + status.GetType());
@@ -216,6 +230,6 @@ public class BattleScript : MonoBehaviour
 
     public void RegisterAttackLaunched()
     {
-        BattleManager.Instance.attackLaunched = true;
+        BattleManager.Instance.targetImpactReached = true;
     }
 }

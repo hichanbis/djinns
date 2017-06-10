@@ -23,21 +23,22 @@ public class Toxic : Status
 
     public override void Add(GameObject unit)
     {
-        unit.GetComponent<BattleScript>().Character.status.Add(this);
+        this.unit = unit;
+        unit.GetComponent<BattleScript>().Character.listStatus.Add(this);
         //effet visuel icone son whatever (ou alors dans le battlescript ca)
     }
 
-    public override void ApplyEndTurn(GameObject unit)
+    public override void Apply()
     {
         float damage = unit.GetComponent<BattleScript>().Character.GetStat(StatName.hp).baseValue * ((float)hpPercentToRemove / 100);
-        StartCoroutine(unit.GetComponent<BattleScript>().TakeDamage(Mathf.RoundToInt(damage)));
+        unit.GetComponent<BattleScript>().TakeDamage(Mathf.RoundToInt(damage));
         timeApplied++;
     }
 
-    public override void Remove(GameObject unit)
+    public override void Remove()
     {
         //Remove effet visuel icone son whatever (ou alors dans le battlescript ca)
-        unit.GetComponent<BattleScript>().Character.status.Remove(this);
+        unit.GetComponent<BattleScript>().Character.listStatus.Remove(this);
     }
 
 }

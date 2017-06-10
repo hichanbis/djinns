@@ -13,7 +13,7 @@ public class BattleManager : MonoBehaviour
     public List<GameObject> monsterUnits = new List<GameObject>();
 
     public GameObject currentActingUnit;
-    public GameObject currentTargetUnit;
+    public List<GameObject> currentTargets;
     public BattleAction currentUnitAction;
     public List<BattleAction> turnActions = new List<BattleAction>();
     public int currentPlayerIndex = 0;
@@ -23,7 +23,7 @@ public class BattleManager : MonoBehaviour
     public bool chosen;
     public bool victoryAcknowledged;
     private bool battleEnd;
-    public bool attackLaunched;
+    public bool targetImpactReached;
 
     private SceneController sceneController;
     // Reference to the SceneController to actually do the loading and unloading of scenes.
@@ -60,7 +60,7 @@ public class BattleManager : MonoBehaviour
         if (FindObjectOfType(typeof(EventManager)) == null)
         {
             Debug.Log("No EventManager found, it is likely the persistent scene is unloaded so it is debug mode");
-            StartCoroutine(LoadDebugPersistentScene());
+            SceneManager.LoadSceneAsync("Persistent", LoadSceneMode.Additive);
             Debug.Log("Ok persistent scene loaded go debug");
         }
 
@@ -90,7 +90,7 @@ public class BattleManager : MonoBehaviour
         playerUnits = BattleStart.InstantiatePlayerParty();
         currentActingUnit = playerUnits[0];
         monsterUnits = BattleStart.InstantiateMonsterParty();
-        currentTargetUnit = monsterUnits[0];
+        currentTargets = new List<GameObject>(){ monsterUnits[0] };
 
         StartCoroutine(BattleStateMachine());
     }
@@ -100,7 +100,7 @@ public class BattleManager : MonoBehaviour
         yield return null;
 
         //init UI and rotate anim and wait for it to finish
-        EventManager.TriggerEvent(BattleEventMessages.unitsLoaded.ToString());
+        EventManager.TriggerEvent(BattleEventMessages.UnitsLoaded.ToString());
 
 
         battleEnd = false;
@@ -113,9 +113,10 @@ public class BattleManager : MonoBehaviour
         while (!battleEnd)
         {
             yield return StartCoroutine(currentState.ToString());
+            ;
         }
 
-        EventManager.TriggerEvent(BattleEventMessages.battleEnded.ToString());
+        EventManager.TriggerEvent(BattleEventMessages.BattleEnded.ToString());
         yield return null;
 
         if (victoryAcknowledged)
@@ -130,7 +131,7 @@ public class BattleManager : MonoBehaviour
     {
         //wait 3 sec before taunt (during rotate anim) 
         //yield return new WaitForSeconds(3f);
-        //EventManager.TriggerEvent(BattleEventMessages.taunt.ToString());
+        //EventManager.TriggerEvent(BattleEventMessages.Taunt.ToString());
 
         //wait for rotate and taunt to finish before action choice
         yield return new WaitForSeconds(1f);
@@ -142,7 +143,6 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator ActionChoice()
     {
-        EventManager.TriggerEvent(BattleEventMessages.newTurn.ToString());
         yield return null;
 
         if (!currentState.Equals(BattleStates.ActionChoice))
@@ -158,7 +158,7 @@ public class BattleManager : MonoBehaviour
             if (IsGameObjectAPlayer(currentActingUnit) && !currentActingUnit.GetComponent<BattleScript>().Dead)
             {
                 currentUnitAction.fromUnit = currentActingUnit;
-                EventManager.TriggerEvent(BattleEventMessages.playerChoiceExpected.ToString());
+                EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
                 bool choiceDone = false;
                 while (!choiceDone)
                 {
@@ -190,6 +190,8 @@ public class BattleManager : MonoBehaviour
 
             yield return null;
         }
+        EventManager.TriggerEvent(BattleEventMessages.ActionChoicePhaseDone.ToString());
+        yield return new WaitForSeconds(1f);
         currentState = BattleStates.Rage;
     }
 
@@ -210,22 +212,27 @@ public class BattleManager : MonoBehaviour
             ReassignTargetIfNeeded(battleAction);
 
             Vector3 initPos = battleAction.fromUnit.transform.position;
+            Quaternion initRot = battleAction.fromUnit.transform.rotation;
             if (battleAction.ability.distance.Equals(Distance.Close))
                 yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().RunToTarget(battleAction.targets[0]));
 
-            attackLaunched = false;
-            StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAndWaitAnim(battleAction.ability.id));
+            targetImpactReached = false;
+
+            //ne pas se mettre en attente car ensuite on attend l'anim event qui set targetImpactReached a true
+            StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAbilityAnim(battleAction.ability.id));
 
             //battleManager calculates the damage and send it to targets who withstand the impact
 
             foreach (GameObject target in battleAction.targets.ToList())
             {
-                int dmg = CalculateDamage(battleAction, target);
+                int dmg = CalculateDamage(battleAction.fromUnit, battleAction.ability, target);
 
-                //se mettre en attente d'un bool et à appeler dans un animEvent
-                while (!attackLaunched)
+                //targetImpactReached est setté par un animEvent
+                while (!targetImpactReached)
                     yield return null;
-                StartCoroutine(target.GetComponent<BattleScript>().TakeDamage(dmg));
+
+                //if there are dmg! if poison or guard c un autre delire
+                yield return StartCoroutine(target.GetComponent<BattleScript>().TakeDamage(dmg));
 
                 foreach (string statusClass in battleAction.ability.status)
                 {
@@ -247,6 +254,8 @@ public class BattleManager : MonoBehaviour
 
             if (battleAction.ability.distance.Equals(Distance.Close))
                 battleAction.fromUnit.transform.position = initPos;
+            
+            battleAction.fromUnit.transform.rotation = initRot;
 
             //little delay before next action
             yield return new WaitForSeconds(1f);
@@ -256,7 +265,7 @@ public class BattleManager : MonoBehaviour
 
         if (!AreAllPlayersDead() && !AreAllEnemiesDead())
         {
-            EventManager.TriggerEvent(BattleEventMessages.applyEndTurnStatus.ToString());
+            EventManager.TriggerEvent(BattleEventMessages.EndRage.ToString());
             yield return null;
         }
 
@@ -274,18 +283,18 @@ public class BattleManager : MonoBehaviour
             currentState = BattleStates.ActionChoice;
     }
 
-    private int CalculateDamage(BattleAction battleAction, GameObject target)
+    private int CalculateDamage(GameObject fromUnit, Ability ability, GameObject target)
     {
         int rawDmg = 0;
         int dmg = 0;
         int multiplyingStat = 0;
-        if (battleAction.ability.abilityType.Equals(AbilityType.Magic))
-            multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.intelligence).GetValue();
+        if (ability.abilityType.Equals(AbilityType.Magic))
+            multiplyingStat = fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.intelligence).GetValue();
         else
-            multiplyingStat = battleAction.fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.strength).GetValue();
-        rawDmg = battleAction.ability.power * multiplyingStat * 6;
-        if (battleAction.ability.targetType.Equals(TargetType.Self) || battleAction.ability.targetType.Equals(TargetType.Same) || battleAction.ability.targetType.Equals(TargetType.AllSame))
-            dmg = Mathf.CeilToInt(rawDmg / 10); // or reduce ally magic power....
+            multiplyingStat = fromUnit.GetComponent<BattleScript>().Character.GetStat(StatName.strength).GetValue();
+        rawDmg = ability.power * multiplyingStat * 6;
+        if (ability.targetType.Equals(TargetType.Self) || ability.targetType.Equals(TargetType.Same) || ability.targetType.Equals(TargetType.AllSame))
+            dmg = Mathf.CeilToInt(rawDmg / 10); // or reduce magic power....
         else
             //if opposite dmg = rawDmg with defense reduction
             dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().Character.GetStat(StatName.defense).GetValue() * 2));
@@ -333,7 +342,7 @@ public class BattleManager : MonoBehaviour
     IEnumerator Victory()
     {
         yield return null;
-        EventManager.TriggerEvent(BattleEventMessages.win.ToString());
+        EventManager.TriggerEvent(BattleEventMessages.Victory.ToString());
 
         while (!victoryAcknowledged)
         {
@@ -349,7 +358,7 @@ public class BattleManager : MonoBehaviour
     IEnumerator Failure()
     {
         yield return null;
-        EventManager.TriggerEvent(BattleEventMessages.lose.ToString());
+        EventManager.TriggerEvent(BattleEventMessages.Lost.ToString());
 
         while (!restartBattle && !backToMainMenu)
         {
@@ -378,9 +387,14 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    bool IsGameObjectAPlayer(GameObject unit)
+    public bool IsGameObjectAPlayer(GameObject unit)
     {
         return (System.Enum.IsDefined(typeof(PlayerName), unit.name));
+    }
+
+    public bool IsCurrentActingUnitAPlayer()
+    {
+        return (System.Enum.IsDefined(typeof(PlayerName), currentActingUnit.name));
     }
 
     bool AreAllPlayersDead()
@@ -472,7 +486,11 @@ public class BattleManager : MonoBehaviour
     {
         List<GameObject> allUnits = playerUnits.Concat(monsterUnits).ToList();
         if (!targetName.Equals("All"))
-            currentTargetUnit = allUnits.Find(u => u.name.Equals(targetName));
+            currentTargets = new List<GameObject>() { allUnits.Find(u => u.name.Equals(targetName)) };
+        else if (targetName.Equals("All Players"))
+            currentTargets = playerUnits;
+        else if (targetName.Equals("All Enemies"))
+            currentTargets = monsterUnits;
     }
 
 }

@@ -3,15 +3,24 @@ using System;
 
 public enum BattleEventMessages
 {
-    taunt,
-    unitsLoaded,
-    monsterUnitsExist,
-    newTurn,
-    playerChoiceExpected,
-    targetsPanelDisplayed,
-    damageApplied,
-    applyEndTurnStatus,
-    win,
-    lose,
-    battleEnded
+    Taunt,
+    UnitsLoaded,
+    DamageApplied,
+    EndRage,
+    Victory,
+    Lost,
+    BattleEnded,
+    PlayerChoiceExpected,
+    TargetChoiceExpected,
+    TargetChoiceAllPlayers,
+    TargetChoiceAllMonsters,
+    ActionChoicePhaseDone,
+    MeleePlayerRun,
+    MeleePlayerAttack,
+    MeleeEnemyRun,
+    MeleeEnemyAttack,
+    MagicAttack,
+    MagicAttackLaunchedSingle,
+    MagicAttackLaunchedAll
+
 }

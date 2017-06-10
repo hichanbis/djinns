@@ -1,13 +1,16 @@
 using UnityEngine;
 
-public abstract class Status : MonoBehaviour
+public abstract class Status
 {
     protected int successRatePercent;
+    protected GameObject unit;
+    protected string type;
 
     public abstract bool Finished { get; }
     public abstract void Add(GameObject unit);
-    public abstract void Remove(GameObject unit);
-    public abstract void ApplyEndTurn(GameObject unit);
+    public abstract void Remove();
+    public abstract void Apply();
+
     public int SuccessRatePercent
     {
         get
@@ -16,6 +19,13 @@ public abstract class Status : MonoBehaviour
         }
     }
 
+    public string Type
+    {
+        get
+        {
+            return type;
+        }
+    }
 }
 
 

@@ -56,21 +56,20 @@ public class BattleUI : MonoBehaviour
         playerMagicsPanels = new Dictionary<string, GameObject>();
 
         playerUnitsExistListener = new UnityAction(InitializePlayerPanels);
-        EventManager.StartListening(BattleEventMessages.unitsLoaded.ToString(), playerUnitsExistListener);
+        EventManager.StartListening(BattleEventMessages.UnitsLoaded.ToString(), playerUnitsExistListener);
 
         playerMustChooseAbilityListener = new UnityAction(ActivateCurrentPlayerActionsPanel);
-        EventManager.StartListening(BattleEventMessages.playerChoiceExpected.ToString(), playerMustChooseAbilityListener);
+        EventManager.StartListening(BattleEventMessages.PlayerChoiceExpected.ToString(), playerMustChooseAbilityListener);
 
         rageAppliedListener = new UnityAction(refreshPlayersInfo);
-        EventManager.StartListening(BattleEventMessages.damageApplied.ToString(), rageAppliedListener);
+        EventManager.StartListening(BattleEventMessages.DamageApplied.ToString(), rageAppliedListener);
 
         winListener = new UnityAction(displayWinCanvas);
-        EventManager.StartListening(BattleEventMessages.win.ToString(), winListener);
+        EventManager.StartListening(BattleEventMessages.Victory.ToString(), winListener);
 
         loseListener = new UnityAction(displayGameOverCanvas);
-        EventManager.StartListening(BattleEventMessages.lose.ToString(), loseListener);
+        EventManager.StartListening(BattleEventMessages.Lost.ToString(), loseListener);
     }
-
 
     void InitializePlayerPanels()
     {
@@ -261,7 +260,22 @@ public class BattleUI : MonoBehaviour
         DeActivateCurrentPlayerMagicsPanel();
         InstantiateTargetsPanel(targetType);
         currentActionPanel = "targets";
-        EventManager.TriggerEvent(BattleEventMessages.targetsPanelDisplayed.ToString());
+        if (targetType.Equals(TargetType.AllSame))
+        {
+            if (battleManager.IsCurrentActingUnitAPlayer())
+                EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllPlayers.ToString());
+            else
+                EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllMonsters.ToString());
+        }
+        else if (targetType.Equals(TargetType.AllOpposite))
+        {
+            if (battleManager.IsCurrentActingUnitAPlayer())
+                EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllMonsters.ToString());
+            else
+                EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllPlayers.ToString());
+        }
+        else
+            EventManager.TriggerEvent(BattleEventMessages.TargetChoiceExpected.ToString());
     }
 
     //if all on grise le tout mais on attend le submit quand même
@@ -278,8 +292,9 @@ public class BattleUI : MonoBehaviour
         if (targetType.Equals(TargetType.AllOpposite) || targetType.Equals(TargetType.AllSame))
         {
             GameObject targetButton = Instantiate(targetButtonTemplate, targetsPanel.transform, false) as GameObject;
-            targetButton.name = "All";
-            targetButton.transform.Find("TargetName").GetComponent<Text>().text = "All";
+            String targetName = targetType.Equals(TargetType.AllSame) ? "All Players" : "All Enemies";
+            targetButton.name = targetName;
+            targetButton.transform.Find("TargetName").GetComponent<Text>().text = targetName;
             targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(targets));
             targetButton.GetComponent<Button>().Select();
         }
@@ -381,14 +396,12 @@ public class BattleUI : MonoBehaviour
             if (currentActionPanel.Equals("magic"))
             {
                 DeActivateCurrentPlayerMagicsPanel();
-                ActivateCurrentPlayerActionsPanel();
-                EventManager.TriggerEvent(BattleEventMessages.playerChoiceExpected.ToString());
+                EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
             }
             else if (currentActionPanel.Equals("targets"))
             {
                 Destroy(targetsPanel);
-                ActivateCurrentPlayerActionsPanel();
-                EventManager.TriggerEvent(BattleEventMessages.playerChoiceExpected.ToString());
+                EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
                 if (battleManager.currentUnitAction.ability.abilityType.Equals(AbilityType.Magic))
                     DisplayMagicsPanel();
                 battleManager.currentUnitAction.ability = null;
