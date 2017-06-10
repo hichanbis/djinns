@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Test : MonoBehaviour {
+public class MatchCamera : MonoBehaviour {
+
+    public Camera main;
 
 	// Use this for initialization
 	void Start () {
@@ -11,7 +13,7 @@ public class Test : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position = Camera.main.transform.position;
-        transform.rotation = Camera.main.transform.rotation;
+        transform.position = main.transform.position;
+        transform.rotation = main.transform.rotation;
 	}
 }

@@ -716,7 +716,7 @@ GameObject:
   - component: {fileID: 609983637}
   - component: {fileID: 609983636}
   - component: {fileID: 609983635}
-  - component: {fileID: 609983639}
+  - component: {fileID: 609983634}
   m_Layer: 0
   m_Name: WorldUICamera
   m_TagString: Untagged
@@ -724,6 +724,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &609983634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 609983633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee1f6da31e1f14f86a1450fcf961d4ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  main: {fileID: 1889171448}
 --- !u!92 &609983635
 Behaviour:
   m_ObjectHideFlags: 0
@@ -787,17 +799,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &609983639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 609983633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1926ee46338343cb89eb1870e20886a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &677223938
 GameObject:
   m_ObjectHideFlags: 0
@@ -1157,7 +1158,7 @@ MonoBehaviour:
   playerUnits: []
   monsterUnits: []
   currentActingUnit: {fileID: 0}
-  currentTargetUnit: {fileID: 0}
+  currentTargets: []
   currentUnitAction:
     fromUnit: {fileID: 0}
     targets: []
@@ -1179,7 +1180,7 @@ MonoBehaviour:
   restartBattle: 0
   chosen: 0
   victoryAcknowledged: 0
-  attackLaunched: 0
+  targetImpactReached: 0
 --- !u!4 &829642756
 Transform:
   m_ObjectHideFlags: 0
@@ -1609,9 +1610,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f10720a25c2b7ad44ab729da3f1de05f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xOffset: 0
-  yOffset: 3
-  zOffset: -5
 --- !u!81 &1889171445
 AudioListener:
   m_ObjectHideFlags: 0
