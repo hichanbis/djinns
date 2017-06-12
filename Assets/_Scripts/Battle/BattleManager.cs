@@ -113,7 +113,7 @@ public class BattleManager : MonoBehaviour
         while (!battleEnd)
         {
             yield return StartCoroutine(currentState.ToString());
-            ;
+
         }
 
         EventManager.TriggerEvent(BattleEventMessages.BattleEnded.ToString());
@@ -234,11 +234,8 @@ public class BattleManager : MonoBehaviour
                 //if there are dmg! if poison or guard c un autre delire
                 yield return StartCoroutine(target.GetComponent<BattleScript>().TakeDamage(dmg));
 
-                foreach (string statusClass in battleAction.ability.status)
+                foreach (Status status in battleAction.ability.statuses)
                 {
-                    Status status = (Status)System.Reflection.Assembly.GetExecutingAssembly().CreateInstance(statusClass);
-                    if (status == null)
-                        throw new System.ExecutionEngineException("Status class " + statusClass + " doesn't exist");
                     target.GetComponent<BattleScript>().TryAddStatus(status);
                 }
                 yield return null;
@@ -358,7 +355,7 @@ public class BattleManager : MonoBehaviour
     IEnumerator Failure()
     {
         yield return null;
-        EventManager.TriggerEvent(BattleEventMessages.Lost.ToString());
+        EventManager.TriggerEvent(BattleEventMessages.Failure.ToString());
 
         while (!restartBattle && !backToMainMenu)
         {

@@ -8,7 +8,7 @@ public enum BattleEventMessages
     DamageApplied,
     EndRage,
     Victory,
-    Lost,
+    Failure,
     BattleEnded,
     PlayerChoiceExpected,
     TargetChoiceExpected,

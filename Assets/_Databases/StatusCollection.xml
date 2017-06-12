@@ -1,0 +1,124 @@
+<StatusCollection>
+<Statuses>
+  <Status id="Poison">
+    <name>Poison</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Toxic">
+    <name>Toxic</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Venom">
+    <name>Venom</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Sleep">
+    <name>Sleep</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Freeze">
+    <name>Freeze</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Paralysis">
+    <name>Paralysis</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Petrify">
+    <name>Petrify</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Mute">
+    <name>Mute</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Berserk">
+    <name>Berserk</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Martyr">
+    <name>Martyr</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Darkness">
+    <name>Darkness</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Heavy">
+    <name>Heavy</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Fragile">
+    <name>Fragile</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Slow">
+    <name>Slow</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Dull">
+    <name>Dull</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Weak">
+    <name>Weak</name>
+    <type>Ailment</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Light">
+    <name>Light</name>
+    <type>Support</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Robust">
+    <name>Robust</name>
+    <type>Support</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Haste">
+    <name>Haste</name>
+    <type>Support</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Focus">
+    <name>Focus</name>
+    <type>Support</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Strong">
+    <name>Strong</name>
+    <type>Support</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Regen">
+    <name>Regen</name>
+    <type>Support</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="RegenM">
+    <name>RegenM</name>
+    <type>Support</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+  <Status id="Guard">
+    <name>Guard</name>
+    <type>Support</type>
+    <successRatePercent>100</successRatePercent>
+  </Status>
+</Statuses>
+</StatusCollection>

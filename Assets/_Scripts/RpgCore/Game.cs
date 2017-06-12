@@ -35,11 +35,29 @@ public class Game
     //Debug constructor for Dev only
     public Game(string scene)
     {
-
-        /*for (int i=0; i < AbilityCollection.Instance.abilities.Count; i++)
+        
+        for (int i=0; i < StatusCollection.Instance.statuses.Count; i++)
         {
-            Debug.Log("Loaded: " + AbilityCollection.Instance.abilities[i] + " statImpact(0): " + AbilityCollection.Instance.abilities[i].statImpacts[0]);
-        }*/
+            Debug.Log("Loaded: " + StatusCollection.Instance.statuses[i]);
+        }
+
+        Debug.Log("loading Abilities");
+
+        for (int i=0; i < AbilityCollection.Instance.abilities.Count; i++)
+        {
+            Debug.Log("Loaded: " + AbilityCollection.Instance.abilities[i]);
+        }
+
+        Debug.Log("now matching refs");
+        AbilityCollection.Instance.ReplaceWithRefs();
+
+        Debug.Log("loading Abilities");
+
+        for (int i=0; i < AbilityCollection.Instance.abilities.Count; i++)
+        {
+            Debug.Log("Loaded: " + AbilityCollection.Instance.abilities[i]);
+        }
+
 
         party = new Dictionary<int, Character>();
 
@@ -62,6 +80,8 @@ public class Game
         if (spawnPoint != null)
             pos = spawnPoint.transform.position;
         position = new Vector3Serializer(pos + new Vector3(2f, 2f, 2f));
+
+       
     }
 
     private List<Stat> GenerateDefaultStats()

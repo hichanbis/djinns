@@ -24,7 +24,7 @@ public enum BattleAdvantage
 public class ExploSaveData
 {
     private static ExploSaveData instance;
-    private UnityAction battleEndedListener;
+    private UnityAction victoryListener;
 
     [SerializeField]
     private List<int> enemyKilledIndexes;
@@ -53,8 +53,8 @@ public class ExploSaveData
     void Init()
     {
         ResetFull();
-        battleEndedListener = new UnityAction(ResetPostBattle);
-        EventManager.StartListening(BattleEventMessages.BattleEnded.ToString(), battleEndedListener);
+        victoryListener = new UnityAction(ResetPostBattle);
+        EventManager.StartListening(BattleEventMessages.Victory.ToString(), victoryListener);
     }
 
  

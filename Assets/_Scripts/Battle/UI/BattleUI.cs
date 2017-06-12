@@ -68,7 +68,7 @@ public class BattleUI : MonoBehaviour
         EventManager.StartListening(BattleEventMessages.Victory.ToString(), winListener);
 
         loseListener = new UnityAction(displayGameOverCanvas);
-        EventManager.StartListening(BattleEventMessages.Lost.ToString(), loseListener);
+        EventManager.StartListening(BattleEventMessages.Failure.ToString(), loseListener);
     }
 
     void InitializePlayerPanels()

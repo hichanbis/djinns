@@ -22,6 +22,7 @@ public class BattleCamera : MonoBehaviour
 
     private BattleManager battleManager;
     private LookAtType currentLookAt;
+    private bool cutInFrontPlayers = false;
     private bool cutToSidePlayers = false;
     private bool cutBehindPlayers = false;
     private bool cutToLeftPlayer = false;
@@ -33,6 +34,8 @@ public class BattleCamera : MonoBehaviour
     private UnityAction targetChoiceAllMonstersListener;
     private UnityAction actionChoicePhaseDoneListener;
     private UnityAction unitsLoadedListener;
+    private UnityAction victoryListener;
+    private UnityAction failureListener;
 
 
     // BEHAVIOUR related to Battle MESSAGES
@@ -85,6 +88,11 @@ public class BattleCamera : MonoBehaviour
         actionChoicePhaseDoneListener = new UnityAction(CutBehindPlayers);
         EventManager.StartListening(BattleEventMessages.ActionChoicePhaseDone.ToString(), actionChoicePhaseDoneListener);
 
+        victoryListener = new UnityAction(CutInFrontPlayers);
+        EventManager.StartListening(BattleEventMessages.Victory.ToString(), victoryListener);
+
+        failureListener = new UnityAction(CutInFrontPlayers);
+        EventManager.StartListening(BattleEventMessages.Failure.ToString(), failureListener);
 
 
     }
@@ -93,14 +101,26 @@ public class BattleCamera : MonoBehaviour
     {
         cutToSidePlayers = true;
 
+        cutInFrontPlayers = false;
         cutBehindPlayers = false;
         cutToLeftPlayer = false;
+    }
+
+    void CutInFrontPlayers()
+    {
+        cutInFrontPlayers = true;
+
+        cutBehindPlayers = false;
+        cutToSidePlayers = false;
+        cutToLeftPlayer = false;
+        currentLookAt = LookAtType.lookAtPlayerZone;
     }
 
     void CutBehindPlayers()
     {
         cutBehindPlayers = true;
 
+        cutInFrontPlayers = false;
         cutToSidePlayers = false;
         cutToLeftPlayer = false;
         currentLookAt = LookAtType.lookAtCenter;
@@ -110,6 +130,7 @@ public class BattleCamera : MonoBehaviour
     {
         cutToLeftPlayer = true;
 
+        cutInFrontPlayers = false;
         cutToSidePlayers = false;
         cutBehindPlayers = false;
         currentLookAt = LookAtType.lookAtPlayer;
@@ -143,6 +164,12 @@ public class BattleCamera : MonoBehaviour
 
     void LateUpdate()
     {
+
+        if (cutInFrontPlayers)
+        {
+            transform.position = new Vector3(-2f, 3.5f, -10f);
+        }
+
         if (cutToLeftPlayer && battleManager.currentActingUnit != null)
         {
             Vector3 playerPos = battleManager.GetCurrentPlayer().transform.position;
@@ -160,7 +187,7 @@ public class BattleCamera : MonoBehaviour
         if (cutBehindPlayers)
         {
             transform.position = new Vector3(-2f, 3.5f, -10f);
-            transform.LookAt(new Vector3(0f, 0f, 0f));
+
         }
 
         if (currentLookAt.Equals(LookAtType.lookAtTarget) && battleManager.currentTargets != null && battleManager.currentTargets[0] != null)
@@ -189,6 +216,8 @@ public class BattleCamera : MonoBehaviour
 
             transform.LookAt(battleManager.GetCurrentPlayer().transform.position + new Vector3(0f, playerChestHeight, 0.5f));
         }
+        else if (currentLookAt.Equals(LookAtType.lookAtCenter))
+            transform.LookAt(new Vector3(0f, 0f, 0f));
         
         cutToLeftPlayer = false;
 

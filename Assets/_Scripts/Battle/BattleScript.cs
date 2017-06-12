@@ -141,28 +141,21 @@ public class BattleScript : MonoBehaviour
     public void ApplyEndRageStatusEffects()
     {
        
-        for (int i = 0; i < character.listStatus.Count; i++)
+        for (int i = 0; i < character.statuses.Count; i++)
         {
             damageTaken = false;
-            Status status = character.listStatus[i];
+            Status status = character.statuses[i];
 
-            status.Apply();
-            if (status.Type.Equals("damage"))
+            if (status.id.Equals("Poison"))
             {
                 //add a bool and sync BattleManager to all units who have poison... maybe not a message.
                 // applyendturn as coroutine serait mieux
-                Poison pois = status as Poison;
-                StartCoroutine(TakeDamage(pois.Damage));
+                int damage = Mathf.RoundToInt(character.GetStat(StatName.hp).baseValue * ((float) 20 / 100));
+
+                StartCoroutine(TakeDamage(damage));
                 damageTaken = true;
             }
-            
 
-            if (status.Finished) //
-            {
-                status.Remove();
-                //character.status.Remove(status);
-                status = null;
-            }
         }
     }
 
@@ -206,10 +199,9 @@ public class BattleScript : MonoBehaviour
     public void TryAddStatus(Status status)
     {
         //Applied if not already present and depending on success rate of the status
-        if (!character.listStatus.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.SuccessRatePercent))
+        if (!character.statuses.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.successRatePercent))
         {
-            status.Add(gameObject);
-            //Debug.Log(gameObject + " status added to me: " + status.GetType());
+            character.statuses.Add(status);
         }
     }
 
