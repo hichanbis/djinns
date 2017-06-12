@@ -62,7 +62,7 @@ public class Ability
 
     public override string ToString()
     {
-        return string.Format("[Ability: id={0}, name={1}], power={2}, statuses={3}", id, name, power, statuses.Count > 0 ? statuses[0].ToString() : null);
+        return string.Format("[Ability: id={0}, name={1}, power={2}, statuses={3}]", id, name, power, statuses.Count > 0 ? string.Join(" / ", statuses.ConvertAll(x => Convert.ToString(x)).ToArray()) : null);
     }
 
 }
