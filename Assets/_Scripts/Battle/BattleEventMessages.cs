@@ -6,7 +6,7 @@ public enum BattleEventMessages
     Taunt,
     UnitsLoaded,
     DamageApplied,
-    EndRage,
+    EndRageStatusTime,
     Victory,
     Failure,
     BattleEnded,

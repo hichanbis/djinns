@@ -16,6 +16,7 @@ public class BattleScript : MonoBehaviour
     private UnityAction launchTaunt;
     public GameObject damagePopUpPrefab;
     public bool damageTaken;
+    public bool doneApplied;
 
     public Animator Anim
     {
@@ -31,7 +32,7 @@ public class BattleScript : MonoBehaviour
         anim.runtimeAnimatorController = battleAnimController;
 
         endRageStatusListener = new UnityAction(ApplyEndRageStatusEffects);
-        EventManager.StartListening(BattleEventMessages.EndRage.ToString(), endRageStatusListener);
+        EventManager.StartListening(BattleEventMessages.EndRageStatusTime.ToString(), endRageStatusListener);
         launchTaunt = new UnityAction(battleTaunt);
         EventManager.StartListening(BattleEventMessages.Taunt.ToString(), launchTaunt);
     }
@@ -140,39 +141,44 @@ public class BattleScript : MonoBehaviour
     //on end turn
     public void ApplyEndRageStatusEffects()
     {
-       
+        doneApplied = false;
         for (int i = 0; i < character.statuses.Count; i++)
         {
-            damageTaken = false;
             Status status = character.statuses[i];
 
             if (status.id.Equals("Poison"))
             {
                 //add a bool and sync BattleManager to all units who have poison... maybe not a message.
                 // applyendturn as coroutine serait mieux
-                int damage = Mathf.RoundToInt(character.GetStat(StatName.hp).baseValue * ((float) 20 / 100));
+                int damage = Mathf.RoundToInt(character.GetStat(StatName.hp).baseValue * ((float)20 / 100));
 
                 StartCoroutine(TakeDamage(damage));
-                damageTaken = true;
+                while (!damageTaken)
+                {
+                    Debug.Log("waiting damage taken");
+                }
+                Debug.Log("Done damage taken");
             }
 
         }
+        doneApplied = true;
     }
 
     public IEnumerator TakeDamage(int dmg)
     {
+        
         character.GetStat(StatName.hpNow).baseValue = Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue + dmg, 0, character.GetStat(StatName.hp).GetValue());
         if (character.GetStat(StatName.hpNow).baseValue == 0)
         {
             dead = true;
-            if (!AmIAPlayer())
-                BattleManager.Instance.monsterUnits.Remove(gameObject);
+            //if (!AmIAPlayer())
+                //BattleManager.Instance.monsterUnits.Remove(gameObject);
         }
         
         GameObject damagePopup = Instantiate(damagePopUpPrefab, transform);
         damagePopup.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
 
-        EventManager.TriggerEvent(BattleEventMessages.DamageApplied.ToString());
+        //EventManager.TriggerEvent(BattleEventMessages.DamageApplied.ToString());
 
         if (dmg > 0)
             Debug.Log("should launch heal anim");
@@ -186,14 +192,29 @@ public class BattleScript : MonoBehaviour
                 yield return null;
             while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
                 yield return null;
-
-            if (!AmIAPlayer())
-                Destroy(gameObject);
+            
         }
         else
+        {
             anim.SetTrigger("Hit");
+            while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+                yield return null;
+            while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+                yield return null;
+        }
 
         yield return null;
+
+    }
+
+    public void DestroyIfDead()
+    {
+        if (!AmIAPlayer() && dead)
+        {
+            BattleManager.Instance.monsterUnits.Remove(gameObject);
+            Destroy(gameObject);
+        }
+        
     }
 
     public void TryAddStatus(Status status)

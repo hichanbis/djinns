@@ -35,7 +35,7 @@ public class Game
     //Debug constructor for Dev only
     public Game(string scene)
     {
-        
+        /*
         for (int i=0; i < StatusCollection.Instance.statuses.Count; i++)
         {
             Debug.Log("Loaded: " + StatusCollection.Instance.statuses[i]);
@@ -57,6 +57,10 @@ public class Game
         {
             Debug.Log("Loaded: " + AbilityCollection.Instance.abilities[i]);
         }
+
+*/
+        Debug.Log(StatusCollection.Instance.statuses.Count);
+        AbilityCollection.Instance.ReplaceWithRefs();
 
 
         party = new Dictionary<int, Character>();
