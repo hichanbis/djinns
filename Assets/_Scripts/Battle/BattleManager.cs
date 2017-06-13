@@ -202,7 +202,6 @@ public class BattleManager : MonoBehaviour
         //turnActions.OrderByDescending(u => u.GetComponent<BattleCharacter>().Character.stats.speed).ToList();
         foreach (BattleAction battleAction in turnActions)
         {
-            Debug.Log(battleAction);
             if (AreAllPlayersDead() || AreAllEnemiesDead())
                 break;
 
@@ -223,7 +222,7 @@ public class BattleManager : MonoBehaviour
             StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAbilityAnim(battleAction.ability.id));
 
             //battleManager calculates the damage and send it to targets who withstand the impact
-            CoroutineJoin coroutineJoin = new CoroutineJoin(this);
+            CoroutineJoin coroutineJoinTakeDamage = new CoroutineJoin(this);
             foreach (GameObject target in battleAction.targets.ToList())
             {
                 int dmg = CalculateDamage(battleAction.fromUnit, battleAction.ability, target);
@@ -234,24 +233,27 @@ public class BattleManager : MonoBehaviour
 
                 //if there are dmg! if poison or guard c un autre delire
                 target.GetComponent<BattleScript>().damageTaken = false;
-                coroutineJoin.StartSubtask(target.GetComponent<BattleScript>().TakeDamage(dmg));
+                coroutineJoinTakeDamage.StartSubtask(target.GetComponent<BattleScript>().TakeDamage(dmg));
             }
 
             battleAction.fromUnit.GetComponent<BattleScript>().removeMp(battleAction.ability);
 
-            yield return coroutineJoin.WaitForAll();
+            //Wait for all takeDamage End
+            yield return coroutineJoinTakeDamage.WaitForAll();
 
+            CoroutineJoin coroutineJoinStatuses = new CoroutineJoin(this);
             foreach (GameObject target in battleAction.targets.ToList())
             {
                 foreach (Status status in battleAction.ability.statuses)
                 {
-                    target.GetComponent<BattleScript>().TryAddStatus(status);
+                    coroutineJoinTakeDamage.StartSubtask(target.GetComponent<BattleScript>().TryAddStatus(status));
                 }
 
                 yield return null;
                 target.GetComponent<BattleScript>().DestroyIfDead();
 
             }
+            yield return coroutineJoinStatuses.WaitForAll();
         
 
             //wait for attack anim to finish before moving on
@@ -267,6 +269,8 @@ public class BattleManager : MonoBehaviour
             battleAction.fromUnit.transform.rotation = initRot;
 
         }
+
+        //Fin d'exec de la battleAction
     
 
 
@@ -277,16 +281,13 @@ public class BattleManager : MonoBehaviour
             // à remplacer par une joint coroutine wait for all
             EventManager.TriggerEvent(BattleEventMessages.EndRageStatusTime.ToString());
 
+            CoroutineJoin coroutineJoinEndRage = new CoroutineJoin(this);
             foreach (GameObject gameO in GetAllUnits())
             {
-                //gameO.GetComponent<BattleScript>().doneApplied = false;
-                while (!gameO.GetComponent<BattleScript>().doneApplied)
-                {
-                    yield return null;
-                }
+                coroutineJoinEndRage.StartSubtask(gameO.GetComponent<BattleScript>().ApplyEndRageStatusEffects());
             }
       
-            Debug.Log("Done Applied all");
+            coroutineJoinEndRage.WaitForAll();
             yield return new WaitForSeconds(1f);
         }
 

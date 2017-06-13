@@ -10,7 +10,9 @@ public class BattleScript : MonoBehaviour
     public RuntimeAnimatorController battleAnimController;
 
     private Character character;
-    private bool dead = false;
+    private bool dead;
+    private bool canAttack;
+    private bool canCast;
     private Animator anim;
     private UnityAction endRageStatusListener;
     private UnityAction launchTaunt;
@@ -28,11 +30,15 @@ public class BattleScript : MonoBehaviour
 
     void Start()
     {
+        dead = false;
+        canAttack = true;
+        canCast = true;
+
         anim = GetComponentInChildren<Animator>();
         anim.runtimeAnimatorController = battleAnimController;
 
-        endRageStatusListener = new UnityAction(ApplyEndRageStatusEffects);
-        EventManager.StartListening(BattleEventMessages.EndRageStatusTime.ToString(), endRageStatusListener);
+        //endRageStatusListener = new UnityAction(ApplyEndRageStatusEffects);
+        //EventManager.StartListening(BattleEventMessages.EndRageStatusTime.ToString(), endRageStatusListener);
         launchTaunt = new UnityAction(battleTaunt);
         EventManager.StartListening(BattleEventMessages.Taunt.ToString(), launchTaunt);
     }
@@ -139,29 +145,18 @@ public class BattleScript : MonoBehaviour
     }
 
     //on end turn
-    public void ApplyEndRageStatusEffects()
+    public IEnumerator ApplyEndRageStatusEffects()
     {
-        doneApplied = false;
         for (int i = 0; i < character.statuses.Count; i++)
         {
             Status status = character.statuses[i];
 
-            if (status.id.Equals("Poison"))
+            if (status.applyMoment.Equals(StatusApplyMoment.endTurn))
             {
-                //add a bool and sync BattleManager to all units who have poison... maybe not a message.
-                // applyendturn as coroutine serait mieux
-                int damage = Mathf.RoundToInt(character.GetStat(StatName.hp).baseValue * ((float)20 / 100));
-
-                StartCoroutine(TakeDamage(damage));
-                while (!damageTaken)
-                {
-                    Debug.Log("waiting damage taken");
-                }
-                Debug.Log("Done damage taken");
+                yield return StartCoroutine(ApplyStatus(status));
             }
 
         }
-        doneApplied = true;
     }
 
     public IEnumerator TakeDamage(int dmg)
@@ -171,21 +166,19 @@ public class BattleScript : MonoBehaviour
         if (character.GetStat(StatName.hpNow).baseValue == 0)
         {
             dead = true;
-            //if (!AmIAPlayer())
-                //BattleManager.Instance.monsterUnits.Remove(gameObject);
         }
         
         GameObject damagePopup = Instantiate(damagePopUpPrefab, transform);
         damagePopup.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
 
-        //EventManager.TriggerEvent(BattleEventMessages.DamageApplied.ToString());
+        EventManager.TriggerEvent(BattleEventMessages.DamageApplied.ToString());
 
         if (dmg > 0)
             Debug.Log("should launch heal anim");
         else if (dmg == 0)
             Debug.Log("no dmg");
         //  anim.SetTrigger("Healed");
-        else if (dmg < 0 && character.GetStat(StatName.hpNow).baseValue == 0)
+        else if (dead)
         {
             anim.SetTrigger("Die");
             while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
@@ -203,8 +196,6 @@ public class BattleScript : MonoBehaviour
                 yield return null;
         }
 
-        yield return null;
-
     }
 
     public void DestroyIfDead()
@@ -217,13 +208,33 @@ public class BattleScript : MonoBehaviour
         
     }
 
-    public void TryAddStatus(Status status)
+    public IEnumerator TryAddStatus(Status status)
     {
-        //Applied if not already present and depending on success rate of the status
+        //Added if not already present and depending on success rate of the status
         if (!character.statuses.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.successRatePercent))
         {
             character.statuses.Add(status);
+            if (status.applyMoment.Equals(StatusApplyMoment.add))
+                yield return StartCoroutine(ApplyStatus(status));
         }
+    }
+
+    public IEnumerator ApplyStatus(Status status)
+    {
+        if (status.applyType.Equals(StatusApplyType.damage))
+        {
+            int damage = Mathf.RoundToInt(character.GetStat(StatName.hp).baseValue * ((float)status.powerPercent / 100));
+            yield return StartCoroutine(TakeDamage(damage));
+        }
+        else if (status.applyType.Equals(StatusApplyType.modifier))
+            character.GetStat(status.statName).modifiers.Add(status.powerPercent);
+        else if (status.applyType.Equals(StatusApplyType.disableCommands))
+            canAttack = false;
+        else if (status.applyType.Equals(StatusApplyType.disableMagic))
+            canCast = false;
+
+        yield return null;
+    
     }
 
     public void removeMp(Ability ability)

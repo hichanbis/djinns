@@ -3,122 +3,242 @@
   <Status id="Poison">
     <name>Poison</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Damages at the end of every turn. (wears off).</description>
+    <applyMoment>endTurn</applyMoment>
+    <applyType>damage</applyType>
+    <statName>hpNow</statName>
+    <powerPercent>10</powerPercent>
   </Status>
   <Status id="Toxic">
     <name>Toxic</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Greatly Damages at the end of every turn (wears off).</description>
+    <applyMoment>endTurn</applyMoment>
+    <applyType>damage</applyType>
+    <statName>hpNow</statName>
+    <powerPercent>20</powerPercent>
   </Status>
   <Status id="Venom">
     <name>Venom</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Greatly Damages at the end of every turn</description>
+    <applyMoment>endTurn</applyMoment>
+    <applyType>damage</applyType>
+    <statName>hpNow</statName>
+    <powerPercent>20</powerPercent>
   </Status>
   <Status id="Sleep">
     <name>Sleep</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Prevents all actions (wears off or get hit).</description>
+    <applyMoment>add</applyMoment>
+    <applyType>disableCommands</applyType>
+    <statName>none</statName>
+    <powerPercent>0</powerPercent>
   </Status>
   <Status id="Freeze">
     <name>Freeze</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Prevents all actions (wears off).</description>
+    <applyMoment>add</applyMoment>
+    <applyType>disableCommands</applyType>
+    <statName>none</statName>
+    <powerPercent>0</powerPercent>
   </Status>
   <Status id="Paralysis">
     <name>Paralysis</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Prevent all actions</description>
+    <applyMoment>add</applyMoment>
+    <applyType>disableCommands</applyType>
+    <statName>none</statName>
+    <powerPercent>0</powerPercent>
   </Status>
   <Status id="Petrify">
     <name>Petrify</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Prevents all actions, kills character after three turns if not cured.</description>
+    <applyMoment>add</applyMoment>
+    <applyType>disableCommands</applyType>
+    <statName>none</statName>
+    <powerPercent>0</powerPercent>
   </Status>
   <Status id="Mute">
     <name>Mute</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Prevents magic casting.</description>
+    <applyMoment>add</applyMoment>
+    <applyType>disableMagic</applyType>
+    <statName>none</statName>
+    <powerPercent>0</powerPercent>
   </Status>
   <Status id="Berserk">
     <name>Berserk</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Attacks a random target with increased strength</description>
+    <applyMoment>add</applyMoment>
+    <applyType>disableCommands</applyType>
+    <statName>none</statName>
+    <powerPercent>0</powerPercent>
   </Status>
   <Status id="Martyr">
     <name>Martyr</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Triples the chance to inflict critical hit damage. Kill character after three turns if fight is not over</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>criticalHit</statName>
+    <powerPercent>300</powerPercent>
   </Status>
   <Status id="Darkness">
     <name>Darkness</name>
     <type>Ailment</type>
-    <successRatePercent>100</successRatePercent>
+    <successRatePercent>30</successRatePercent>
+    <description>Adds a random status ailment every turn (wears off).</description>
+    <applyMoment>endTurn</applyMoment>
+    <applyType>addStatus</applyType>
+    <statName>none</statName>
+    <powerPercent>0</powerPercent>
   </Status>
   <Status id="Heavy">
     <name>Heavy</name>
     <type>Ailment</type>
     <successRatePercent>100</successRatePercent>
+    <description>Reduces character's ability to evade physical attacks.</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>agility</statName>
+    <powerPercent>-30</powerPercent>
   </Status>
   <Status id="Fragile">
     <name>Fragile</name>
     <type>Ailment</type>
     <successRatePercent>100</successRatePercent>
+    <description>Reduces character's defense</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>defense</statName>
+    <powerPercent>-30</powerPercent>
   </Status>
   <Status id="Slow">
     <name>Slow</name>
     <type>Ailment</type>
     <successRatePercent>100</successRatePercent>
+    <description>Reduces character's speed</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>speed</statName>
+    <powerPercent>-30</powerPercent>
   </Status>
   <Status id="Dull">
     <name>Dull</name>
     <type>Ailment</type>
     <successRatePercent>100</successRatePercent>
+    <description>Reduces character's intelligence</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>intelligence</statName>
+    <powerPercent>-30</powerPercent>
   </Status>
   <Status id="Weak">
     <name>Weak</name>
     <type>Ailment</type>
     <successRatePercent>100</successRatePercent>
+    <description>Reduces character's strength</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>strength</statName>
+    <powerPercent>-30</powerPercent>
   </Status>
   <Status id="Light">
     <name>Light</name>
     <type>Support</type>
     <successRatePercent>100</successRatePercent>
+    <description>Increases character's ability to evade physical attacks</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>agility</statName>
+    <powerPercent>30</powerPercent>
   </Status>
   <Status id="Robust">
     <name>Robust</name>
     <type>Support</type>
     <successRatePercent>100</successRatePercent>
+    <description>Increases character's defense</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>defense</statName>
+    <powerPercent>30</powerPercent>
   </Status>
   <Status id="Haste">
     <name>Haste</name>
     <type>Support</type>
     <successRatePercent>100</successRatePercent>
+    <description>Increases character's speed</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>speed</statName>
+    <powerPercent>30</powerPercent>
   </Status>
   <Status id="Focus">
     <name>Focus</name>
     <type>Support</type>
     <successRatePercent>100</successRatePercent>
+    <description>Increases character's intelligence</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>intelligence</statName>
+    <powerPercent>30</powerPercent>
   </Status>
   <Status id="Strong">
     <name>Strong</name>
     <type>Support</type>
     <successRatePercent>100</successRatePercent>
+    <description>Increases character's strength</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>strength</statName>
+    <powerPercent>30</powerPercent>
   </Status>
   <Status id="Regen">
     <name>Regen</name>
     <type>Support</type>
     <successRatePercent>100</successRatePercent>
+    <description>Resplenishes character's HP every turn</description>
+    <applyMoment>endTurn</applyMoment>
+    <applyType>damage</applyType>
+    <statName>hpNow</statName>
+    <powerPercent>20</powerPercent>
   </Status>
   <Status id="RegenM">
     <name>RegenM</name>
     <type>Support</type>
     <successRatePercent>100</successRatePercent>
+    <description>Refills character's MP every turn</description>
+    <applyMoment>endTurn</applyMoment>
+    <applyType>damage</applyType>
+    <statName>hpNow</statName>
+    <powerPercent>20</powerPercent>
   </Status>
   <Status id="Guard">
     <name>Guard</name>
     <type>Support</type>
     <successRatePercent>100</successRatePercent>
+    <description>Guard postion doubles the character's defense for the current turn</description>
+    <applyMoment>add</applyMoment>
+    <applyType>modifier</applyType>
+    <statName>defense</statName>
+    <powerPercent>100</powerPercent>
   </Status>
 </Statuses>
 </StatusCollection>

@@ -51,17 +51,16 @@ public class Game
         Debug.Log("now matching refs");
         AbilityCollection.Instance.ReplaceWithRefs();
 
-        Debug.Log("loading Abilities");
-
-        for (int i=0; i < AbilityCollection.Instance.abilities.Count; i++)
-        {
-            Debug.Log("Loaded: " + AbilityCollection.Instance.abilities[i]);
-        }
+        
 
 */
         Debug.Log(StatusCollection.Instance.statuses.Count);
         AbilityCollection.Instance.ReplaceWithRefs();
 
+        for (int i=0; i < AbilityCollection.Instance.abilities.Count; i++)
+        {
+            Debug.Log("Loaded: " + AbilityCollection.Instance.abilities[i]);
+        }
 
         party = new Dictionary<int, Character>();
 
