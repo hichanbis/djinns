@@ -9,24 +9,15 @@ public class BattleScript : MonoBehaviour
 {
     public RuntimeAnimatorController battleAnimController;
 
-    private Character character;
-    private bool dead;
-    private bool canAttack;
-    private bool canCast;
-    private Animator anim;
-    private UnityAction endRageStatusListener;
-    private UnityAction launchTaunt;
+    public Character character;
+    public bool dead;
+    public bool canAttack;
+    public bool canCast;
+    public Animator anim;
     public GameObject damagePopUpPrefab;
     public bool damageTaken;
     public bool doneApplied;
 
-    public Animator Anim
-    {
-        get
-        {
-            return anim;
-        }
-    }
 
     void Start()
     {
@@ -37,10 +28,7 @@ public class BattleScript : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         anim.runtimeAnimatorController = battleAnimController;
 
-        //endRageStatusListener = new UnityAction(ApplyEndRageStatusEffects);
-        //EventManager.StartListening(BattleEventMessages.EndRageStatusTime.ToString(), endRageStatusListener);
-        launchTaunt = new UnityAction(battleTaunt);
-        EventManager.StartListening(BattleEventMessages.Taunt.ToString(), launchTaunt);
+
     }
 
     //launch anim battleTaunt
@@ -119,31 +107,6 @@ public class BattleScript : MonoBehaviour
     }
 
 
-
-    public Character Character
-    {
-        get
-        {
-            return this.character;
-        }
-        set
-        {
-            this.character = value;
-        }
-    }
-
-    public bool Dead
-    {
-        get
-        {
-            return this.dead;
-        }
-        set
-        {
-            this.dead = value;
-        }
-    }
-
     //on end turn
     public IEnumerator ApplyEndRageStatusEffects()
     {
@@ -211,7 +174,8 @@ public class BattleScript : MonoBehaviour
     public IEnumerator TryAddStatus(Status status)
     {
         //Added if not already present and depending on success rate of the status
-        if (!character.statuses.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.successRatePercent))
+        //if (!character.statuses.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.successRatePercent))
+        if (!character.statuses.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(100))
         {
             character.statuses.Add(status);
             if (status.applyMoment.Equals(StatusApplyMoment.add))
@@ -221,6 +185,7 @@ public class BattleScript : MonoBehaviour
 
     public IEnumerator ApplyStatus(Status status)
     {
+        Debug.Log("Applying " + status + " for " + character);
         if (status.applyType.Equals(StatusApplyType.damage))
         {
             int damage = Mathf.RoundToInt(character.GetStat(StatName.hp).baseValue * ((float)status.powerPercent / 100));

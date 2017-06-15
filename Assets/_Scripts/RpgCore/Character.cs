@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+
 
 [System.Serializable]
 public class Character
@@ -35,6 +37,10 @@ public class Character
     public Stat GetStat(StatName name)
     {
         return this.stats.Find(s => s.name.Equals(name));
+    }
+
+    public override string ToString(){
+        return string.Format("[Character: name={0}, statuses={1}]", name, statuses.Count > 0 ? string.Join(" / ", statuses.ConvertAll(x => Convert.ToString(x)).ToArray()) : null);
     }
 
 }

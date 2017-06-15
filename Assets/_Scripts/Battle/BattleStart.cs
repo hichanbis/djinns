@@ -26,7 +26,7 @@ public class BattleStart : MonoBehaviour
                 unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
 
                 unitPlayer.name = character.name;
-                unitPlayer.GetComponent<BattleScript>().Character = ObjectCopier.Clone<Character>(character);
+                unitPlayer.GetComponent<BattleScript>().character = ObjectCopier.Clone<Character>(character);
                 unitPlayer.GetComponent<BattleScript>().enabled = true;
                 
                 players.Add(unitPlayer);
@@ -64,7 +64,7 @@ public class BattleStart : MonoBehaviour
             Stat agility = new Stat(StatName.agility, 10);
             List<Stat> defaultStats = new List<Stat> { hp, hpNow, mp, mpNow, strength, defense, intelligence, agility };
             Character character = new Character(enemy.name, Element.Fire, basicAbs, defaultStats, false);
-            enemy.GetComponent<BattleScript>().Character = character;
+            enemy.GetComponent<BattleScript>().character = character;
             enemies.Add(enemy);
             xPos += spaceBetweenEnemies;
         }

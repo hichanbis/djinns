@@ -92,7 +92,7 @@ public class BattleUI : MonoBehaviour
 
     void fillPlayerInfo(GameObject playerUnit)
     {
-        Character playerChar = playerUnit.GetComponent<BattleScript>().Character;
+        Character playerChar = playerUnit.GetComponent<BattleScript>().character;
 
         Transform playerInfoTr = playersInfoPanel.transform.Find(playerUnit.name + "PlayerInfo").transform;
         playerInfoTr.Find("PlayerName").transform.Find("PlayerNameText").GetComponent<Text>().text = playerChar.name;
@@ -131,7 +131,7 @@ public class BattleUI : MonoBehaviour
         {
             GameObject playerMagicsPanel = Instantiate(playerMagicsPanelTemplate, battleCanvas.transform, false) as GameObject;
             playerMagicsPanel.name = playerUnit.name + "MagicsPanel";
-            List<Ability> abilities = playerUnit.GetComponent<BattleScript>().Character.Abilities;
+            List<Ability> abilities = playerUnit.GetComponent<BattleScript>().character.Abilities;
             List<Ability> magics = abilities.Where(a => a.abilityType.Equals(AbilityType.Magic)).ToList();
             foreach (Ability magic in magics)
             {
@@ -249,7 +249,7 @@ public class BattleUI : MonoBehaviour
         foreach (Button button in currentPlayerMagicsPanel.GetComponentsInChildren<Button>())
         {
             Ability ab = AbilityCollection.Instance.FindAbilityFromName(button.name);
-            if (battleManager.currentActingUnit.GetComponent<BattleScript>().Character.GetStat(StatName.mpNow).baseValue < ab.mpCost)
+            if (battleManager.currentActingUnit.GetComponent<BattleScript>().character.GetStat(StatName.mpNow).baseValue < ab.mpCost)
                 button.interactable = false;
         }
     }
