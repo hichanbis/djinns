@@ -12,6 +12,7 @@ public class BattleManager : MonoBehaviour
     public List<GameObject> playerUnits = new List<GameObject>();
     public List<GameObject> monsterUnits = new List<GameObject>();
 
+    public GameObject currentChoosingUnit;
     public GameObject currentActingUnit;
     public List<GameObject> currentTargets;
     public BattleAction currentUnitAction;
@@ -88,7 +89,7 @@ public class BattleManager : MonoBehaviour
         sceneController = FindObjectOfType<SceneController>();
 
         playerUnits = BattleStart.InstantiatePlayerParty();
-        currentActingUnit = playerUnits[0];
+        currentChoosingUnit = playerUnits[0];
         monsterUnits = BattleStart.InstantiateMonsterParty();
         currentTargets = new List<GameObject>(){ monsterUnits[0] };
 
@@ -153,11 +154,11 @@ public class BattleManager : MonoBehaviour
 
         for (int i = 0; i < battlingUnits.Count; i++)
         {
-            currentActingUnit = battlingUnits[i];
+            currentChoosingUnit = battlingUnits[i];
             currentUnitAction = new BattleAction();
-            if (IsGameObjectAPlayer(currentActingUnit) && !currentActingUnit.GetComponent<BattleScript>().dead)
+            if (IsGameObjectAPlayer(currentChoosingUnit) && !currentChoosingUnit.GetComponent<BattleScript>().dead)
             {
-                currentUnitAction.fromUnit = currentActingUnit;
+                currentUnitAction.fromUnit = currentChoosingUnit;
                 EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
                 bool choiceDone = false;
                 while (!choiceDone)
@@ -177,19 +178,21 @@ public class BattleManager : MonoBehaviour
                 turnActions.Add(currentUnitAction);
                 IncrementPlayerIndex();
             }
-            else if (!IsGameObjectAPlayer(currentActingUnit))
+            else if (!IsGameObjectAPlayer(currentChoosingUnit))
             {
                 List<GameObject> alivePlayerUnits = playerUnits.Where(p => !p.GetComponent<BattleScript>().dead).ToList();
                 if (alivePlayerUnits.Count > 0)
                 {
-                    BattleAction action = new BattleAction(currentActingUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentActingUnit.GetComponent<BattleScript>().character.getAbility("Attack"));
+                    BattleAction action = new BattleAction(currentChoosingUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentChoosingUnit.GetComponent<BattleScript>().character.getAbility("Attack"));
                     turnActions.Add(action);
                 }
                 IncrementEnemyIndex();
             }
 
             yield return null;
+
         }
+
         EventManager.TriggerEvent(BattleEventMessages.ActionChoicePhaseDone.ToString());
         yield return new WaitForSeconds(1f);
         currentState = BattleStates.Rage;
@@ -205,94 +208,89 @@ public class BattleManager : MonoBehaviour
             if (AreAllPlayersDead() || AreAllEnemiesDead())
                 break;
 
+            currentActingUnit = battleAction.fromUnit;
+
             //si unit source est détruite, dead ou paralysé par l'attaque précedente on skip sa turn action
             if (battleAction.fromUnit == null || battleAction.fromUnit.GetComponent<BattleScript>().dead)
                 continue;
 
             ReassignTargetIfNeeded(battleAction);
 
-            Vector3 initPos = battleAction.fromUnit.transform.position;
-            Quaternion initRot = battleAction.fromUnit.transform.rotation;
-            if (battleAction.ability.distance.Equals(Distance.Close))
-                yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().RunToTarget(battleAction.targets[0]));
-
             targetImpactReached = false;
-
             //ne pas se mettre en attente car ensuite on attend l'anim event qui set targetImpactReached a true
-            StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAbilityAnim(battleAction.ability.id));
-
-            //battleManager calculates the damage and send it to targets who withstand the impact
-            CoroutineJoin coroutineJoinTakeDamage = new CoroutineJoin(this);
-            foreach (GameObject target in battleAction.targets.ToList())
-            {
-                int dmg = CalculateDamage(battleAction.fromUnit, battleAction.ability, target);
-
-                //targetImpactReached est setté par un animEvent
-                while (!targetImpactReached)
-                    yield return null;
-
-                //if there are dmg! if poison or guard c un autre delire
-                target.GetComponent<BattleScript>().damageTaken = false;
-                coroutineJoinTakeDamage.StartSubtask(target.GetComponent<BattleScript>().TakeDamage(dmg));
-            }
-
-            battleAction.fromUnit.GetComponent<BattleScript>().removeMp(battleAction.ability);
-
-            //Wait for all takeDamage End
-            yield return coroutineJoinTakeDamage.WaitForAll();
-
-            CoroutineJoin coroutineJoinStatuses = new CoroutineJoin(this);
-            foreach (GameObject target in battleAction.targets.ToList())
-            {
-                foreach (Status status in battleAction.ability.statuses)
-                {
-                    coroutineJoinTakeDamage.StartSubtask(target.GetComponent<BattleScript>().TryAddStatus(status));
-                }
-
+            StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAbilityWithAnim(battleAction));
+           
+            //targetImpactReached est setté par un animEvent
+            while (!targetImpactReached)
                 yield return null;
-                target.GetComponent<BattleScript>().DestroyIfDead();
 
-            }
-            yield return coroutineJoinStatuses.WaitForAll();
+            yield return StartCoroutine(WaitForAllDamageToBeTaken(battleAction));
+            yield return StartCoroutine(WaitForAllStatusToBeAdded(battleAction));
         
-
             //wait for attack anim to finish before moving on
             //voir si on peut pas utiliser normalizedTime < 1
-            while (battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName(battleAction.ability.id))
+            while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("CombatIdle"))
             {
                 yield return null;
             }
-
-            if (battleAction.ability.distance.Equals(Distance.Close))
-                battleAction.fromUnit.transform.position = initPos;
-            
-            battleAction.fromUnit.transform.rotation = initRot;
 
         }
 
-        //Fin d'exec de la battleAction
+        //Fin d'exec des battleActions
     
-
-
+        Debug.Log("LA");
 
         if (!AreAllPlayersDead() && !AreAllEnemiesDead())
         {
-            //will reinit DoneApplied for each script
-            // à remplacer par une joint coroutine wait for all
             EventManager.TriggerEvent(BattleEventMessages.EndRageStatusTime.ToString());
 
-            CoroutineJoin coroutineJoinEndRage = new CoroutineJoin(this);
-            foreach (GameObject unit in GetAllUnits())
-            {
-                coroutineJoinEndRage.StartSubtask(unit.GetComponent<BattleScript>().ApplyEndRageStatusEffects());
-            }
-      
-            coroutineJoinEndRage.WaitForAll();
-            yield return new WaitForSeconds(5f);
+            yield return StartCoroutine(WaitForAllEndRageStatusToBeApplied());
+
         }
 
         SetBattleStateAfterDamage();
         yield return null;
+    }
+
+    private IEnumerator WaitForAllDamageToBeTaken(BattleAction battleAction)
+    {
+        //battleManager calculates the damage and send it to targets who withstand the impact
+        CoroutineJoin coroutineJoinTakeDamage = new CoroutineJoin(this);
+
+        foreach (GameObject target in battleAction.targets.ToList())
+        {
+            int dmg = CalculateDamage(battleAction.fromUnit, battleAction.ability, target);
+
+            //if there are dmg! if poison or guard c un autre delire
+            if (dmg != 0)
+                coroutineJoinTakeDamage.StartSubtask(target.GetComponent<BattleScript>().TakeDamage(dmg));
+        }
+        //Wait for all takeDamage End
+        yield return coroutineJoinTakeDamage.WaitForAll();
+    }
+
+    private IEnumerator WaitForAllStatusToBeAdded(BattleAction battleAction)
+    {
+        CoroutineJoin coroutineJoinStatuses = new CoroutineJoin(this);
+        foreach (GameObject target in battleAction.targets.ToList())
+        {
+            foreach (Status status in battleAction.ability.statuses)
+            {
+                coroutineJoinStatuses.StartSubtask(target.GetComponent<BattleScript>().TryAddStatus(status));
+            }
+        }
+        yield return coroutineJoinStatuses.WaitForAll();
+    }
+
+    private IEnumerator WaitForAllEndRageStatusToBeApplied(){
+        
+        CoroutineJoin coroutineJoinEndRage = new CoroutineJoin(this);
+        foreach (GameObject unit in GetAllUnits())
+        {
+            coroutineJoinEndRage.StartSubtask(unit.GetComponent<BattleScript>().ApplyEndRageStatusEffects());
+        }
+
+        yield return coroutineJoinEndRage.WaitForAll();
     }
 
     private void SetBattleStateAfterDamage()
@@ -416,7 +414,7 @@ public class BattleManager : MonoBehaviour
 
     public bool IsCurrentActingUnitAPlayer()
     {
-        return (System.Enum.IsDefined(typeof(PlayerName), currentActingUnit.name));
+        return (System.Enum.IsDefined(typeof(PlayerName), currentChoosingUnit.name));
     }
 
     bool AreAllPlayersDead()

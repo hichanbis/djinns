@@ -170,7 +170,7 @@ public class BattleCamera : MonoBehaviour
             transform.position = new Vector3(-2f, 3.5f, -10f);
         }
 
-        if (cutToLeftPlayer && battleManager.currentActingUnit != null)
+        if (cutToLeftPlayer && battleManager.currentChoosingUnit != null)
         {
             Vector3 playerPos = battleManager.GetCurrentPlayer().transform.position;
             float playerVerticalSize = battleManager.GetCurrentPlayer().GetComponent<CapsuleCollider>().height;
@@ -205,8 +205,8 @@ public class BattleCamera : MonoBehaviour
             transform.position = new Vector3(0f, 2.5f, -2f);
             transform.LookAt(new Vector3(0f, 1f, 5f));
         }
-        else if (currentLookAt.Equals(LookAtType.lookAtActingUnit) && battleManager.currentActingUnit != null)
-            transform.LookAt(battleManager.currentActingUnit.transform);
+        else if (currentLookAt.Equals(LookAtType.lookAtActingUnit) && battleManager.currentChoosingUnit != null)
+            transform.LookAt(battleManager.currentChoosingUnit.transform);
         else if (currentLookAt.Equals(LookAtType.lookAtEnemy) && battleManager.GetCurrentEnemy() != null)
             transform.LookAt(battleManager.GetCurrentEnemy().transform);
         else if (currentLookAt.Equals(LookAtType.lookAtPlayer) && battleManager.GetCurrentPlayer() != null)

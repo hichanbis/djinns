@@ -38,25 +38,54 @@ public class BattleScript : MonoBehaviour
     }
 
 
-    public IEnumerator LaunchAbilityAnim(String trigger)
+    public IEnumerator LaunchAbilityWithAnim(BattleAction battleAction)
     {
+        removeMp(battleAction.ability);
+
+        Vector3 initPos = transform.position;
+        Quaternion initRot = transform.rotation;
+        if (battleAction.ability.distance.Equals(Distance.Close))
+            yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().RunToTarget(battleAction.targets[0]));
+        
+
         AnimatorControllerParameter[] animParams = anim.parameters;
-
-
-        if (!Array.Exists(animParams, animParam => animParam.name.Equals(trigger)))
+        if (!Array.Exists(animParams, animParam => animParam.name.Equals(battleAction.ability.id)))
         {
-            Debug.LogError(trigger + " parameter missing in the battle controller. Won't launch the animation");
+            Debug.LogError(battleAction.ability.id + " parameter missing in the battle controller. Won't launch the animation");
             BattleManager.Instance.targetImpactReached = true;
             yield break;
         }
 
-        anim.SetTrigger(trigger);
+
+        anim.SetTrigger(battleAction.ability.id);
+
         //wait for anim to start
-        while (!anim.GetCurrentAnimatorStateInfo(0).IsName(trigger))
+        while (!anim.GetCurrentAnimatorStateInfo(0).IsName(battleAction.ability.id))
+        {
+            yield return null;
+        }
+        while (anim.GetCurrentAnimatorStateInfo(0).IsName(battleAction.ability.id))
         {
             yield return null;
         }
 
+        if (battleAction.ability.distance.Equals(Distance.Close))
+        {
+            while (!anim.GetCurrentAnimatorStateInfo(0).IsName("WalkBack"))
+            {
+                yield return null;
+            }
+            yield return StartCoroutine(MoveToPositionPercentDistance(gameObject, initPos, 1f, 10));
+            while (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkBack"))
+            {
+                yield return null;
+            }
+        }
+
+        if (battleAction.ability.distance.Equals(Distance.Close))
+            battleAction.fromUnit.transform.position = initPos;
+
+        battleAction.fromUnit.transform.rotation = initRot;
 
     }
 
@@ -138,8 +167,6 @@ public class BattleScript : MonoBehaviour
 
         if (dmg > 0)
             Debug.Log("should launch heal anim");
-        else if (dmg == 0)
-            Debug.Log("no dmg");
         //  anim.SetTrigger("Healed");
         else if (dead)
         {
@@ -158,6 +185,9 @@ public class BattleScript : MonoBehaviour
             while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
                 yield return null;
         }
+
+        DestroyIfDead();
+            
 
     }
 

@@ -176,7 +176,7 @@ public class BattleUI : MonoBehaviour
     {
         foreach (KeyValuePair<string, GameObject> entry in playerActionsPanels)
         {
-            if (entry.Key.Equals(battleManager.currentActingUnit.name))
+            if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
             {
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
@@ -191,7 +191,7 @@ public class BattleUI : MonoBehaviour
     {
         foreach (KeyValuePair<string, GameObject> entry in playerActionsPanels)
         {
-            if (entry.Key.Equals(battleManager.currentActingUnit.name))
+            if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
                 entry.Value.SetActive(false);
         }
     }
@@ -216,7 +216,7 @@ public class BattleUI : MonoBehaviour
     {
         foreach (KeyValuePair<string, GameObject> entry in playerMagicsPanels)
         {
-            if (entry.Key.Equals(battleManager.currentActingUnit.name))
+            if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
             {
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
@@ -230,14 +230,14 @@ public class BattleUI : MonoBehaviour
     {
         foreach (KeyValuePair<string, GameObject> entry in playerMagicsPanels)
         {
-            if (entry.Key.Equals(battleManager.currentActingUnit.name))
+            if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
                 entry.Value.SetActive(false);
         }
     }
 
     private void DisplayMagicsPanel()
     {
-        GameObject currentPlayerMagicsPanel = GetPlayerMagicsPanel(battleManager.currentActingUnit.name);
+        GameObject currentPlayerMagicsPanel = GetPlayerMagicsPanel(battleManager.currentChoosingUnit.name);
         DisableMagicsBasedOnMp(currentPlayerMagicsPanel);
         currentPlayerMagicsPanel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(currentPlayerMagicsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject);
@@ -249,7 +249,7 @@ public class BattleUI : MonoBehaviour
         foreach (Button button in currentPlayerMagicsPanel.GetComponentsInChildren<Button>())
         {
             Ability ab = AbilityCollection.Instance.FindAbilityFromName(button.name);
-            if (battleManager.currentActingUnit.GetComponent<BattleScript>().character.GetStat(StatName.mpNow).baseValue < ab.mpCost)
+            if (battleManager.currentChoosingUnit.GetComponent<BattleScript>().character.GetStat(StatName.mpNow).baseValue < ab.mpCost)
                 button.interactable = false;
         }
     }

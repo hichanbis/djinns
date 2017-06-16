@@ -8,7 +8,7 @@
     <applyMoment>endTurn</applyMoment>
     <applyType>damage</applyType>
     <statName>hpNow</statName>
-    <powerPercent>10</powerPercent>
+    <powerPercent>-10</powerPercent>
   </Status>
   <Status id="Toxic">
     <name>Toxic</name>
@@ -18,7 +18,7 @@
     <applyMoment>endTurn</applyMoment>
     <applyType>damage</applyType>
     <statName>hpNow</statName>
-    <powerPercent>20</powerPercent>
+    <powerPercent>-20</powerPercent>
   </Status>
   <Status id="Venom">
     <name>Venom</name>
@@ -28,7 +28,7 @@
     <applyMoment>endTurn</applyMoment>
     <applyType>damage</applyType>
     <statName>hpNow</statName>
-    <powerPercent>20</powerPercent>
+    <powerPercent>-20</powerPercent>
   </Status>
   <Status id="Sleep">
     <name>Sleep</name>
