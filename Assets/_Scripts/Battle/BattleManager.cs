@@ -100,8 +100,6 @@ public class BattleManager : MonoBehaviour
     {
         yield return null;
 
-        //init UI and rotate anim and wait for it to finish
-        EventManager.TriggerEvent(BattleEventMessages.UnitsLoaded.ToString());
 
 
         battleEnd = false;
@@ -130,12 +128,10 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator InitBattle()
     {
-        //wait 3 sec before taunt (during rotate anim) 
-        //yield return new WaitForSeconds(3f);
-        //EventManager.TriggerEvent(BattleEventMessages.Taunt.ToString());
+        yield return new WaitForSeconds(2f);
 
-        //wait for rotate and taunt to finish before action choice
-        yield return new WaitForSeconds(1f);
+        EventManager.TriggerEvent(BattleEventMessages.InitBattle.ToString()); //starts anim rotation and taunt
+        yield return new WaitForSeconds(5f);
 
         currentState = BattleStates.ActionChoice;
         yield return null;
@@ -238,12 +234,9 @@ public class BattleManager : MonoBehaviour
 
         //Fin d'exec des battleActions
     
-        Debug.Log("LA");
-
         if (!AreAllPlayersDead() && !AreAllEnemiesDead())
         {
             EventManager.TriggerEvent(BattleEventMessages.EndRageStatusTime.ToString());
-
             yield return StartCoroutine(WaitForAllEndRageStatusToBeApplied());
 
         }
@@ -412,7 +405,7 @@ public class BattleManager : MonoBehaviour
         return (System.Enum.IsDefined(typeof(PlayerName), unit.name));
     }
 
-    public bool IsCurrentActingUnitAPlayer()
+    public bool IsCurrentChoosingUnitAPlayer()
     {
         return (System.Enum.IsDefined(typeof(PlayerName), currentChoosingUnit.name));
     }
@@ -504,12 +497,22 @@ public class BattleManager : MonoBehaviour
 
     public void SetCurrentTargetFromName(string targetName)
     {
+        Debug.Log("target: " + targetName);
         if (!targetName.Equals("All"))
+        {
             currentTargets = new List<GameObject>() { GetAllUnits().Find(u => u.name.Equals(targetName)) };
+            EventManager.TriggerEvent(BattleEventMessages.TargetChoiceExpected.ToString());
+        }
         else if (targetName.Equals("All Players"))
+        {
             currentTargets = playerUnits;
+            EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllPlayers.ToString());
+        }
         else if (targetName.Equals("All Enemies"))
+        {
             currentTargets = monsterUnits;
+            EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllMonsters.ToString());
+        }
     }
 
     public List<GameObject> GetAllUnits()

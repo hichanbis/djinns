@@ -4,7 +4,7 @@ using System;
 public enum BattleEventMessages
 {
     Taunt,
-    UnitsLoaded,
+    InitBattle,
     DamageApplied,
     EndRageStatusTime,
     Victory,

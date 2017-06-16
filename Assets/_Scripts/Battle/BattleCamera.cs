@@ -6,6 +6,7 @@ using System;
 
 public enum LookAtType
 {
+    none,
     lookAtCenter,
     lookAtPlayer,
     lookAtTarget,
@@ -15,6 +16,17 @@ public enum LookAtType
     lookAtActingUnit
 }
 
+public enum Position
+{
+    none,
+    InFrontPlayers,
+    InFrontMonsters,
+    InFrontOfTarget,
+    SideOfPlayers,
+    BehindPlayers,
+    LeftOfPlayer
+}
+
 
 public class BattleCamera : MonoBehaviour
 {
@@ -22,10 +34,8 @@ public class BattleCamera : MonoBehaviour
 
     private BattleManager battleManager;
     private LookAtType currentLookAt;
-    private bool cutInFrontPlayers = false;
-    private bool cutToSidePlayers = false;
-    private bool cutBehindPlayers = false;
-    private bool cutToLeftPlayer = false;
+    private Position currentPos;
+  
    
     private UnityAction playerUnitsExistListener;
     private UnityAction playerChoiceExpectedListener;
@@ -68,24 +78,28 @@ public class BattleCamera : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        //transform.position = new Vector3(20f, 2f, 0f);
+        currentPos = Position.none;
+        currentLookAt = LookAtType.none;
+
         battleManager = BattleManager.Instance;
 
         unitsLoadedListener = new UnityAction(MoveFromSideToBehindPlayers);
-        EventManager.StartListening(BattleEventMessages.UnitsLoaded.ToString(), unitsLoadedListener);
+        EventManager.StartListening(BattleEventMessages.InitBattle.ToString(), unitsLoadedListener);
 
-        playerChoiceExpectedListener = new UnityAction(CutLeftToPlayer);
+        playerChoiceExpectedListener = new UnityAction(CutLeftToPlayerLookAtPlayer);
         EventManager.StartListening(BattleEventMessages.PlayerChoiceExpected.ToString(), playerChoiceExpectedListener);
 
-        targetChoiceExpectedListener = new UnityAction(LookAtTarget);
+        targetChoiceExpectedListener = new UnityAction(CutInFrontOfTargetLookAtTarget);
         EventManager.StartListening(BattleEventMessages.TargetChoiceExpected.ToString(), targetChoiceExpectedListener);
 
-        targetChoiceAllPlayersListener = new UnityAction(LookAtPlayerZone);
+        targetChoiceAllPlayersListener = new UnityAction(CutAndLookAtPlayerZone);
         EventManager.StartListening(BattleEventMessages.TargetChoiceAllPlayers.ToString(), targetChoiceAllPlayersListener);
 
-        targetChoiceAllMonstersListener = new UnityAction(LookAtMonsterZone);
+        targetChoiceAllMonstersListener = new UnityAction(CutAndLookAtMonsterZone);
         EventManager.StartListening(BattleEventMessages.TargetChoiceAllMonsters.ToString(), targetChoiceAllMonstersListener);
 
-        actionChoicePhaseDoneListener = new UnityAction(CutBehindPlayers);
+        actionChoicePhaseDoneListener = new UnityAction(CutBehindPlayersLookAtCenter);
         EventManager.StartListening(BattleEventMessages.ActionChoicePhaseDone.ToString(), actionChoicePhaseDoneListener);
 
         victoryListener = new UnityAction(CutInFrontPlayers);
@@ -99,112 +113,93 @@ public class BattleCamera : MonoBehaviour
 
     void MoveFromSideToBehindPlayers()
     {
-        cutToSidePlayers = true;
-
-        cutInFrontPlayers = false;
-        cutBehindPlayers = false;
-        cutToLeftPlayer = false;
+        currentPos = Position.SideOfPlayers;
+        currentLookAt = LookAtType.lookAtPlayerZone;
     }
 
     void CutInFrontPlayers()
     {
-        cutInFrontPlayers = true;
-
-        cutBehindPlayers = false;
-        cutToSidePlayers = false;
-        cutToLeftPlayer = false;
+        transform.position = new Vector3(0f, 0.5f, -0.5f);
+        currentPos = Position.InFrontPlayers;
         currentLookAt = LookAtType.lookAtPlayerZone;
     }
 
-    void CutBehindPlayers()
+    void CutBehindPlayersLookAtCenter()
     {
-        cutBehindPlayers = true;
-
-        cutInFrontPlayers = false;
-        cutToSidePlayers = false;
-        cutToLeftPlayer = false;
+        transform.position = new Vector3(-2f, 3.5f, -10f);
+        currentPos = Position.BehindPlayers;
         currentLookAt = LookAtType.lookAtCenter;
     }
 
-    void CutLeftToPlayer()
+    void CutLeftToPlayerLookAtPlayer()
     {
-        cutToLeftPlayer = true;
+        Vector3 playerPos = battleManager.GetCurrentPlayer().transform.position;
+        float playerVerticalSize = battleManager.GetCurrentPlayer().GetComponent<CapsuleCollider>().height;
+        float playerChestHeight = playerVerticalSize - 0.5f;
 
-        cutInFrontPlayers = false;
-        cutToSidePlayers = false;
-        cutBehindPlayers = false;
+        float leftPlayerXOffset = -1f;
+        float leftPlayerYOffset = playerChestHeight;
+        float leftPlayerZOffset = 0.5f;
+
+        Vector3 offset = new Vector3(leftPlayerXOffset, leftPlayerYOffset, leftPlayerZOffset);
+        transform.position = playerPos + offset;
+
+        currentPos = Position.LeftOfPlayer;
         currentLookAt = LookAtType.lookAtPlayer;
       
     }
 
-    void LookAtCenter()
+    void CutInFrontOfTargetLookAtTarget()
     {
-        currentLookAt = LookAtType.lookAtCenter;
-    }
-
-    void LookAtPlayer()
-    {
-        currentLookAt = LookAtType.lookAtPlayer;
-    }
-
-    void LookAtTarget()
-    {
+        transform.position = new Vector3(battleManager.currentTargets[0].transform.position.x, 2f, 0f);
+        currentPos = Position.InFrontOfTarget;
         currentLookAt = LookAtType.lookAtTarget;
     }
 
-    void LookAtPlayerZone()
+    void CutAndLookAtPlayerZone()
     {
+        transform.position = new Vector3(0f, 2.5f, 2f);
+        currentPos = Position.InFrontPlayers;
         currentLookAt = LookAtType.lookAtPlayerZone;
     }
 
-    void LookAtMonsterZone()
+    void CutAndLookAtMonsterZone()
     {
+        transform.position = new Vector3(0f, 2.5f, -2f);
+        currentPos = Position.InFrontMonsters;
         currentLookAt = LookAtType.lookAtMonsterZone;
     }
 
     void LateUpdate()
     {
 
-        if (cutInFrontPlayers)
+        if (currentPos.Equals(Position.SideOfPlayers))
+            transform.position = Vector3.Lerp(transform.position, new Vector3(0f, 2.5f, -10f), 0.7f * Time.deltaTime);
+        else if (currentPos.Equals(Position.InFrontPlayers))
         {
-            transform.position = new Vector3(-2f, 3.5f, -10f);
+           
         }
-
-        if (cutToLeftPlayer && battleManager.currentChoosingUnit != null)
+        else if (currentPos.Equals(Position.LeftOfPlayer) && battleManager.currentChoosingUnit != null)
         {
-            Vector3 playerPos = battleManager.GetCurrentPlayer().transform.position;
-            float playerVerticalSize = battleManager.GetCurrentPlayer().GetComponent<CapsuleCollider>().height;
-            float playerChestHeight = playerVerticalSize - 0.5f;
-
-            float leftPlayerXOffset = -1f;
-            float leftPlayerYOffset = playerChestHeight;
-            float leftPlayerZOffset = 0.5f;
-
-            Vector3 offset = new Vector3(leftPlayerXOffset, leftPlayerYOffset, leftPlayerZOffset);
-            transform.position = playerPos + offset;
+            
         }
-
-        if (cutBehindPlayers)
+        else if (currentPos.Equals(Position.BehindPlayers))
         {
-            transform.position = new Vector3(-2f, 3.5f, -10f);
-
+            
+        }
+        else if (currentPos.Equals(Position.InFrontOfTarget))
+        {
+            //trouver une façon de le faire plus haut
+            //if (battleManager.currentTargets != null && battleManager.currentTargets[0] != null)
+                
         }
 
         if (currentLookAt.Equals(LookAtType.lookAtTarget) && battleManager.currentTargets != null && battleManager.currentTargets[0] != null)
-        {
-            transform.position = new Vector3(battleManager.currentTargets[0].transform.position.x, 2f, 0f);
             transform.LookAt(battleManager.currentTargets[0].transform);
-        }
         else if (currentLookAt.Equals(LookAtType.lookAtPlayerZone))
-        {
-            transform.position = new Vector3(0f, 2.5f, 2f);
             transform.LookAt(new Vector3(0f, 1f, -5f));
-        }
         else if (currentLookAt.Equals(LookAtType.lookAtMonsterZone))
-        {
-            transform.position = new Vector3(0f, 2.5f, -2f);
             transform.LookAt(new Vector3(0f, 1f, 5f));
-        }
         else if (currentLookAt.Equals(LookAtType.lookAtActingUnit) && battleManager.currentChoosingUnit != null)
             transform.LookAt(battleManager.currentChoosingUnit.transform);
         else if (currentLookAt.Equals(LookAtType.lookAtEnemy) && battleManager.GetCurrentEnemy() != null)
@@ -213,13 +208,12 @@ public class BattleCamera : MonoBehaviour
         {
             float playerVerticalSize = battleManager.GetCurrentPlayer().GetComponent<CapsuleCollider>().height;
             float playerChestHeight = playerVerticalSize - 0.5f;
-
             transform.LookAt(battleManager.GetCurrentPlayer().transform.position + new Vector3(0f, playerChestHeight, 0.5f));
         }
         else if (currentLookAt.Equals(LookAtType.lookAtCenter))
             transform.LookAt(new Vector3(0f, 0f, 0f));
         
-        cutToLeftPlayer = false;
+
 
     }
 }

@@ -56,7 +56,7 @@ public class BattleUI : MonoBehaviour
         playerMagicsPanels = new Dictionary<string, GameObject>();
 
         playerUnitsExistListener = new UnityAction(InitializePlayerPanels);
-        EventManager.StartListening(BattleEventMessages.UnitsLoaded.ToString(), playerUnitsExistListener);
+        EventManager.StartListening(BattleEventMessages.InitBattle.ToString(), playerUnitsExistListener);
 
         playerMustChooseAbilityListener = new UnityAction(ActivateCurrentPlayerActionsPanel);
         EventManager.StartListening(BattleEventMessages.PlayerChoiceExpected.ToString(), playerMustChooseAbilityListener);
@@ -256,26 +256,14 @@ public class BattleUI : MonoBehaviour
 
     private void DisplayTargetsPanel(TargetType targetType)
     {
+       
         DeActivateCurrentPlayerActionsPanel();
         DeActivateCurrentPlayerMagicsPanel();
         InstantiateTargetsPanel(targetType);
         currentActionPanel = "targets";
-        if (targetType.Equals(TargetType.AllSame))
-        {
-            if (battleManager.IsCurrentActingUnitAPlayer())
-                EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllPlayers.ToString());
-            else
-                EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllMonsters.ToString());
-        }
-        else if (targetType.Equals(TargetType.AllOpposite))
-        {
-            if (battleManager.IsCurrentActingUnitAPlayer())
-                EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllMonsters.ToString());
-            else
-                EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllPlayers.ToString());
-        }
-        else
-            EventManager.TriggerEvent(BattleEventMessages.TargetChoiceExpected.ToString());
+
+
+
     }
 
     //if all on grise le tout mais on attend le submit quand même
@@ -316,7 +304,9 @@ public class BattleUI : MonoBehaviour
             targetsPanel.GetComponent<CanvasGroup>().interactable = false;
         }
         else*/
+
         EventSystem.current.SetSelectedGameObject(targetsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject);
+        battleManager.SetCurrentTargetFromName(targetsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject.name);
     }
 
     private void ClickedTarget(GameObject targetUnit)
@@ -381,18 +371,24 @@ public class BattleUI : MonoBehaviour
         battleManager.backToMainMenu = true;
     }
 
+    string selected = "";
     void Update()
     {
         if (currentActionPanel != null && currentActionPanel.Equals("targets"))
         {
-            if (EventSystem.current.currentSelectedGameObject != null)
-                battleManager.SetCurrentTargetFromName(EventSystem.current.currentSelectedGameObject.name);
+            if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.name.Equals(selected))
+            {
+                selected = EventSystem.current.currentSelectedGameObject.name;
+                battleManager.SetCurrentTargetFromName(selected);
+
+            }
         }
 
      
 
         if (Input.GetButtonDown("Cancel") && currentActionPanel != null)
         {
+            selected = "";
             if (currentActionPanel.Equals("magic"))
             {
                 DeActivateCurrentPlayerMagicsPanel();
@@ -405,6 +401,7 @@ public class BattleUI : MonoBehaviour
                 if (battleManager.currentUnitAction.ability.abilityType.Equals(AbilityType.Magic))
                     DisplayMagicsPanel();
                 battleManager.currentUnitAction.ability = null;
+
             }
         }
     }
