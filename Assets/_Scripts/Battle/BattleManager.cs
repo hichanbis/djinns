@@ -128,10 +128,10 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator InitBattle()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         EventManager.TriggerEvent(BattleEventMessages.InitBattle.ToString()); //starts anim rotation and taunt
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
 
         currentState = BattleStates.ActionChoice;
         yield return null;
@@ -154,6 +154,7 @@ public class BattleManager : MonoBehaviour
             currentUnitAction = new BattleAction();
             if (IsGameObjectAPlayer(currentChoosingUnit) && !currentChoosingUnit.GetComponent<BattleScript>().dead)
             {
+                StartCoroutine(currentChoosingUnit.GetComponent<BattleScript>().LaunchChoiceAnim());
                 currentUnitAction.fromUnit = currentChoosingUnit;
                 EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
                 bool choiceDone = false;
@@ -164,7 +165,11 @@ public class BattleManager : MonoBehaviour
                         if (currentUnitAction.ability.targetType.Equals(TargetType.Self))
                             choiceDone = true;
                         else if (currentUnitAction.targets != null)
+                        {
                             choiceDone = true;
+                            //fin de la choice anim si en cours...
+                            currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("Idle");
+                        }
                     }
 
                     //launch anim for attack preparation here (guard or magic focus)!
@@ -225,7 +230,7 @@ public class BattleManager : MonoBehaviour
         
             //wait for attack anim to finish before moving on
             //voir si on peut pas utiliser normalizedTime < 1
-            while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("CombatIdle"))
+            while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             {
                 yield return null;
             }
@@ -497,13 +502,7 @@ public class BattleManager : MonoBehaviour
 
     public void SetCurrentTargetFromName(string targetName)
     {
-        Debug.Log("target: " + targetName);
-        if (!targetName.Equals("All"))
-        {
-            currentTargets = new List<GameObject>() { GetAllUnits().Find(u => u.name.Equals(targetName)) };
-            EventManager.TriggerEvent(BattleEventMessages.TargetChoiceExpected.ToString());
-        }
-        else if (targetName.Equals("All Players"))
+       if (targetName.Equals("All Players"))
         {
             currentTargets = playerUnits;
             EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllPlayers.ToString());
@@ -513,6 +512,12 @@ public class BattleManager : MonoBehaviour
             currentTargets = monsterUnits;
             EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllMonsters.ToString());
         }
+        else
+        {
+            currentTargets = new List<GameObject>() { GetAllUnits().Find(u => u.name.Equals(targetName)) };
+            EventManager.TriggerEvent(BattleEventMessages.TargetChoiceExpected.ToString());
+        }
+
     }
 
     public List<GameObject> GetAllUnits()

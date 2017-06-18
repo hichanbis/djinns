@@ -1053,6 +1053,9 @@ MonoBehaviour:
   targetsPanelTemplate: {fileID: 1000012778026230, guid: 98d9cdf482aa3414483632ce9453e8ca,
     type: 2}
   targetButtonTemplate: {fileID: 184630, guid: bcbd4bdfd3a2dd0408b13aba80ea8024, type: 2}
+  battleCanvas: {fileID: 350330449}
+  victoryCanvas: {fileID: 1486419399}
+  gameOverCanvas: {fileID: 2018784827}
 --- !u!1 &811256687
 GameObject:
   m_ObjectHideFlags: 0
@@ -1368,7 +1371,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1486419400
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1679,7 +1682,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1889171443}
   m_LocalRotation: {x: 0.06777322, y: -0.7038514, z: 0.06777322, w: 0.7038514}
-  m_LocalPosition: {x: 7, y: 1.5, z: -4}
+  m_LocalPosition: {x: 6.5, y: 1.5, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2038,7 +2041,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2018784828
 RectTransform:
   m_ObjectHideFlags: 0

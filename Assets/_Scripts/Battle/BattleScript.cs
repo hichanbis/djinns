@@ -37,6 +37,11 @@ public class BattleScript : MonoBehaviour
         anim.SetTrigger("Taunt");
     }
 
+    public IEnumerator LaunchChoiceAnim(){
+
+        anim.SetTrigger("ChoiceAnim");
+        yield return null;
+    }
 
     public IEnumerator LaunchAbilityWithAnim(BattleAction battleAction)
     {

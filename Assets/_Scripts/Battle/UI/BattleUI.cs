@@ -33,14 +33,14 @@ public class BattleUI : MonoBehaviour
     private UnityAction winListener;
     private UnityAction loseListener;
 
-    private GameObject battleCanvas, victoryCanvas, gameOverCanvas;
+    public GameObject battleCanvas, victoryCanvas, gameOverCanvas;
 
 
     void Awake()
     {
-        battleCanvas = GameObject.Find("BattleCanvas");
-        victoryCanvas = GameObject.Find("VictoryCanvas");
-        gameOverCanvas = GameObject.Find("GameOverCanvas");
+        //battleCanvas = GameObject.Find("BattleCanvas");
+        //victoryCanvas = GameObject.Find("VictoryCanvas");
+        //gameOverCanvas = GameObject.Find("GameOverCanvas");
     }
 
     // Use this for initialization
@@ -51,6 +51,7 @@ public class BattleUI : MonoBehaviour
         battleCanvas.SetActive(true);
         victoryCanvas.SetActive(false);
         gameOverCanvas.SetActive(false);
+
 
         playerActionsPanels = new Dictionary<string, GameObject>();
         playerMagicsPanels = new Dictionary<string, GameObject>();
@@ -371,24 +372,12 @@ public class BattleUI : MonoBehaviour
         battleManager.backToMainMenu = true;
     }
 
-    string selected = "";
     void Update()
     {
-        if (currentActionPanel != null && currentActionPanel.Equals("targets"))
-        {
-            if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.name.Equals(selected))
-            {
-                selected = EventSystem.current.currentSelectedGameObject.name;
-                battleManager.SetCurrentTargetFromName(selected);
-
-            }
-        }
-
-     
-
+        
         if (Input.GetButtonDown("Cancel") && currentActionPanel != null)
         {
-            selected = "";
+          
             if (currentActionPanel.Equals("magic"))
             {
                 DeActivateCurrentPlayerMagicsPanel();
