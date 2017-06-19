@@ -5,15 +5,16 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 224: {fileID: 22481676}
-  - 222: {fileID: 22228368}
-  - 114: {fileID: 11475930}
-  - 114: {fileID: 11441318}
-  - 225: {fileID: 22558452}
-  - 114: {fileID: 11476772}
-  - 114: {fileID: 11472520}
+  - component: {fileID: 22481676}
+  - component: {fileID: 22228368}
+  - component: {fileID: 11475930}
+  - component: {fileID: 11441318}
+  - component: {fileID: 22558452}
+  - component: {fileID: 11476772}
+  - component: {fileID: 11472520}
+  - component: {fileID: 114510036741236036}
   m_Layer: 5
   m_Name: PlayerActions
   m_TagString: Untagged
@@ -41,6 +42,8 @@ MonoBehaviour:
   m_Spacing: 1
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
 --- !u!114 &11472520
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -114,10 +117,10 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 20, y: 200}
@@ -149,3 +152,14 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100072}
   m_IsPrefabParent: 1
+--- !u!114 &114510036741236036
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18679558272ea4fdda76ffb1795ec291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -184,7 +184,7 @@ public class BattleCamera : MonoBehaviour
         }
         else if (lerpBehaviour.Equals(LerpType.LeftOfPlayer) && battleManager.currentChoosingUnit != null)
         {
-            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, transform.position.y, -4.5f), 4f * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, transform.position.y, -4.8f), 4f * Time.deltaTime);
 
             //only after lerp fully done
 
