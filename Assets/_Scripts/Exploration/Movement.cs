@@ -40,6 +40,7 @@ public class Movement : MonoBehaviour
         screenMovementRight = screenMovementSpace * Vector3.right;
 
         Vector3 movementDirection = horizontal * screenMovementRight + vertical * screenMovementForward;
+        //Vector3 movementDirection = new Vector3(horizontal, 0f, vertical);
         if (movementDirection.sqrMagnitude > 1)
             movementDirection.Normalize();
 
@@ -47,6 +48,7 @@ public class Movement : MonoBehaviour
         Vector3 deltaVelocity = targetVelocity - playerRigidbody.velocity;
         if (playerRigidbody.useGravity)
             deltaVelocity.y = 0;
+        
         playerRigidbody.AddForce(deltaVelocity * walkingSnappyness, ForceMode.Acceleration);
 
         bool running = movementDirection.sqrMagnitude > 0;
