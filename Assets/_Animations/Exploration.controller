@@ -218,16 +218,13 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 110265734}
-    m_Position: {x: 48, y: -168, z: 0}
+    m_Position: {x: 24, y: -132, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110289668}
     m_Position: {x: -84, y: -240, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110293052}
     m_Position: {x: 144, y: -240, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: 1102963297715204254}
-    m_Position: {x: 179, y: -175, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -241,26 +238,3 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 720, y: 36, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 110265734}
---- !u!1102 &1102963297715204254
-AnimatorState:
-  serializedVersion: 5
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: dwarf_idle_test
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 94e2537dc98434efe8c047c53cdb5a8a, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
