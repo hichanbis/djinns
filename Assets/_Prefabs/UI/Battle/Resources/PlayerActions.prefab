@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 22558452}
   - component: {fileID: 11476772}
   - component: {fileID: 11472520}
-  - component: {fileID: 114510036741236036}
   m_Layer: 5
   m_Name: PlayerActions
   m_TagString: Untagged
@@ -152,14 +151,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100072}
   m_IsPrefabParent: 1
---- !u!114 &114510036741236036
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18679558272ea4fdda76ffb1795ec291, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

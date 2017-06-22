@@ -17,14 +17,14 @@ public class BattleManager : MonoBehaviour
     public List<GameObject> currentTargets;
     public BattleAction currentUnitAction;
     public List<BattleAction> turnActions = new List<BattleAction>();
-    public int currentPlayerIndex = 0;
-    public int currentEnemyIndex = 0;
+  
     public bool backToMainMenu;
     public bool restartBattle;
     public bool chosen;
     public bool victoryAcknowledged;
     private bool battleEnd;
     public bool targetImpactReached;
+    private bool interrupt;
 
     private SceneController sceneController;
     // Reference to the SceneController to actually do the loading and unloading of scenes.
@@ -88,10 +88,6 @@ public class BattleManager : MonoBehaviour
     {
         sceneController = FindObjectOfType<SceneController>();
 
-        playerUnits = BattleStart.InstantiatePlayerParty();
-        currentChoosingUnit = playerUnits[0];
-        monsterUnits = BattleStart.InstantiateMonsterParty();
-        currentTargets = new List<GameObject>(){ monsterUnits[0] };
 
         StartCoroutine(BattleStateMachine());
     }
@@ -101,6 +97,8 @@ public class BattleManager : MonoBehaviour
         yield return null;
 
 
+        currentChoosingUnit = null;
+        currentActingUnit = null;
 
         battleEnd = false;
         restartBattle = false;
@@ -128,6 +126,11 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator InitBattle()
     {
+
+        playerUnits = BattleStart.InstantiatePlayerParty();
+        monsterUnits = BattleStart.InstantiateMonsterParty();
+        currentTargets = new List<GameObject>(){ monsterUnits[0] };
+
         yield return new WaitForSeconds(1f);
 
         EventManager.TriggerEvent(BattleEventMessages.InitBattle.ToString()); //starts anim rotation and taunt
@@ -146,13 +149,13 @@ public class BattleManager : MonoBehaviour
             yield break;
 
         turnActions = new List<BattleAction>();
-        List<GameObject> battlingUnits = GetAllUnits(); //should filter on dead and disabled
+        List<GameObject> battlingUnits = GetAllBattleAbleUnits(); //should filter on dead and disabled
 
         for (int i = 0; i < battlingUnits.Count; i++)
         {
             currentChoosingUnit = battlingUnits[i];
             currentUnitAction = new BattleAction();
-            if (IsGameObjectAPlayer(currentChoosingUnit) && !currentChoosingUnit.GetComponent<BattleScript>().dead)
+            if (IsGameObjectAPlayer(currentChoosingUnit))
             {
                 StartCoroutine(currentChoosingUnit.GetComponent<BattleScript>().LaunchChoiceAnim());
                 currentUnitAction.fromUnit = currentChoosingUnit;
@@ -176,18 +179,19 @@ public class BattleManager : MonoBehaviour
 
                     yield return null;
                 }
+
                 turnActions.Add(currentUnitAction);
-                IncrementPlayerIndex();
+
             }
             else if (!IsGameObjectAPlayer(currentChoosingUnit))
             {
-                List<GameObject> alivePlayerUnits = playerUnits.Where(p => !p.GetComponent<BattleScript>().dead).ToList();
+                List<GameObject> alivePlayerUnits = GetAlivePlayerUnits();
                 if (alivePlayerUnits.Count > 0)
                 {
                     BattleAction action = new BattleAction(currentChoosingUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentChoosingUnit.GetComponent<BattleScript>().character.getAbility("Attack"));
                     turnActions.Add(action);
                 }
-                IncrementEnemyIndex();
+
             }
 
             yield return null;
@@ -195,6 +199,7 @@ public class BattleManager : MonoBehaviour
         }
 
         EventManager.TriggerEvent(BattleEventMessages.ActionChoicePhaseDone.ToString());
+        currentChoosingUnit = null;
         yield return new WaitForSeconds(1f);
         currentState = BattleStates.Rage;
     }
@@ -228,14 +233,14 @@ public class BattleManager : MonoBehaviour
             yield return StartCoroutine(WaitForAllDamageToBeTaken(battleAction));
             yield return StartCoroutine(WaitForAllStatusToBeAdded(battleAction));
         
-            //wait for attack anim to finish before moving on
-            //voir si on peut pas utiliser normalizedTime < 1
             while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             {
-                yield return null;
+              yield return null;
             }
 
         }
+
+        currentActingUnit = null;
 
         //Fin d'exec des battleActions
     
@@ -280,7 +285,8 @@ public class BattleManager : MonoBehaviour
         yield return coroutineJoinStatuses.WaitForAll();
     }
 
-    private IEnumerator WaitForAllEndRageStatusToBeApplied(){
+    private IEnumerator WaitForAllEndRageStatusToBeApplied()
+    {
         
         CoroutineJoin coroutineJoinEndRage = new CoroutineJoin(this);
         foreach (GameObject unit in GetAllUnits())
@@ -289,6 +295,20 @@ public class BattleManager : MonoBehaviour
         }
 
         yield return coroutineJoinEndRage.WaitForAll();
+    }
+
+    public void CancelTarget()
+    {
+        EventManager.TriggerEvent(BattleEventMessages.CancelTarget.ToString());
+        EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
+        if (currentUnitAction.ability.abilityType.Equals(AbilityType.Magic))
+            EventManager.TriggerEvent(BattleEventMessages.DisplayMagicsPanel.ToString());
+        currentUnitAction.ability = null;
+    }
+
+    public void CancelPreviousChoice()
+    {
+
     }
 
     private void SetBattleStateAfterDamage()
@@ -342,14 +362,14 @@ public class BattleManager : MonoBehaviour
             if (IsGameObjectAPlayer(battleAction.fromUnit))
                 battleAction.targets = new List<GameObject>() { monsterUnits.First() };
             else
-                battleAction.targets = new List<GameObject>() { playerUnits.Where(p => !p.GetComponent<BattleScript>().dead).ToList().First() }; //should be random
+                battleAction.targets = new List<GameObject>() { GetAlivePlayerUnits().First() }; //should be random
         }
         else if (battleAction.ability.targetType.Equals(TargetType.Same) && (battleAction.targets == null || battleAction.targets[0] == null || battleAction.targets[0].GetComponent<BattleScript>().dead))
         {
             if (IsGameObjectAPlayer(battleAction.fromUnit))
             {
                 if (!battleAction.ability.id.Equals("Revive"))
-                    battleAction.targets = new List<GameObject>() { playerUnits.Where(p => !p.GetComponent<BattleScript>().dead).ToList().First() };
+                    battleAction.targets = new List<GameObject>() { GetAlivePlayerUnits().First() };
 
             }
             else
@@ -442,67 +462,9 @@ public class BattleManager : MonoBehaviour
     {
     }
 
-    void CaptureSwitchPlayerInput()
-    {
-        if (Input.GetButtonDown("L2"))
-        {
-            DecrementPlayerIndex();
-        }
-
-        if (Input.GetButtonDown("R2"))
-        {
-            IncrementPlayerIndex();
-        }
-    }
-
-    public void IncrementEnemyIndex()
-    {
-        if (currentEnemyIndex != monsterUnits.Count - 1)
-            currentEnemyIndex++;
-        else
-            currentEnemyIndex = 0;
-    }
-
-    public void DecrementEnemyIndex()
-    {
-        if (currentEnemyIndex != 0)
-            currentEnemyIndex--;
-        else
-            currentEnemyIndex = monsterUnits.Count - 1;
-    }
-
-
-    public void IncrementPlayerIndex()
-    {
-
-        if (currentPlayerIndex != playerUnits.Count - 1)
-            currentPlayerIndex++;
-        else
-            currentPlayerIndex = 0;
-    }
-
-    public void DecrementPlayerIndex()
-    {
-
-        if (currentPlayerIndex != 0)
-            currentPlayerIndex--;
-        else
-            currentPlayerIndex = playerUnits.Count - 1;
-    }
-
-    public GameObject GetCurrentPlayer()
-    {
-        return playerUnits[currentPlayerIndex];
-    }
-
-    public GameObject GetCurrentEnemy()
-    {
-        return monsterUnits[currentEnemyIndex];
-    }
-
     public void SetCurrentTargetFromName(string targetName)
     {
-       if (targetName.Equals("All Players"))
+        if (targetName.Equals("All Players"))
         {
             currentTargets = playerUnits;
             EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllPlayers.ToString());
@@ -520,8 +482,24 @@ public class BattleManager : MonoBehaviour
 
     }
 
+    public List<GameObject> GetAlivePlayerUnits()
+    {
+        return playerUnits.Where(u => !u.GetComponent<BattleScript>().dead).ToList();
+    }
+
+    public List<GameObject> GetAliveMonsterUnits()
+    {
+        return monsterUnits.Where(u => !u.GetComponent<BattleScript>().dead).ToList();
+    }
+
     public List<GameObject> GetAllUnits()
     {
         return playerUnits.Concat(monsterUnits).ToList();
+    }
+
+    public List<GameObject> GetAllBattleAbleUnits()
+    {
+        return playerUnits.Concat(monsterUnits).ToList().Where(u => !u.GetComponent<BattleScript>().dead && u.GetComponent<BattleScript>().canAct).ToList();
+
     }
 }

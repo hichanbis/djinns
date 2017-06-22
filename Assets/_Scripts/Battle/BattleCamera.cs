@@ -8,12 +8,10 @@ public enum LookAtType
 {
     none,
     lookAtCenter,
-    lookAtPlayer,
+    lookAtActingUnit,
     lookAtTarget,
-    lookAtEnemy,
     lookAtPlayerZone,
-    lookAtMonsterZone,
-    lookAtActingUnit
+    lookAtMonsterZone
 }
 
 public enum LerpType
@@ -24,26 +22,34 @@ public enum LerpType
     InFrontOfTarget,
     SideOfPlayersToBehind,
     BehindPlayers,
-    LeftOfPlayer
+    LeftFrontOfPlayerToLeftCenter,
+    FollowActing
 }
 
 
 public class BattleCamera : MonoBehaviour
 {
-    
-
+ 
     private BattleManager battleManager;
     private LookAtType currentLookAt;
     private LerpType lerpBehaviour;
-  
-   
-    private UnityAction playerUnitsExistListener;
+    private Vector3 offset; 
+    //BattleCameraPositions object
+    private Transform BCPSideOfPlayers;
+    private Transform BCPBehindPlayers;
+    private Transform BCPPlayerChoiceLeft;
+    private Transform BCPPlayerRun;
+    private Transform BCPEnemyTakeCloseHit;
+
+    private UnityAction unitsLoadedListener;
     private UnityAction playerChoiceExpectedListener;
     private UnityAction targetChoiceExpectedListener;
     private UnityAction targetChoiceAllPlayersListener;
     private UnityAction targetChoiceAllMonstersListener;
     private UnityAction actionChoicePhaseDoneListener;
-    private UnityAction unitsLoadedListener;
+    private UnityAction meleePlayerRunListener;
+    private UnityAction meleePlayerAttackListener;
+
     private UnityAction victoryListener;
     private UnityAction failureListener;
 
@@ -102,6 +108,12 @@ public class BattleCamera : MonoBehaviour
         actionChoicePhaseDoneListener = new UnityAction(CutBehindPlayersLookAtCenter);
         EventManager.StartListening(BattleEventMessages.ActionChoicePhaseDone.ToString(), actionChoicePhaseDoneListener);
 
+        meleePlayerRunListener = new UnityAction(CutBehindPlayerAndFollow);
+        EventManager.StartListening(BattleEventMessages.MeleePlayerRun.ToString(), meleePlayerRunListener);
+
+        meleePlayerAttackListener = new UnityAction(CutToTargetSideAngleLookAtTarget);
+        EventManager.StartListening(BattleEventMessages.MeleePlayerAttack.ToString(), meleePlayerAttackListener);
+
         victoryListener = new UnityAction(CutInFrontPlayers);
         EventManager.StartListening(BattleEventMessages.Victory.ToString(), victoryListener);
 
@@ -113,41 +125,60 @@ public class BattleCamera : MonoBehaviour
 
     void MoveFromSideToBehindPlayers()
     {
-        //no need so set transform.pos because it is the initial pos
+        BCPSideOfPlayers = GameObject.Find("BCPSideOfPlayers").transform;
+        BCPBehindPlayers = GameObject.Find("BCPBehindPlayers").transform;
+
+        transform.position = BCPSideOfPlayers.position;
+        transform.rotation = BCPSideOfPlayers.rotation;
+
         lerpBehaviour = LerpType.SideOfPlayersToBehind;
         currentLookAt = LookAtType.lookAtPlayerZone;
+    }
+
+    void CutBehindPlayerAndFollow(){
+        BCPPlayerRun = battleManager.currentActingUnit.transform.Find("BCPPLayerRun").transform;
+
+        transform.position = BCPPlayerRun.position;
+        transform.rotation = BCPPlayerRun.rotation;
+
+        offset = transform.position - battleManager.currentActingUnit.transform.position;
+
+        lerpBehaviour = LerpType.FollowActing;
+        currentLookAt = LookAtType.lookAtTarget;
     }
 
     void CutInFrontPlayers()
     {
         transform.position = new Vector3(0f, 0.5f, -0.5f);
-        lerpBehaviour = LerpType.InFrontPlayers;
+        lerpBehaviour = LerpType.none;
         currentLookAt = LookAtType.lookAtPlayerZone;
     }
 
     void CutBehindPlayersLookAtCenter()
     {
         transform.position = new Vector3(-2f, 3.5f, -10f);
-        lerpBehaviour = LerpType.BehindPlayers;
+        lerpBehaviour = LerpType.none;
         currentLookAt = LookAtType.lookAtCenter;
+    }
+
+    void CutToTargetSideAngleLookAtTarget(){
+        BCPEnemyTakeCloseHit = battleManager.currentTargets[0].transform.Find("BCPEnemyTakeCloseHit");
+        Debug.Log(BCPEnemyTakeCloseHit.position);
+        transform.position = BCPEnemyTakeCloseHit.position;
+        transform.rotation = BCPEnemyTakeCloseHit.rotation;
+
+        currentLookAt = LookAtType.none;
+        lerpBehaviour = LerpType.none;
+
     }
 
     void CutLeftToPlayerLookAtPlayer()
     {
-        Vector3 playerPos = battleManager.GetCurrentPlayer().transform.position;
-        float playerVerticalSize = battleManager.GetCurrentPlayer().GetComponent<CapsuleCollider>().height;
-        float playerChestHeight = playerVerticalSize - 0.5f;
+        BCPPlayerChoiceLeft = battleManager.currentChoosingUnit.transform.Find("BCPPlayerChoiceLeft");
+        transform.position = BCPPlayerChoiceLeft.position;
+        transform.rotation = BCPPlayerChoiceLeft.rotation;
 
-        float leftPlayerXOffset = -1f;
-        float leftPlayerYOffset = playerChestHeight;
-        float leftPlayerZOffset = 1.5f;
-
-        Vector3 offset = new Vector3(leftPlayerXOffset, leftPlayerYOffset, leftPlayerZOffset);
-        transform.position = playerPos + offset;
-
-        transform.LookAt(battleManager.GetCurrentPlayer().transform.position + new Vector3(0f, playerChestHeight, 1.5f));
-
-        lerpBehaviour = LerpType.LeftOfPlayer;
+        lerpBehaviour = LerpType.LeftFrontOfPlayerToLeftCenter;
         currentLookAt = LookAtType.none;
       
     }
@@ -155,21 +186,21 @@ public class BattleCamera : MonoBehaviour
     void CutInFrontOfTargetLookAtTarget()
     {
         transform.position = new Vector3(battleManager.currentTargets[0].transform.position.x, 2f, 0f);
-        lerpBehaviour = LerpType.InFrontOfTarget;
+        lerpBehaviour = LerpType.none;
         currentLookAt = LookAtType.lookAtTarget;
     }
 
     void CutAndLookAtPlayerZone()
     {
         transform.position = new Vector3(0f, 2.5f, 2f);
-        lerpBehaviour = LerpType.InFrontPlayers;
+        lerpBehaviour = LerpType.none;
         currentLookAt = LookAtType.lookAtPlayerZone;
     }
 
     void CutAndLookAtMonsterZone()
     {
         transform.position = new Vector3(0f, 2.5f, -2f);
-        lerpBehaviour = LerpType.InFrontMonsters;
+        lerpBehaviour = LerpType.none;
         currentLookAt = LookAtType.lookAtMonsterZone;
     }
 
@@ -177,28 +208,11 @@ public class BattleCamera : MonoBehaviour
     {
 
         if (lerpBehaviour.Equals(LerpType.SideOfPlayersToBehind))
-            transform.position = Vector3.Lerp(transform.position, new Vector3(0f, 2.5f, -10f), 0.8f * Time.deltaTime);
-        else if (lerpBehaviour.Equals(LerpType.InFrontPlayers))
-        {
-           
-        }
-        else if (lerpBehaviour.Equals(LerpType.LeftOfPlayer) && battleManager.currentChoosingUnit != null)
-        {
-            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, transform.position.y, -4.8f), 4f * Time.deltaTime);
-
-            //only after lerp fully done
-
-        }
-        else if (lerpBehaviour.Equals(LerpType.BehindPlayers))
-        {
-            
-        }
-        else if (lerpBehaviour.Equals(LerpType.InFrontOfTarget))
-        {
-            //trouver une façon de le faire plus haut
-            //if (battleManager.currentTargets != null && battleManager.currentTargets[0] != null)
-                
-        }
+            transform.position = Vector3.Lerp(transform.position, BCPBehindPlayers.position, 0.8f * Time.deltaTime);
+        else if (lerpBehaviour.Equals(LerpType.LeftFrontOfPlayerToLeftCenter) && battleManager.currentChoosingUnit)
+            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, transform.position.y, BCPPlayerChoiceLeft.position.z - 0.3f), 4f * Time.deltaTime);
+        else if (lerpBehaviour.Equals(LerpType.FollowActing) && battleManager.currentActingUnit)
+            transform.position = battleManager.currentActingUnit.transform.position + offset;
 
         if (currentLookAt.Equals(LookAtType.lookAtTarget) && battleManager.currentTargets != null && battleManager.currentTargets[0] != null)
             transform.LookAt(battleManager.currentTargets[0].transform);
@@ -206,18 +220,15 @@ public class BattleCamera : MonoBehaviour
             transform.LookAt(new Vector3(0f, 1f, -5f));
         else if (currentLookAt.Equals(LookAtType.lookAtMonsterZone))
             transform.LookAt(new Vector3(0f, 1f, 5f));
-        else if (currentLookAt.Equals(LookAtType.lookAtActingUnit) && battleManager.currentChoosingUnit != null)
-            transform.LookAt(battleManager.currentChoosingUnit.transform);
-        else if (currentLookAt.Equals(LookAtType.lookAtEnemy) && battleManager.GetCurrentEnemy() != null)
-            transform.LookAt(battleManager.GetCurrentEnemy().transform);
-        else if (currentLookAt.Equals(LookAtType.lookAtPlayer) && battleManager.GetCurrentPlayer() != null)
-        {
-            
-        }
+        else if (currentLookAt.Equals(LookAtType.lookAtActingUnit) && battleManager.currentActingUnit)
+            transform.LookAt(battleManager.currentActingUnit.transform);
         else if (currentLookAt.Equals(LookAtType.lookAtCenter))
             transform.LookAt(new Vector3(0f, 0f, 0f));
         
 
 
     }
+
+
+
 }

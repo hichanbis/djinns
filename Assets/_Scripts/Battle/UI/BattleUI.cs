@@ -32,16 +32,11 @@ public class BattleUI : MonoBehaviour
     private UnityAction rageAppliedListener;
     private UnityAction winListener;
     private UnityAction loseListener;
+    private UnityAction cancelTargetListener;
+    private UnityAction displayMagicsPanelListener;
 
     public GameObject battleCanvas, victoryCanvas, gameOverCanvas;
 
-
-    void Awake()
-    {
-        //battleCanvas = GameObject.Find("BattleCanvas");
-        //victoryCanvas = GameObject.Find("VictoryCanvas");
-        //gameOverCanvas = GameObject.Find("GameOverCanvas");
-    }
 
     // Use this for initialization
     void Start()
@@ -62,21 +57,27 @@ public class BattleUI : MonoBehaviour
         playerMustChooseAbilityListener = new UnityAction(ActivateCurrentPlayerActionsPanel);
         EventManager.StartListening(BattleEventMessages.PlayerChoiceExpected.ToString(), playerMustChooseAbilityListener);
 
-        rageAppliedListener = new UnityAction(refreshPlayersInfo);
+        rageAppliedListener = new UnityAction(UpdatePlayersInfo);
         EventManager.StartListening(BattleEventMessages.DamageApplied.ToString(), rageAppliedListener);
 
-        winListener = new UnityAction(displayWinCanvas);
+        winListener = new UnityAction(DisplayWinCanvas);
         EventManager.StartListening(BattleEventMessages.Victory.ToString(), winListener);
 
-        loseListener = new UnityAction(displayGameOverCanvas);
+        loseListener = new UnityAction(DisplayGameOverCanvas);
         EventManager.StartListening(BattleEventMessages.Failure.ToString(), loseListener);
+
+        cancelTargetListener = new UnityAction(CancelTarget);
+        EventManager.StartListening(BattleEventMessages.CancelTarget.ToString(), cancelTargetListener);
+
+        displayMagicsPanelListener = new UnityAction(DisplayMagicsPanel);
+        EventManager.StartListening(BattleEventMessages.DisplayMagicsPanel.ToString(), displayMagicsPanelListener);
     }
 
     void InitializePlayerPanels()
     {
         playerUnits = battleManager.playerUnits;
         InstantiatePlayersInfoPanel();
-        refreshPlayersInfo();
+
         InstantiatePlayerActionsPanels();
         InstantiatePlayerMagicsPanels();
     }
@@ -89,24 +90,25 @@ public class BattleUI : MonoBehaviour
             GameObject playerInfo = Instantiate(playerInfoPanelTemplate, playersInfoPanel.transform, false) as GameObject;
             playerInfo.name = playerUnits[i].name + "PlayerInfo";
         }
+        UpdatePlayersInfo();
     }
 
-    void fillPlayerInfo(GameObject playerUnit)
+    void UpdatePlayerInfo(GameObject playerUnit)
     {
         Character playerChar = playerUnit.GetComponent<BattleScript>().character;
 
         Transform playerInfoTr = playersInfoPanel.transform.Find(playerUnit.name + "PlayerInfo").transform;
-        playerInfoTr.Find("PlayerName").transform.Find("PlayerNameText").GetComponent<Text>().text = playerChar.name;
-        playerInfoTr.Find("HpMp").transform.Find("Hp").transform.Find("HpText").GetComponent<Text>().text = playerChar.GetStat(StatName.hpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.hp).baseValue.ToString();
-        playerInfoTr.Find("HpMp").transform.Find("Mp").transform.Find("MpText").GetComponent<Text>().text = playerChar.GetStat(StatName.mpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.mp).baseValue.ToString();
+        playerInfoTr.Find("PlayerName").GetComponentInChildren<Text>().text = playerChar.name;
+        playerInfoTr.Find("HpMp").transform.Find("Hp").GetComponentInChildren<Text>().text = playerChar.GetStat(StatName.hpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.hp).baseValue.ToString();
+        playerInfoTr.Find("HpMp").transform.Find("Mp").GetComponentInChildren<Text>().text = playerChar.GetStat(StatName.mpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.mp).baseValue.ToString();
     }
 
-    void refreshPlayersInfo()
+    void UpdatePlayersInfo()
     {
         playerUnits = battleManager.playerUnits;
         for (int i = 0; i < playerUnits.Count; i++)
         {
-            fillPlayerInfo(playerUnits[i]);
+            UpdatePlayerInfo(playerUnits[i]);
         }
     }
 
@@ -332,7 +334,7 @@ public class BattleUI : MonoBehaviour
         battleManager.currentUnitAction.ability = ability;
     }
 
-    private void displayWinCanvas()
+    private void DisplayWinCanvas()
     {
         battleCanvas.SetActive(false);
         victoryCanvas.SetActive(true);
@@ -340,7 +342,7 @@ public class BattleUI : MonoBehaviour
         gameOverCanvas.SetActive(false);
     }
 
-    private void displayGameOverCanvas()
+    private void DisplayGameOverCanvas()
     {
         battleCanvas.SetActive(false);
         victoryCanvas.SetActive(false);
@@ -372,27 +374,20 @@ public class BattleUI : MonoBehaviour
         battleManager.backToMainMenu = true;
     }
 
+    public void CancelMagic()
+    {
+        DeActivateCurrentPlayerMagicsPanel();
+        ActivateCurrentPlayerActionsPanel();
+
+    }
+
+    public void CancelTarget()
+    {
+        Destroy(targetsPanel);
+    }
+
     void Update()
     {
-        
-        if (Input.GetButtonDown("Cancel") && currentActionPanel != null)
-        {
-          
-            if (currentActionPanel.Equals("magic"))
-            {
-                DeActivateCurrentPlayerMagicsPanel();
-                EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
-            }
-            else if (currentActionPanel.Equals("targets"))
-            {
-                Destroy(targetsPanel);
-                EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
-                if (battleManager.currentUnitAction.ability.abilityType.Equals(AbilityType.Magic))
-                    DisplayMagicsPanel();
-                battleManager.currentUnitAction.ability = null;
-
-            }
-        }
     }
 
 

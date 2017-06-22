@@ -11,7 +11,7 @@ public class BattleScript : MonoBehaviour
 
     public Character character;
     public bool dead;
-    public bool canAttack;
+    public bool canAct;
     public bool canCast;
     public Animator anim;
     public GameObject damagePopUpPrefab;
@@ -22,7 +22,7 @@ public class BattleScript : MonoBehaviour
     void Start()
     {
         dead = false;
-        canAttack = true;
+        canAct = true;
         canCast = true;
 
         anim = GetComponentInChildren<Animator>();
@@ -50,8 +50,13 @@ public class BattleScript : MonoBehaviour
         Vector3 initPos = transform.position;
         Quaternion initRot = transform.rotation;
         if (battleAction.ability.distance.Equals(Distance.Close))
+        {
+            EventManager.TriggerEvent(BattleEventMessages.MeleePlayerRun.ToString());
             yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().RunToTarget(battleAction.targets[0]));
-        
+
+        }
+
+        EventManager.TriggerEvent(BattleEventMessages.MeleePlayerAttack.ToString());
 
         AnimatorControllerParameter[] animParams = anim.parameters;
         if (!Array.Exists(animParams, animParam => animParam.name.Equals(battleAction.ability.id)))
@@ -80,7 +85,7 @@ public class BattleScript : MonoBehaviour
             {
                 yield return null;
             }
-            yield return StartCoroutine(MoveToPositionPercentDistance(gameObject, initPos, 1f, 10));
+            yield return StartCoroutine(MoveToPositionPercentDistance(gameObject, initPos, 2f, 25));
             while (anim.GetCurrentAnimatorStateInfo(0).IsName("WalkBack"))
             {
                 yield return null;
@@ -229,7 +234,7 @@ public class BattleScript : MonoBehaviour
         else if (status.applyType.Equals(StatusApplyType.modifier))
             character.GetStat(status.statName).modifiers.Add(status.powerPercent);
         else if (status.applyType.Equals(StatusApplyType.disableCommands))
-            canAttack = false;
+            canAct = false;
         else if (status.applyType.Equals(StatusApplyType.disableMagic))
             canCast = false;
 

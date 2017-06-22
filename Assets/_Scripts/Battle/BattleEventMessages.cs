@@ -21,6 +21,8 @@ public enum BattleEventMessages
     MeleeEnemyAttack,
     MagicAttack,
     MagicAttackLaunchedSingle,
-    MagicAttackLaunchedAll
+    MagicAttackLaunchedAll,
+    DisplayMagicsPanel,
+    CancelTarget
 
 }

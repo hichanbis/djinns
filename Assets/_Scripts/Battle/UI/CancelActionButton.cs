@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class CancelActionPanel : MonoBehaviour, ICancelHandler
+public class CancelActionButton : MonoBehaviour, ICancelHandler
 {
     //only work on button?
     public void OnCancel(BaseEventData eventData)

@@ -30,6 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4341697438645240}
+  - {fileID: 4368732503634398}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -759,6 +760,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1834809776760116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4368732503634398}
+  m_Layer: 0
+  m_Name: BCPEnemyTakeCloseHit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1848713433893402
 GameObject:
   m_ObjectHideFlags: 1
@@ -1248,6 +1264,19 @@ Transform:
   m_Father: {fileID: 4167927035313556}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4368732503634398
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1834809776760116}
+  m_LocalRotation: {x: 0.030524252, y: -0.86441016, z: 0.052869566, w: 0.49906737}
+  m_LocalPosition: {x: 3.2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 468074}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 7, y: -120, z: 0}
 --- !u!4 &4372332128174338
 Transform:
   m_ObjectHideFlags: 1
@@ -1823,8 +1852,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleAnimController: {fileID: 9100000, guid: f65e2ac52f3d04d79b4ae02f1d9b6a10,
     type: 2}
+  character:
+    name: 
+    element: 0
+    abilities: []
+    stats: []
+    canSummon: 0
+    statuses: []
+  dead: 0
+  canAct: 0
+  canCast: 0
+  anim: {fileID: 0}
   damagePopUpPrefab: {fileID: 1733827680770478, guid: 75dea17b618bf430fa5d721d31b54e74,
     type: 2}
+  damageTaken: 0
+  doneApplied: 0
 --- !u!136 &136922435824476908
 CapsuleCollider:
   m_ObjectHideFlags: 1

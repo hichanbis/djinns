@@ -28,10 +28,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 154994}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -71.40373, y: 1.6364522, z: -27.946205}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4195547126971880}
+  - {fileID: 4762825489868436}
+  - {fileID: 4492258198819364}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1642,6 +1644,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1613677452959220
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4492258198819364}
+  m_Layer: 0
+  m_Name: BCPPLayerRun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1613823800718196
 GameObject:
   m_ObjectHideFlags: 1
@@ -2467,6 +2484,21 @@ GameObject:
   - component: {fileID: 4835352520059156}
   m_Layer: 0
   m_Name: right_beard_jnt09
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1910507194671826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4762825489868436}
+  m_Layer: 0
+  m_Name: BCPPlayerChoiceLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3973,6 +4005,19 @@ Transform:
   m_Father: {fileID: 4181041727854642}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -2.2747998, y: 1.9327999, z: 33.1977}
+--- !u!4 &4492258198819364
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1613677452959220}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.5, y: 2.5, z: -2.5}
+  m_LocalScale: {x: 1.0000005, y: 1, z: 1.0000005}
+  m_Children: []
+  m_Father: {fileID: 434442}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4502493262929128
 Transform:
   m_ObjectHideFlags: 1
@@ -4535,6 +4580,19 @@ Transform:
   m_Father: {fileID: 4992825728857616}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 7.9837, y: -4.6643, z: 30.0866}
+--- !u!4 &4762825489868436
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1910507194671826}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -1, y: 1.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 434442}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!4 &4768813933600372
 Transform:
   m_ObjectHideFlags: 1
@@ -5322,7 +5380,7 @@ MonoBehaviour:
     canSummon: 0
     statuses: []
   dead: 0
-  canAttack: 0
+  canAct: 0
   canCast: 0
   anim: {fileID: 0}
   damagePopUpPrefab: {fileID: 1733827680770478, guid: 75dea17b618bf430fa5d721d31b54e74,
@@ -5716,8 +5774,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 4523733454516014}
   m_AABB:
-    m_Center: {x: -0.014678478, y: 0.028881073, z: 0.584877}
-    m_Extent: {x: 0.42046338, y: 0.38310024, z: 0.6396673}
+    m_Center: {x: -0.014678001, y: 0.028878327, z: 0.58488}
+    m_Extent: {x: 0.4204634, y: 0.38310033, z: 0.6396687}
   m_DirtyAABB: 0
 --- !u!137 &137279306320974136
 SkinnedMeshRenderer:
