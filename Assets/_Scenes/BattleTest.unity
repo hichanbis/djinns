@@ -1053,6 +1053,8 @@ MonoBehaviour:
   targetsPanelTemplate: {fileID: 1000012778026230, guid: 98d9cdf482aa3414483632ce9453e8ca,
     type: 2}
   targetButtonTemplate: {fileID: 184630, guid: bcbd4bdfd3a2dd0408b13aba80ea8024, type: 2}
+  cursorTemplate: {fileID: 1771323515625652, guid: 25a305be1640c47ad9cf46162439a952,
+    type: 2}
   battleCanvas: {fileID: 350330449}
   victoryCanvas: {fileID: 1486419399}
   gameOverCanvas: {fileID: 2018784827}

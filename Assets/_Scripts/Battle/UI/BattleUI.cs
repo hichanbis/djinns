@@ -19,13 +19,16 @@ public class BattleUI : MonoBehaviour
     public GameObject magicActionButtonTemplate;
     public GameObject targetsPanelTemplate;
     public GameObject targetButtonTemplate;
+    public GameObject cursorTemplate;
+
+    private GameObject cursor;
 
     private GameObject playersInfoPanel;
     private Dictionary<string, GameObject> playerActionsPanels;
     private Dictionary<string, GameObject> playerMagicsPanels;
     private List<GameObject> playerUnits;
     private GameObject targetsPanel;
-    private string currentActionPanel;
+
 
     private UnityAction playerUnitsExistListener;
     private UnityAction playerMustChooseAbilityListener;
@@ -47,6 +50,8 @@ public class BattleUI : MonoBehaviour
         victoryCanvas.SetActive(false);
         gameOverCanvas.SetActive(false);
 
+        cursor = Instantiate(cursorTemplate);
+        cursor.SetActive(false);
 
         playerActionsPanels = new Dictionary<string, GameObject>();
         playerMagicsPanels = new Dictionary<string, GameObject>();
@@ -183,11 +188,13 @@ public class BattleUI : MonoBehaviour
             {
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
+                cursor.SetActive(true);
+                cursor.transform.SetParent(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject.transform, false);
             }
             else
                 entry.Value.SetActive(false);
         }
-        currentActionPanel = "action";
+
     }
 
     void DeActivateCurrentPlayerActionsPanel()
@@ -244,7 +251,7 @@ public class BattleUI : MonoBehaviour
         DisableMagicsBasedOnMp(currentPlayerMagicsPanel);
         currentPlayerMagicsPanel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(currentPlayerMagicsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject);
-        currentActionPanel = "magic";
+       
     }
 
     private void DisableMagicsBasedOnMp(GameObject currentPlayerMagicsPanel)
@@ -263,10 +270,7 @@ public class BattleUI : MonoBehaviour
         DeActivateCurrentPlayerActionsPanel();
         DeActivateCurrentPlayerMagicsPanel();
         InstantiateTargetsPanel(targetType);
-        currentActionPanel = "targets";
-
-
-
+       
     }
 
     //if all on grise le tout mais on attend le submit quand même
@@ -315,14 +319,12 @@ public class BattleUI : MonoBehaviour
     private void ClickedTarget(GameObject targetUnit)
     {
         Destroy(targetsPanel);
-        currentActionPanel = null;
         battleManager.currentUnitAction.targets = new List<GameObject>() { targetUnit };
     }
 
     private void ClickedTarget(List<GameObject> targetUnits)
     {
         Destroy(targetsPanel);
-        currentActionPanel = null;
         battleManager.currentUnitAction.targets = targetUnits;
     }
 
