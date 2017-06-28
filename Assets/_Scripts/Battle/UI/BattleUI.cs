@@ -21,7 +21,7 @@ public class BattleUI : MonoBehaviour
     public GameObject targetButtonTemplate;
     public GameObject cursorTemplate;
 
-    private GameObject cursor;
+    public GameObject cursor;
 
     private GameObject playersInfoPanel;
     private Dictionary<string, GameObject> playerActionsPanels;
@@ -50,7 +50,7 @@ public class BattleUI : MonoBehaviour
         victoryCanvas.SetActive(false);
         gameOverCanvas.SetActive(false);
 
-        cursor = Instantiate(cursorTemplate);
+        cursor = Instantiate(cursorTemplate, battleCanvas.transform, false);
         cursor.SetActive(false);
 
         playerActionsPanels = new Dictionary<string, GameObject>();
@@ -189,7 +189,7 @@ public class BattleUI : MonoBehaviour
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
                 cursor.SetActive(true);
-                cursor.transform.SetParent(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject.transform, false);
+
             }
             else
                 entry.Value.SetActive(false);
@@ -202,7 +202,10 @@ public class BattleUI : MonoBehaviour
         foreach (KeyValuePair<string, GameObject> entry in playerActionsPanels)
         {
             if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
+            {
                 entry.Value.SetActive(false);
+                cursor.SetActive(false);
+            }
         }
     }
 
@@ -230,6 +233,7 @@ public class BattleUI : MonoBehaviour
             {
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
+                cursor.SetActive(true);
             }
             else
                 entry.Value.SetActive(false);
@@ -249,9 +253,10 @@ public class BattleUI : MonoBehaviour
     {
         GameObject currentPlayerMagicsPanel = GetPlayerMagicsPanel(battleManager.currentChoosingUnit.name);
         DisableMagicsBasedOnMp(currentPlayerMagicsPanel);
+        cursor.SetActive(true);
         currentPlayerMagicsPanel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(currentPlayerMagicsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject);
-       
+
     }
 
     private void DisableMagicsBasedOnMp(GameObject currentPlayerMagicsPanel)
@@ -269,8 +274,9 @@ public class BattleUI : MonoBehaviour
        
         DeActivateCurrentPlayerActionsPanel();
         DeActivateCurrentPlayerMagicsPanel();
+        cursor.SetActive(true);
         InstantiateTargetsPanel(targetType);
-       
+
     }
 
     //if all on grise le tout mais on attend le submit quand même
@@ -300,7 +306,7 @@ public class BattleUI : MonoBehaviour
             targetButton.name = target.name;
             targetButton.transform.Find("TargetName").GetComponent<Text>().text = target.name;
             if (targetType.Equals(TargetType.Opposite) || targetType.Equals(TargetType.Same))
-                targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(target));
+                targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(new List<GameObject>() { target }));
             else if (targetType.Equals(TargetType.AllOpposite) || targetType.Equals(TargetType.AllSame))
                 targetButton.GetComponent<Button>().interactable = false;
         }
@@ -316,15 +322,10 @@ public class BattleUI : MonoBehaviour
         battleManager.SetCurrentTargetFromName(targetsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject.name);
     }
 
-    private void ClickedTarget(GameObject targetUnit)
-    {
-        Destroy(targetsPanel);
-        battleManager.currentUnitAction.targets = new List<GameObject>() { targetUnit };
-    }
-
     private void ClickedTarget(List<GameObject> targetUnits)
     {
         Destroy(targetsPanel);
+        cursor.SetActive(false);
         battleManager.currentUnitAction.targets = targetUnits;
     }
 

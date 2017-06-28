@@ -44,7 +44,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -52,7 +52,7 @@ LightmapSettings:
     m_AlbedoBoost: 1
     m_TemporalCoherenceThreshold: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 0
+    m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 8
@@ -221,7 +221,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
       propertyPath: m_Shadows.m_Strength
-      value: 0.98
+      value: 0.412
       objectReference: {fileID: 0}
     - target: {fileID: 429882, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -234,6 +234,18 @@ Prefab:
     - target: {fileID: 429882, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -202.224
+      objectReference: {fileID: 0}
+    - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
+      propertyPath: m_Shadows.m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
+      propertyPath: m_ShadowAngle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
+      propertyPath: m_Shadows.m_Resolution
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
@@ -393,10 +405,10 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1055,6 +1067,7 @@ MonoBehaviour:
   targetButtonTemplate: {fileID: 184630, guid: bcbd4bdfd3a2dd0408b13aba80ea8024, type: 2}
   cursorTemplate: {fileID: 1771323515625652, guid: 25a305be1640c47ad9cf46162439a952,
     type: 2}
+  cursor: {fileID: 0}
   battleCanvas: {fileID: 350330449}
   victoryCanvas: {fileID: 1486419399}
   gameOverCanvas: {fileID: 2018784827}
@@ -2356,7 +2369,7 @@ MonoBehaviour:
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
+  m_ForceModuleActive: 1
 --- !u!114 &1981693350
 MonoBehaviour:
   m_ObjectHideFlags: 0

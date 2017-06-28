@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class TargetSelectButton : MonoBehaviour, ISelectHandler
+public class TargetButtonSelect : MonoBehaviour, ISelectHandler
 {
+    private GameObject cursor;
+
     public void OnSelect(BaseEventData eventData)
     {
         BattleManager.Instance.SetCurrentTargetFromName(gameObject.name);
