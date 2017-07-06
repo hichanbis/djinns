@@ -26,7 +26,9 @@ public class AnyButtonSelect : MonoBehaviour, ISelectHandler
         yield return null;
 
         float elapsedTime = 0f;
-        Vector3 dest = new Vector3(transform.position.x - RectTransformToScreenSpace(rectTransform).width / 2, transform.position.y, transform.position.z);
+        float transformWidth = RectTransformToScreenSpace(rectTransform).width;
+        float cursorWidth = RectTransformToScreenSpace(cursor.GetComponent<RectTransform>()).width;
+        Vector3 dest = new Vector3(transform.position.x - (transformWidth / 2) - (cursorWidth / 2), transform.position.y, transform.position.z);
 
         while (elapsedTime < 0.1f)
         {

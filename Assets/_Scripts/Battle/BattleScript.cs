@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class BattleScript : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class BattleScript : MonoBehaviour
     public GameObject damagePopUpPrefab;
     public bool damageTaken;
     public bool doneApplied;
+    public Dictionary<Status, int> battleStatusesDurations;
 
 
     void Start()
@@ -24,6 +26,12 @@ public class BattleScript : MonoBehaviour
         dead = false;
         canAct = true;
         canCast = true;
+        battleStatusesDurations = new Dictionary<Status, int>();
+        //pour l'instant ça c toujours vide donc on rentre pas dans le foreach
+        foreach (Status status in character.statuses)
+        {   
+            battleStatusesDurations.Add(status, 0);
+        }
 
         anim = GetComponentInChildren<Animator>();
         anim.runtimeAnimatorController = battleAnimController;
@@ -37,7 +45,8 @@ public class BattleScript : MonoBehaviour
         anim.SetTrigger("Taunt");
     }
 
-    public IEnumerator LaunchChoiceAnim(){
+    public IEnumerator LaunchChoiceAnim()
+    {
 
         anim.SetTrigger("ChoiceAnim");
         yield return null;
@@ -49,25 +58,36 @@ public class BattleScript : MonoBehaviour
 
         Vector3 initPos = transform.position;
         Quaternion initRot = transform.rotation;
+        Debug.Log(battleAction.ability);
+
         if (battleAction.ability.distance.Equals(Distance.Close))
         {
-            EventManager.TriggerEvent(BattleEventMessages.MeleePlayerRun.ToString());
+            if (AmIAPlayer())
+                EventManager.TriggerEvent(BattleEventMessages.MeleePlayerRun.ToString());
+            else
+                EventManager.TriggerEvent(BattleEventMessages.MeleeEnemyRun.ToString());
+            
             yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().RunToTarget(battleAction.targets[0]));
 
+
+            if (AmIAPlayer())
+                EventManager.TriggerEvent(BattleEventMessages.MeleePlayerAttack.ToString());
+            else
+                EventManager.TriggerEvent(BattleEventMessages.MeleeEnemyAttack.ToString());
         }
 
-        EventManager.TriggerEvent(BattleEventMessages.MeleePlayerAttack.ToString());
+
 
         AnimatorControllerParameter[] animParams = anim.parameters;
         if (!Array.Exists(animParams, animParam => animParam.name.Equals(battleAction.ability.id)))
         {
-            Debug.LogError(battleAction.ability.id + " parameter missing in the battle controller. Won't launch the animation");
+            Debug.LogWarning(battleAction.ability.id + " parameter missing in the battle controller. Won't launch the animation");
             BattleManager.Instance.targetImpactReached = true;
             yield break;
         }
 
-
         anim.SetTrigger(battleAction.ability.id);
+
 
         //wait for anim to start
         while (!anim.GetCurrentAnimatorStateInfo(0).IsName(battleAction.ability.id))
@@ -145,31 +165,15 @@ public class BattleScript : MonoBehaviour
         }
     }
 
-
-    //on end turn
-    public IEnumerator ApplyEndRageStatusEffects()
-    {
-        for (int i = 0; i < character.statuses.Count; i++)
-        {
-            Status status = character.statuses[i];
-
-            if (status.applyMoment.Equals(StatusApplyMoment.endTurn))
-            {
-                yield return StartCoroutine(ApplyStatus(status));
-            }
-
-        }
-    }
-
     public IEnumerator TakeDamage(int dmg)
     {
-        
+
         character.GetStat(StatName.hpNow).baseValue = Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue + dmg, 0, character.GetStat(StatName.hp).GetValue());
         if (character.GetStat(StatName.hpNow).baseValue == 0)
         {
             dead = true;
         }
-        
+
         GameObject damagePopup = Instantiate(damagePopUpPrefab, transform);
         damagePopup.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
 
@@ -185,7 +189,7 @@ public class BattleScript : MonoBehaviour
                 yield return null;
             while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
                 yield return null;
-            
+
         }
         else
         {
@@ -197,7 +201,7 @@ public class BattleScript : MonoBehaviour
         }
 
         DestroyIfDead();
-            
+
 
     }
 
@@ -208,18 +212,37 @@ public class BattleScript : MonoBehaviour
             BattleManager.Instance.monsterUnits.Remove(gameObject);
             Destroy(gameObject);
         }
-        
+
     }
 
+    //Added if not already present and depending on success rate of the status
     public IEnumerator TryAddStatus(Status status)
     {
-        //Added if not already present and depending on success rate of the status
-        //if (!character.statuses.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(status.successRatePercent))
-        if (!character.statuses.Exists(s => s.GetType() == status.GetType()) && Rng.GetSuccess(100))
+        
+        status.successRatePercent = 100; //hack for debug
+        if (!battleStatusesDurations.ContainsKey(status) && Rng.GetSuccess(status.successRatePercent))
         {
-            character.statuses.Add(status);
+            battleStatusesDurations.Add(status, 0);
             if (status.applyMoment.Equals(StatusApplyMoment.add))
                 yield return StartCoroutine(ApplyStatus(status));
+        }
+    }
+
+    //on end turn
+    public IEnumerator ApplyEndRageStatusEffects()
+    {
+
+        foreach (Status status in battleStatusesDurations.Keys.ToList())
+        {
+            if (status.applyMoment.Equals(StatusApplyMoment.endTurn))
+            {
+                yield return StartCoroutine(ApplyStatus(status));
+            }
+
+            battleStatusesDurations[status]++;
+
+            if (battleStatusesDurations[status] >= status.maxTurns)
+                RemoveStatus(status);
         }
     }
 
@@ -239,8 +262,20 @@ public class BattleScript : MonoBehaviour
             canCast = false;
 
         yield return null;
-    
+
     }
+
+    public void RemoveStatus(Status status)
+    {
+        if (status.applyType.Equals(StatusApplyType.modifier))
+            character.GetStat(status.statName).modifiers.Remove(status.powerPercent);
+        else if (status.applyType.Equals(StatusApplyType.disableCommands))
+            canAct = true;
+        if (status.applyType.Equals(StatusApplyType.disableMagic))
+            canCast = true;
+        battleStatusesDurations.Remove(status);
+    }
+
 
     public void removeMp(Ability ability)
     {
@@ -257,6 +292,7 @@ public class BattleScript : MonoBehaviour
         return character.abilities.FindIndex(a => a.abilityType.Equals(AbilityType.Magic)) >= 0;
     }
 
+    //animation event listener
     public void RegisterAttackLaunched()
     {
         BattleManager.Instance.targetImpactReached = true;

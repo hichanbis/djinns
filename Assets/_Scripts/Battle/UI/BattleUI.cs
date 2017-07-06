@@ -189,6 +189,7 @@ public class BattleUI : MonoBehaviour
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
                 cursor.SetActive(true);
+                cursor.transform.SetAsLastSibling();
 
             }
             else
@@ -234,6 +235,7 @@ public class BattleUI : MonoBehaviour
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
                 cursor.SetActive(true);
+                cursor.transform.SetAsLastSibling();
             }
             else
                 entry.Value.SetActive(false);
@@ -254,6 +256,7 @@ public class BattleUI : MonoBehaviour
         GameObject currentPlayerMagicsPanel = GetPlayerMagicsPanel(battleManager.currentChoosingUnit.name);
         DisableMagicsBasedOnMp(currentPlayerMagicsPanel);
         cursor.SetActive(true);
+        cursor.transform.SetAsLastSibling();
         currentPlayerMagicsPanel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(currentPlayerMagicsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject);
 
@@ -274,8 +277,10 @@ public class BattleUI : MonoBehaviour
        
         DeActivateCurrentPlayerActionsPanel();
         DeActivateCurrentPlayerMagicsPanel();
-        cursor.SetActive(true);
+
         InstantiateTargetsPanel(targetType);
+        cursor.SetActive(true);
+        cursor.transform.SetAsLastSibling();
 
     }
 

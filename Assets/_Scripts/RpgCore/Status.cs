@@ -30,6 +30,8 @@ public class Status
     public StatusApplyType applyType;
     public StatName statName;
     public int powerPercent;
+    public int maxTurns;
+    public List<string> removeStatusesOnAdd;
 
     public Status()
     {
@@ -37,7 +39,7 @@ public class Status
 
     public override string ToString()
     {
-        return string.Format("[Status:{0} rate:{1}% moment:{2} type:{3} stat:{4} pow:{5}%]", id, successRatePercent, applyMoment, applyType, statName, powerPercent);
+        return string.Format("[Status:{0} rate:{1}% moment:{2} type:{3} stat:{4} pow:{5}% maxTurns:{6}]", id, successRatePercent, applyMoment, applyType, statName, powerPercent, maxTurns);
     }
 
 }

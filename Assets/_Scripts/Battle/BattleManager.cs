@@ -389,6 +389,8 @@ public class BattleManager : MonoBehaviour
 
         ImpactHpMpAfterVictory();
 
+        // + impact status que l'on veut conserver après bataille (poison au minimum)
+
         battleEnd = true;
     }
 
