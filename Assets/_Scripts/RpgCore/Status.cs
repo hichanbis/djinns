@@ -31,7 +31,8 @@ public class Status
     public StatName statName;
     public int powerPercent;
     public int maxTurns;
-    public List<string> removeStatusesOnAdd;
+    public List<string> removesStatusesOnAdd;
+    public List<string> blockedByStatuses;
 
     public Status()
     {

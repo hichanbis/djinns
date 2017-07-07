@@ -58,7 +58,7 @@ public class BattleScript : MonoBehaviour
 
         Vector3 initPos = transform.position;
         Quaternion initRot = transform.rotation;
-        Debug.Log(battleAction.ability);
+        //Debug.Log(battleAction.ability);
 
         if (battleAction.ability.distance.Equals(Distance.Close))
         {
@@ -215,17 +215,40 @@ public class BattleScript : MonoBehaviour
 
     }
 
-    //Added if not already present and depending on success rate of the status
-    public IEnumerator TryAddStatus(Status status)
+
+    public bool CanAddStatus(Status status)
     {
-        
         status.successRatePercent = 100; //hack for debug
-        if (!battleStatusesDurations.ContainsKey(status) && Rng.GetSuccess(status.successRatePercent))
+        bool blocked = false;
+        foreach (string blockerStatusId in status.blockedByStatuses)
         {
-            battleStatusesDurations.Add(status, 0);
-            if (status.applyMoment.Equals(StatusApplyMoment.add))
-                yield return StartCoroutine(ApplyStatus(status));
+            foreach (Status presentStatus in battleStatusesDurations.Keys.ToList())
+            {
+                if (blockerStatusId.Equals(presentStatus.id))
+                    blocked = true;
+            }
         }
+
+        return !battleStatusesDurations.ContainsKey(status) && Rng.GetSuccess(status.successRatePercent) && !blocked;
+
+    }
+
+    //Adds status and removes status as described in data (heavy removes light, Toxic removes poison, etc.)
+    public IEnumerator AddStatus(Status status)
+    {
+        foreach (Status presentStatus in battleStatusesDurations.Keys.ToList())
+        {
+            foreach (string statusIdToRemove in status.removesStatusesOnAdd)
+            {
+                if (statusIdToRemove.Equals(presentStatus.id))
+                    RemoveStatus(presentStatus);
+            }
+        }
+
+        battleStatusesDurations.Add(status, 0);
+        if (status.applyMoment.Equals(StatusApplyMoment.add))
+            yield return StartCoroutine(ApplyStatus(status));
+        
     }
 
     //on end turn
@@ -248,7 +271,6 @@ public class BattleScript : MonoBehaviour
 
     public IEnumerator ApplyStatus(Status status)
     {
-        Debug.Log("Applying " + status + " for " + character);
         if (status.applyType.Equals(StatusApplyType.damage))
         {
             int damage = Mathf.RoundToInt(character.GetStat(StatName.hp).baseValue * ((float)status.powerPercent / 100));

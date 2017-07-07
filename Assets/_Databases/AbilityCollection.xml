@@ -102,7 +102,7 @@
   </Ability>
   <Ability id="Ivy">
     <name>Ivy</name>
-    <description>Has a chance to inflict poison status</description>
+    <description>Has a chance to inflict Poison status</description>
     <abilityType>Magic</abilityType>
     <element>Earth</element>
     <distance>Range</distance>
@@ -110,6 +110,17 @@
     <mpCost>10</mpCost>
     <power>0</power>
     <statuses><Status id ="Poison"></Status></statuses>
+  </Ability>
+  <Ability id="IvyEx">
+    <name>Ivy Ex</name>
+    <description>Has a chance to inflict Toxic status</description>
+    <abilityType>Magic</abilityType>
+    <element>Earth</element>
+    <distance>Range</distance>
+    <targetType>Opposite</targetType>
+    <mpCost>20</mpCost>
+    <power>0</power>
+    <statuses><Status id ="Toxic"></Status></statuses>
   </Ability>
 </Abilities>
 </AbilityCollection>

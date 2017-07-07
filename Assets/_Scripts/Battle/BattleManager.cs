@@ -235,7 +235,7 @@ public class BattleManager : MonoBehaviour
         
             while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             {
-              yield return null;
+                yield return null;
             }
 
         }
@@ -279,7 +279,8 @@ public class BattleManager : MonoBehaviour
         {
             foreach (Status status in battleAction.ability.statuses)
             {
-                coroutineJoinStatuses.StartSubtask(target.GetComponent<BattleScript>().TryAddStatus(status));
+                if (target.GetComponent<BattleScript>().CanAddStatus(status))
+                    coroutineJoinStatuses.StartSubtask(target.GetComponent<BattleScript>().AddStatus(status));
             }
         }
         yield return coroutineJoinStatuses.WaitForAll();

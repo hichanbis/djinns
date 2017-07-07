@@ -1,5 +1,5 @@
 <StatusCollection>
-    <Statuses>
+<Statuses>
   <Status id="Poison">
     <name>Poison</name>
     <type>Ailment</type>
@@ -11,6 +11,9 @@
     <powerPercent>-10</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string>
+<string>Venom</string>
+<string>Toxic</string></blockedByStatuses>
   </Status>
   <Status id="Toxic">
     <name>Toxic</name>
@@ -23,6 +26,8 @@
     <powerPercent>-20</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Poison</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string>
+<string>Venom</string></blockedByStatuses>
   </Status>
   <Status id="Venom">
     <name>Venom</name>
@@ -36,6 +41,7 @@
     <maxTurns>999</maxTurns>
     <removesStatusesOnAdd><string>Poison</string>
 <string>Toxic</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Regen">
     <name>Regen</name>
@@ -48,6 +54,7 @@
     <powerPercent>20</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="RegenM">
     <name>RegenM</name>
@@ -57,9 +64,10 @@
     <applyMoment>endTurn</applyMoment>
     <applyType>damage</applyType>
     <statName>hpNow</statName>
-    <powerPercent>20</powerPercent>
+    <powerPercent>5</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Sleep">
     <name>Sleep</name>
@@ -72,6 +80,8 @@
     <powerPercent>0</powerPercent>
     <maxTurns>999</maxTurns>
     <removesStatusesOnAdd><string>Berserk</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Freeze</string>
+<string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Freeze">
     <name>Freeze</name>
@@ -85,20 +95,7 @@
     <maxTurns>999</maxTurns>
     <removesStatusesOnAdd><string>Berserk</string>
 <string>Sleep</string></removesStatusesOnAdd>
-  </Status>
-  <Status id="Paralysis">
-    <name>Paralysis</name>
-    <type>Ailment</type>
-    <successRatePercent>30</successRatePercent>
-    <description>Prevent all actions</description>
-    <applyMoment>add</applyMoment>
-    <applyType>disableCommands</applyType>
-    <statName>none</statName>
-    <powerPercent>0</powerPercent>
-    <maxTurns>3</maxTurns>
-    <removesStatusesOnAdd><string>Berserk</string>
-<string>Sleep</string>
-<string>Freeze</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Petrify">
     <name>Petrify</name>
@@ -111,16 +108,8 @@
     <powerPercent>0</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Berserk</string>
-<string>Poison</string>
-<string>Toxic</string>
-<string>Acid</string>
-<string>Sleep</string>
-<string>Freeze</string>
-<string>Paralysis</string>
-<string>Regen</string>
-<string>RegenM</string>
-<string>Mute</string>
-<string>Martyr</string></removesStatusesOnAdd>
+<string>Sleep</string></removesStatusesOnAdd>
+    <blockedByStatuses></blockedByStatuses>
   </Status>
   <Status id="Berserk">
     <name>Berserk</name>
@@ -132,7 +121,10 @@
     <statName>none</statName>
     <powerPercent>0</powerPercent>
     <maxTurns>999</maxTurns>
-    <removesStatusesOnAdd></removesStatusesOnAdd>
+    <removesStatusesOnAdd><string>Freeze</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Sleep</string>
+<string>Freeze</string>
+<string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Mute">
     <name>Mute</name>
@@ -145,6 +137,9 @@
     <powerPercent>0</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd></removesStatusesOnAdd>
+    <blockedByStatuses><string>Sleep</string>
+<string>Freeze</string>
+<string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Martyr">
     <name>Martyr</name>
@@ -157,6 +152,9 @@
     <powerPercent>300</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd></removesStatusesOnAdd>
+    <blockedByStatuses><string>Sleep</string>
+<string>Freeze</string>
+<string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Heavy">
     <name>Heavy</name>
@@ -169,6 +167,7 @@
     <powerPercent>-30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Light</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Fragile">
     <name>Fragile</name>
@@ -181,6 +180,7 @@
     <powerPercent>-30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Robust</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Slow">
     <name>Slow</name>
@@ -193,6 +193,7 @@
     <powerPercent>-30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Haste</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Dull">
     <name>Dull</name>
@@ -205,6 +206,7 @@
     <powerPercent>-30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Focus</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Weak">
     <name>Weak</name>
@@ -217,6 +219,7 @@
     <powerPercent>-30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Strong</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Light">
     <name>Light</name>
@@ -229,6 +232,7 @@
     <powerPercent>30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Heavy</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Robust">
     <name>Robust</name>
@@ -241,6 +245,7 @@
     <powerPercent>30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Fragile</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Haste">
     <name>Haste</name>
@@ -253,6 +258,7 @@
     <powerPercent>30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Slow</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Focus">
     <name>Focus</name>
@@ -265,6 +271,7 @@
     <powerPercent>30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Dull</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Strong">
     <name>Strong</name>
@@ -277,6 +284,7 @@
     <powerPercent>30</powerPercent>
     <maxTurns>3</maxTurns>
     <removesStatusesOnAdd><string>Weak</string></removesStatusesOnAdd>
+    <blockedByStatuses><string>Petrify</string></blockedByStatuses>
   </Status>
   <Status id="Guard">
     <name>Guard</name>
@@ -289,6 +297,7 @@
     <powerPercent>100</powerPercent>
     <maxTurns>1</maxTurns>
     <removesStatusesOnAdd></removesStatusesOnAdd>
+    <blockedByStatuses></blockedByStatuses>
   </Status>
 </Statuses>
 </StatusCollection>
