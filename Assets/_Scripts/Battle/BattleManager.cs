@@ -467,6 +467,14 @@ public class BattleManager : MonoBehaviour
 
     public void SetCurrentTargetFromName(string targetName)
     {
+        foreach (GameObject target in currentTargets)
+        {
+            TargetCircle tc = target.GetComponent<TargetCircle>();
+            if (tc)
+                tc.HideCircle();
+        }
+
+
         if (targetName.Equals("All Players"))
         {
             currentTargets = playerUnits;
@@ -481,6 +489,13 @@ public class BattleManager : MonoBehaviour
         {
             currentTargets = new List<GameObject>() { GetAllUnits().Find(u => u.name.Equals(targetName)) };
             EventManager.TriggerEvent(BattleEventMessages.TargetChoiceExpected.ToString());
+        }
+
+        foreach (GameObject target in currentTargets)
+        {
+            TargetCircle tc = target.GetComponent<TargetCircle>();
+            if (tc)
+                tc.DisplayCircle();
         }
 
     }
