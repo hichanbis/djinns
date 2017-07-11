@@ -19,9 +19,9 @@ public class BattleUI : MonoBehaviour
     public GameObject magicActionButtonTemplate;
     public GameObject targetsPanelTemplate;
     public GameObject targetButtonTemplate;
-    public GameObject cursorTemplate;
+    public GameObject cursorRootTemplate;
 
-    public GameObject cursor;
+    public GameObject cursorRoot;
 
     private GameObject playersInfoPanel;
     private Dictionary<string, GameObject> playerActionsPanels;
@@ -50,8 +50,8 @@ public class BattleUI : MonoBehaviour
         victoryCanvas.SetActive(false);
         gameOverCanvas.SetActive(false);
 
-        cursor = Instantiate(cursorTemplate, battleCanvas.transform, false);
-        cursor.SetActive(false);
+        cursorRoot = Instantiate(cursorRootTemplate, battleCanvas.transform, false);
+        cursorRoot.SetActive(false);
 
         playerActionsPanels = new Dictionary<string, GameObject>();
         playerMagicsPanels = new Dictionary<string, GameObject>();
@@ -188,8 +188,8 @@ public class BattleUI : MonoBehaviour
             {
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
-                cursor.SetActive(true);
-                cursor.transform.SetAsLastSibling();
+                cursorRoot.SetActive(true);
+                cursorRoot.transform.SetAsLastSibling();
 
             }
             else
@@ -205,7 +205,7 @@ public class BattleUI : MonoBehaviour
             if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
             {
                 entry.Value.SetActive(false);
-                cursor.SetActive(false);
+                cursorRoot.SetActive(false);
             }
         }
     }
@@ -234,8 +234,8 @@ public class BattleUI : MonoBehaviour
             {
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
-                cursor.SetActive(true);
-                cursor.transform.SetAsLastSibling();
+                cursorRoot.SetActive(true);
+                cursorRoot.transform.SetAsLastSibling();
             }
             else
                 entry.Value.SetActive(false);
@@ -255,8 +255,8 @@ public class BattleUI : MonoBehaviour
     {
         GameObject currentPlayerMagicsPanel = GetPlayerMagicsPanel(battleManager.currentChoosingUnit.name);
         DisableMagicsBasedOnMp(currentPlayerMagicsPanel);
-        cursor.SetActive(true);
-        cursor.transform.SetAsLastSibling();
+        cursorRoot.SetActive(true);
+        cursorRoot.transform.SetAsLastSibling();
         currentPlayerMagicsPanel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(currentPlayerMagicsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject);
 
@@ -279,8 +279,8 @@ public class BattleUI : MonoBehaviour
         DeActivateCurrentPlayerMagicsPanel();
 
         InstantiateTargetsPanel(targetType);
-        cursor.SetActive(true);
-        cursor.transform.SetAsLastSibling();
+        cursorRoot.SetActive(true);
+        cursorRoot.transform.SetAsLastSibling();
 
     }
 
@@ -313,7 +313,12 @@ public class BattleUI : MonoBehaviour
             if (targetType.Equals(TargetType.Opposite) || targetType.Equals(TargetType.Same))
                 targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(new List<GameObject>() { target }));
             else if (targetType.Equals(TargetType.AllOpposite) || targetType.Equals(TargetType.AllSame))
+            {
                 targetButton.GetComponent<Button>().interactable = false;
+                ColorBlock cb = targetButton.GetComponent<Button>().colors;
+                cb.disabledColor = cb.highlightedColor;
+                targetButton.GetComponent<Button>().colors = cb;
+            }
         }
 
         /*if (targetType.Equals(TargetType.AllOpposite) || targetType.Equals(TargetType.AllSame))
@@ -330,7 +335,7 @@ public class BattleUI : MonoBehaviour
     private void ClickedTarget(List<GameObject> targetUnits)
     {
         Destroy(targetsPanel);
-        cursor.SetActive(false);
+        cursorRoot.SetActive(false);
         battleManager.currentUnitAction.targets = targetUnits;
     }
 

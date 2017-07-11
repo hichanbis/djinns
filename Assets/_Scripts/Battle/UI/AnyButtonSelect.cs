@@ -12,7 +12,7 @@ public class AnyButtonSelect : MonoBehaviour, ISelectHandler
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
-        cursor = GetComponentInParent<BattleUI>().cursor;
+        cursor = GetComponentInParent<BattleUI>().cursorRoot;
     }
 
     public void OnSelect(BaseEventData eventData)

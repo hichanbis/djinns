@@ -39,8 +39,8 @@ public class BattleStart : MonoBehaviour
     public static List<GameObject> InstantiateMonsterParty()
     {
         List<GameObject> enemies = new List<GameObject>();
-        //int nbEnemies = Random.Range(2, 6);
-        int nbEnemies = 1;
+        int nbEnemies = Random.Range(1, 4);
+        //int nbEnemies = 1;
         float spaceBetweenEnemies = 4;
         float xPos = -spaceBetweenEnemies / 2 * (nbEnemies - 1);
         float zPos = 5f;
