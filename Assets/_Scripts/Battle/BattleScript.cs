@@ -18,7 +18,7 @@ public class BattleScript : MonoBehaviour
     public GameObject damagePopUpPrefab;
     public bool damageTaken;
     public bool doneApplied;
-    public Dictionary<Status, int> battleStatusesDurations;
+    public Dictionary<string, int> battleStatusesDurations;
 
 
     void Start()
@@ -26,11 +26,11 @@ public class BattleScript : MonoBehaviour
         dead = false;
         canAct = true;
         canCast = true;
-        battleStatusesDurations = new Dictionary<Status, int>();
+        battleStatusesDurations = new Dictionary<string, int>();
         //pour l'instant ça c toujours vide donc on rentre pas dans le foreach
         foreach (Status status in character.statuses)
         {   
-            battleStatusesDurations.Add(status, 0);
+            battleStatusesDurations.Add(status.id, 0);
         }
 
         anim = GetComponentInChildren<Animator>();
@@ -62,42 +62,47 @@ public class BattleScript : MonoBehaviour
 
         if (battleAction.ability.distance.Equals(Distance.Close))
         {
-            if (AmIAPlayer())
-                EventManager.TriggerEvent(BattleEventMessages.MeleePlayerRun.ToString());
-            else
-                EventManager.TriggerEvent(BattleEventMessages.MeleeEnemyRun.ToString());
-            
+            EventManager.TriggerEvent(BattleEventMessages.MeleeAttack.ToString());
+
             yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().RunToTarget(battleAction.targets[0]));
 
-
-            if (AmIAPlayer())
-                EventManager.TriggerEvent(BattleEventMessages.MeleePlayerAttack.ToString());
-            else
-                EventManager.TriggerEvent(BattleEventMessages.MeleeEnemyAttack.ToString());
         }
 
 
+        string trigger;
+        if (battleAction.ability.abilityType.Equals(AbilityType.Magic))
+            trigger = "CastMagic";
+        else
+            trigger = battleAction.ability.id;
 
         AnimatorControllerParameter[] animParams = anim.parameters;
-        if (!Array.Exists(animParams, animParam => animParam.name.Equals(battleAction.ability.id)))
+        if (!Array.Exists(animParams, animParam => animParam.name.Equals(trigger)))
         {
-            Debug.LogWarning(battleAction.ability.id + " parameter missing in the battle controller. Won't launch the animation");
+            Debug.LogWarning(trigger + " trigger missing in the battle controller. Won't launch the animation");
             BattleManager.Instance.targetImpactReached = true;
             yield break;
         }
 
-        anim.SetTrigger(battleAction.ability.id);
+        anim.SetTrigger(trigger);
 
+       
 
         //wait for anim to start
-        while (!anim.GetCurrentAnimatorStateInfo(0).IsName(battleAction.ability.id))
+        while (!anim.GetCurrentAnimatorStateInfo(0).IsName(trigger))
         {
             yield return null;
         }
-        while (anim.GetCurrentAnimatorStateInfo(0).IsName(battleAction.ability.id))
+
+        //en attendant de creer l'animation event
+        if (trigger.Equals("CastMagic"))
+            BattleManager.Instance.targetImpactReached = true;
+        
+        //wait for anim to finish
+        while (anim.GetCurrentAnimatorStateInfo(0).IsName(trigger))
         {
             yield return null;
         }
+
 
         if (battleAction.ability.distance.Equals(Distance.Close))
         {
@@ -184,17 +189,36 @@ public class BattleScript : MonoBehaviour
         //  anim.SetTrigger("Healed");
         else if (dead)
         {
+            string expectedState = "ERROR";
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Guard"))
+                expectedState = "GuardDie";
+            else if (anim.GetCurrentAnimatorStateInfo(0).IsName("MagicReady"))
+                expectedState = "MagicReadyDie";
+            else if (anim.GetCurrentAnimatorStateInfo(0).IsName("MeleeReady"))
+                expectedState = "MeleeReadyDie";
+            else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                expectedState = "IdleDie";
+
             anim.SetTrigger("Die");
-            while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+            while (!anim.GetCurrentAnimatorStateInfo(0).IsName(expectedState))
                 yield return null;
             while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
                 yield return null;
-
         }
         else
         {
+            string expectedState = "ERROR";
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Guard"))
+                expectedState = "GuardHit";
+            else if (anim.GetCurrentAnimatorStateInfo(0).IsName("MagicReady"))
+                expectedState = "MagicReadyHit";
+            else if (anim.GetCurrentAnimatorStateInfo(0).IsName("MeleeReady"))
+                expectedState = "MeleeReadyHit";
+            else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                expectedState = "IdleHit";
+            
             anim.SetTrigger("Hit");
-            while (!anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+            while (!anim.GetCurrentAnimatorStateInfo(0).IsName(expectedState))
                 yield return null;
             while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
                 yield return null;
@@ -222,30 +246,30 @@ public class BattleScript : MonoBehaviour
         bool blocked = false;
         foreach (string blockerStatusId in status.blockedByStatuses)
         {
-            foreach (Status presentStatus in battleStatusesDurations.Keys.ToList())
+            foreach (string presentStatusId in battleStatusesDurations.Keys.ToList())
             {
-                if (blockerStatusId.Equals(presentStatus.id))
+                if (blockerStatusId.Equals(presentStatusId))
                     blocked = true;
             }
         }
-
-        return !battleStatusesDurations.ContainsKey(status) && Rng.GetSuccess(status.successRatePercent) && !blocked;
+        Debug.Log("Contains key" + battleStatusesDurations.ContainsKey(status.id));
+        return !battleStatusesDurations.ContainsKey(status.id) && Rng.GetSuccess(status.successRatePercent) && !blocked;
 
     }
 
     //Adds status and removes status as described in data (heavy removes light, Toxic removes poison, etc.)
     public IEnumerator AddStatus(Status status)
     {
-        foreach (Status presentStatus in battleStatusesDurations.Keys.ToList())
+        foreach (string presentStatusId in battleStatusesDurations.Keys.ToList())
         {
             foreach (string statusIdToRemove in status.removesStatusesOnAdd)
             {
-                if (statusIdToRemove.Equals(presentStatus.id))
-                    RemoveStatus(presentStatus);
+                if (statusIdToRemove.Equals(presentStatusId))
+                    RemoveStatus(presentStatusId);
             }
         }
 
-        battleStatusesDurations.Add(status, 0);
+        battleStatusesDurations.Add(status.id, 0);
         if (status.applyMoment.Equals(StatusApplyMoment.add))
             yield return StartCoroutine(ApplyStatus(status));
         
@@ -255,17 +279,18 @@ public class BattleScript : MonoBehaviour
     public IEnumerator ApplyEndRageStatusEffects()
     {
 
-        foreach (Status status in battleStatusesDurations.Keys.ToList())
+        foreach (string statusId in battleStatusesDurations.Keys.ToList())
         {
+            Status status = StatusCollection.Instance.FindStatusFromId(statusId);
             if (status.applyMoment.Equals(StatusApplyMoment.endTurn))
             {
                 yield return StartCoroutine(ApplyStatus(status));
             }
 
-            battleStatusesDurations[status]++;
+            battleStatusesDurations[statusId]++;
 
-            if (battleStatusesDurations[status] >= status.maxTurns)
-                RemoveStatus(status);
+            if (battleStatusesDurations[statusId] >= status.maxTurns)
+                RemoveStatus(statusId);
         }
     }
 
@@ -287,15 +312,16 @@ public class BattleScript : MonoBehaviour
 
     }
 
-    public void RemoveStatus(Status status)
+    public void RemoveStatus(string statusId)
     {
+        Status status = StatusCollection.Instance.FindStatusFromId(statusId);
         if (status.applyType.Equals(StatusApplyType.modifier))
             character.GetStat(status.statName).modifiers.Remove(status.powerPercent);
         else if (status.applyType.Equals(StatusApplyType.disableCommands))
             canAct = true;
         if (status.applyType.Equals(StatusApplyType.disableMagic))
             canCast = true;
-        battleStatusesDurations.Remove(status);
+        battleStatusesDurations.Remove(statusId);
     }
 
 

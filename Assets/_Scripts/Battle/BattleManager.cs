@@ -129,7 +129,7 @@ public class BattleManager : MonoBehaviour
 
         playerUnits = BattleStart.InstantiatePlayerParty();
         monsterUnits = BattleStart.InstantiateMonsterParty();
-        currentTargets = new List<GameObject>(){ monsterUnits[0] };
+        currentTargets = new List<GameObject>();
 
         yield return new WaitForSeconds(1f);
 
@@ -149,11 +149,13 @@ public class BattleManager : MonoBehaviour
             yield break;
 
         turnActions = new List<BattleAction>();
+        currentTargets = new List<GameObject>();
         List<GameObject> battlingUnits = GetAllBattleAbleUnits(); //should filter on dead and disabled
 
         for (int i = 0; i < battlingUnits.Count; i++)
         {
             currentChoosingUnit = battlingUnits[i];
+            currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("Idle");
             currentUnitAction = new BattleAction();
             if (IsGameObjectAPlayer(currentChoosingUnit))
             {
@@ -170,8 +172,7 @@ public class BattleManager : MonoBehaviour
                         else if (currentUnitAction.targets != null)
                         {
                             choiceDone = true;
-                            //fin de la choice anim si en cours...
-                            currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("Idle");
+                                
                         }
                     }
 
@@ -179,6 +180,14 @@ public class BattleManager : MonoBehaviour
 
                     yield return null;
                 }
+
+                if (currentUnitAction.ability.id.Equals("Guard"))
+                    currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("Guard");
+                else if (currentUnitAction.ability.abilityType.Equals(AbilityType.Melee))
+                    currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MeleeReady");
+                else if (currentUnitAction.ability.abilityType.Equals(AbilityType.Magic))
+                    currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MagicReady");
+                
 
                 turnActions.Add(currentUnitAction);
 
@@ -190,6 +199,7 @@ public class BattleManager : MonoBehaviour
                 {
                     BattleAction action = new BattleAction(currentChoosingUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentChoosingUnit.GetComponent<BattleScript>().character.getAbility("Attack"));
                     turnActions.Add(action);
+                    currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MeleeReady");
                 }
 
             }
@@ -222,20 +232,30 @@ public class BattleManager : MonoBehaviour
 
             ReassignTargetIfNeeded(battleAction);
 
-            targetImpactReached = false;
-            //ne pas se mettre en attente car ensuite on attend l'anim event qui set targetImpactReached a true
-            StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAbilityWithAnim(battleAction));
+            Debug.Log("avant launch");
+
+            if (!battleAction.ability.id.Equals("Guard"))
+            {
+                targetImpactReached = false;
+                StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAbilityWithAnim(battleAction));
            
-            //targetImpactReached est setté par un animEvent
-            while (!targetImpactReached)
-                yield return null;
+                //targetImpactReached est setté par un animEvent
+                while (!targetImpactReached)
+                    yield return null;
+            }
+
+            Debug.Log("avant dmg taken");
 
             yield return StartCoroutine(WaitForAllDamageToBeTaken(battleAction));
             yield return StartCoroutine(WaitForAllStatusToBeAdded(battleAction));
         
-            while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+            if (!battleAction.ability.id.Equals("Guard"))
             {
-                yield return null;
+                while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                {
+                    Debug.Log("j'attends idle");
+                    yield return null;
+                }
             }
 
         }
@@ -279,6 +299,7 @@ public class BattleManager : MonoBehaviour
         {
             foreach (Status status in battleAction.ability.statuses)
             {
+                Debug.Log(status);
                 if (target.GetComponent<BattleScript>().CanAddStatus(status))
                     coroutineJoinStatuses.StartSubtask(target.GetComponent<BattleScript>().AddStatus(status));
             }

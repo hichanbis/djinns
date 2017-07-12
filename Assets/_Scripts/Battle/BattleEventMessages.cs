@@ -15,6 +15,7 @@ public enum BattleEventMessages
     TargetChoiceAllPlayers,
     TargetChoiceAllMonsters,
     ActionChoicePhaseDone,
+    MeleeAttack,
     MeleePlayerRun,
     MeleePlayerAttack,
     MeleeEnemyRun,
