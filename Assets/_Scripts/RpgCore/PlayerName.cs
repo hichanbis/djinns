@@ -1,7 +1,7 @@
 [System.Serializable]
 public enum PlayerName
 {
-	Shamal,
+	Cassim,
 	Tayar,
 	Daeva,
 	Afia,

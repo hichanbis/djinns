@@ -8,6 +8,10 @@ public class BattleManager : MonoBehaviour
 {
     private static BattleManager instance;
 
+    public Game currentGame;
+    public StatusCollection statusCollection;
+    public AbilityCollection abilityCollection;
+
     public BattleStates currentState;
     public List<GameObject> playerUnits = new List<GameObject>();
     public List<GameObject> monsterUnits = new List<GameObject>();
@@ -65,17 +69,6 @@ public class BattleManager : MonoBehaviour
             Debug.Log("Ok persistent scene loaded go debug");
         }
 
-
-        //mockup game
-        if (Game.current == null)
-        {
-            Debug.Log("Dev mockup");
-            Game.current = new Game("ExploTest");
-        }
-        else
-        {
-            Debug.Log(Game.current);
-        }
     }
 
     IEnumerator LoadDebugPersistentScene()
@@ -126,9 +119,6 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator InitBattle()
     {
-
-        playerUnits = BattleStart.InstantiatePlayerParty();
-        monsterUnits = BattleStart.InstantiateMonsterParty();
         currentTargets = new List<GameObject>();
 
         yield return new WaitForSeconds(1f);
@@ -140,6 +130,71 @@ public class BattleManager : MonoBehaviour
         yield return null;
     }
 
+    private List<GameObject> InstantiatePlayerParty()
+    {
+        List<GameObject> players = new List<GameObject>();
+        int nbPlayers = currentGame.party.Count;
+        if (nbPlayers > 3)
+            nbPlayers = 3;
+        float spaceBetweenPlayers = 3.5f;
+        float xPos = -spaceBetweenPlayers / 2 * (nbPlayers - 1);
+        float zPos = -5f;
+
+        for (int i = 0; i < nbPlayers; i++)
+        {
+            
+            Character character = currentGame.party[i];
+            Vector3 spawnPosition = new Vector3(xPos, 0f, zPos);
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(xPos, 0, 0) - spawnPosition);
+            GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, spawnPosition, rotation) as GameObject;
+            unitPlayer.GetComponent<Movement>().enabled = false;
+            unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
+
+            unitPlayer.name = character.name;
+            unitPlayer.GetComponent<BattleScript>().character = ObjectCopier.Clone<Character>(character);
+            unitPlayer.GetComponent<BattleScript>().enabled = true;
+
+            players.Add(unitPlayer);
+
+            xPos += spaceBetweenPlayers;
+        }
+        return players;
+    }
+
+    private List<GameObject> InstantiateMonsterParty()
+    {
+        List<GameObject> enemies = new List<GameObject>();
+        int nbEnemies = Random.Range(2, 5);
+        //int nbEnemies = 1;
+        float spaceBetweenEnemies = 4;
+        float xPos = -spaceBetweenEnemies / 2 * (nbEnemies - 1);
+        float zPos = 5f;
+
+        for (int i = 0; i < nbEnemies; i++)
+        {
+            Vector3 spawnPosition = new Vector3(xPos, 0f, zPos);
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(xPos, 0, 0) - spawnPosition);
+            GameObject enemy = Instantiate(Resources.Load("Enemy") as GameObject, spawnPosition, rotation) as GameObject;
+            enemy.GetComponent<AttackOtherOnCollide>().enabled = false;
+            enemy.name = "Enemy" + i;
+            List<Ability> basicAbs = new List<Ability>();
+            basicAbs.Add(abilityCollection.GetAbilityFromId("Attack"));
+            Stat hp = new Stat(StatName.hp, 100);
+            Stat hpNow = new Stat(StatName.hpNow, 100);
+            Stat mp = new Stat(StatName.mp, 35);
+            Stat mpNow = new Stat(StatName.mpNow, 35);
+            Stat strength = new Stat(StatName.strength, 20);
+            Stat defense = new Stat(StatName.defense, 10);
+            Stat intelligence = new Stat(StatName.intelligence, 10);
+            Stat agility = new Stat(StatName.agility, 10);
+            Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
+            Character character = new Character(enemy.name, Element.Fire, basicAbs, defaultStats, false);
+            enemy.GetComponent<BattleScript>().character = character;
+            enemies.Add(enemy);
+            xPos += spaceBetweenEnemies;
+        }
+        return enemies;
+    }
 
     IEnumerator ActionChoice()
     {
@@ -197,7 +252,7 @@ public class BattleManager : MonoBehaviour
                 List<GameObject> alivePlayerUnits = GetAlivePlayerUnits();
                 if (alivePlayerUnits.Count > 0)
                 {
-                    BattleAction action = new BattleAction(currentChoosingUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentChoosingUnit.GetComponent<BattleScript>().character.getAbility("Attack"));
+                    BattleAction action = new BattleAction(currentChoosingUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentChoosingUnit.GetComponent<BattleScript>().character.GetAbility("Attack"));
                     turnActions.Add(action);
                     currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MeleeReady");
                 }
@@ -297,9 +352,10 @@ public class BattleManager : MonoBehaviour
         CoroutineJoin coroutineJoinStatuses = new CoroutineJoin(this);
         foreach (GameObject target in battleAction.targets.ToList())
         {
-            foreach (Status status in battleAction.ability.statuses)
+            foreach (string statusName in battleAction.ability.statusIds)
             {
-                Debug.Log(status);
+                Debug.Log(statusName);
+                Status status = statusCollection.FindStatusFromId(statusName);
                 if (target.GetComponent<BattleScript>().CanAddStatus(status))
                     coroutineJoinStatuses.StartSubtask(target.GetComponent<BattleScript>().AddStatus(status));
             }
@@ -349,15 +405,15 @@ public class BattleManager : MonoBehaviour
         int dmg = 0;
         int multiplyingStat = 0;
         if (ability.abilityType.Equals(AbilityType.Magic))
-            multiplyingStat = fromUnit.GetComponent<BattleScript>().character.GetStat(StatName.intelligence).GetValue();
+            multiplyingStat = fromUnit.GetComponent<BattleScript>().character.stats.intelligence.GetValue();
         else
-            multiplyingStat = fromUnit.GetComponent<BattleScript>().character.GetStat(StatName.strength).GetValue();
+            multiplyingStat = fromUnit.GetComponent<BattleScript>().character.stats.strength.GetValue();
         rawDmg = ability.power * multiplyingStat * 6;
         if (ability.targetType.Equals(TargetType.Self) || ability.targetType.Equals(TargetType.Same) || ability.targetType.Equals(TargetType.AllSame))
             dmg = Mathf.CeilToInt(rawDmg / 10); // or reduce magic power....
         else
             //if opposite dmg = rawDmg with defense reduction
-            dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().character.GetStat(StatName.defense).GetValue() * 2));
+            dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().character.stats.defense.GetValue() * 2));
         return dmg;
     }
 
@@ -438,12 +494,12 @@ public class BattleManager : MonoBehaviour
             Character player = playerUnits[i].GetComponent<BattleScript>().character;
 
 
-            if (player.GetStat(StatName.hpNow).baseValue == 0)
-                Game.current.party[i].GetStat(StatName.hpNow).baseValue = 1;
+            if (player.stats.hpNow.baseValue == 0)
+                currentGame.party[i].stats.hpNow.baseValue = 1;
             else
             {
-                Game.current.party[i].GetStat(StatName.hpNow).baseValue = player.GetStat(StatName.hpNow).baseValue;
-                Game.current.party[i].GetStat(StatName.mpNow).baseValue = player.GetStat(StatName.mpNow).baseValue;
+                currentGame.party[i].stats.hpNow.baseValue = player.stats.hpNow.baseValue;
+                currentGame.party[i].stats.mpNow.baseValue = player.stats.mpNow.baseValue;
             }
         }
 

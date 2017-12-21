@@ -8,6 +8,12 @@ public enum StatusApplyMoment
     add
 }
 
+public enum StatusType
+{
+    ailment,
+    support
+}
+
 public enum StatusApplyType
 {
     damage,
@@ -20,10 +26,9 @@ public enum StatusApplyType
 [System.Serializable]
 public class Status
 {
-    [XmlAttribute("id")]
     public string id;
     public string name;
-    public string type;
+    public StatusType type;
     public int successRatePercent;
     public string description;
     public StatusApplyMoment applyMoment;

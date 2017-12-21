@@ -7,21 +7,11 @@ using UnityEngine.SceneManagement;
 public class ExplorationManager : MonoBehaviour
 {
     public SaveData exploSaveData;
+    public Game currentGame;
     private GameObject player;
 
     void Awake()
     {
-        //Debug code during dev 
-        if (Game.current == null)
-        {
-            Debug.Log("MockupGame");
-            Game.current = new Game("ExploTest");
-        }
-        else
-        {
-            Debug.Log(Game.current);
-        }
-
         if (FindObjectOfType(typeof(EventManager)) == null)
         {
             Debug.Log("No EventManager found, it is likely the persistent scene is unloaded so it is debug mode");
@@ -38,12 +28,10 @@ public class ExplorationManager : MonoBehaviour
 
     void Start()
     {
-        Character character;
-        if (Game.current.party.TryGetValue(0, out character))
-        {
-            this.player = Instantiate(Resources.Load("Player") as GameObject, Game.current.position.V3, Quaternion.identity) as GameObject;
-            this.player.name = "Player";
-        }
+        Character character = currentGame.party[0];
+
+        this.player = Instantiate(Resources.Load("Player") as GameObject, currentGame.position, Quaternion.identity) as GameObject;
+        this.player.name = "Player";
 
         List<GameObject> enemySpawnpoints = new List<GameObject>(GameObject.FindGameObjectsWithTag("EnemySpawnPoint"));
         for (int i = 0; i < enemySpawnpoints.Count; i++)

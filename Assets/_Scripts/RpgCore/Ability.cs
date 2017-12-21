@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.Xml;
 using System;
-using System.Xml.Serialization;
+
 
 [System.Serializable]
 public enum AbilityType
@@ -30,7 +29,6 @@ public enum TargetType
 [System.Serializable]
 public class Ability
 {
-    [XmlAttribute("id")]
     public string id;
     public string name;
     public string description;
@@ -40,13 +38,13 @@ public class Ability
     public TargetType targetType;
     public int mpCost;
     public int power;
-    public List<Status> statuses;
+    public List<string> statusIds;
 
     public Ability()
     {
     }
 
-    public Ability(string id, string name, string description, AbilityType abilityType, Element element, Distance distance, TargetType targetType, int power, int mpCost, List<Status> statuses)
+    public Ability(string id, string name, string description, AbilityType abilityType, Element element, Distance distance, TargetType targetType, int power, int mpCost, List<string> statusIds)
     {
         this.id = id;
         this.name = name;
@@ -57,12 +55,12 @@ public class Ability
         this.targetType = targetType;
         this.mpCost = mpCost;
         this.power = power;
-        this.statuses = statuses;
+        this.statusIds = statusIds;
     }
 
     public override string ToString()
     {
-        return string.Format("[Ability: id={0}, name={1}, power={2}, statuses={3}]", id, name, power, statuses.Count > 0 ? string.Join(" / ", statuses.ConvertAll(x => Convert.ToString(x)).ToArray()) : null);
+        return string.Format("[Ability: id={0}, name={1}, power={2}, statuses={3}]", id, name, power, statusIds.Count > 0 ? string.Join(" / ", statusIds.ConvertAll(x => Convert.ToString(x)).ToArray()) : null);
     }
 
 }

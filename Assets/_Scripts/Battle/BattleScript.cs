@@ -18,6 +18,7 @@ public class BattleScript : MonoBehaviour
     public GameObject damagePopUpPrefab;
     public bool damageTaken;
     public bool doneApplied;
+    public StatusCollection statusCollection;
     public Dictionary<string, int> battleStatusesDurations;
 
 
@@ -173,8 +174,8 @@ public class BattleScript : MonoBehaviour
     public IEnumerator TakeDamage(int dmg)
     {
 
-        character.GetStat(StatName.hpNow).baseValue = Mathf.Clamp(character.GetStat(StatName.hpNow).baseValue + dmg, 0, character.GetStat(StatName.hp).GetValue());
-        if (character.GetStat(StatName.hpNow).baseValue == 0)
+        character.stats.hpNow.baseValue = Mathf.Clamp(character.stats.hpNow.GetValue() + dmg, 0, character.stats.hp.GetValue());
+        if (character.stats.hpNow.GetValue() == 0)
         {
             dead = true;
         }
@@ -281,7 +282,7 @@ public class BattleScript : MonoBehaviour
 
         foreach (string statusId in battleStatusesDurations.Keys.ToList())
         {
-            Status status = StatusCollection.Instance.FindStatusFromId(statusId);
+            Status status = statusCollection.FindStatusFromId(statusId);
             if (status.applyMoment.Equals(StatusApplyMoment.endTurn))
             {
                 yield return StartCoroutine(ApplyStatus(status));
@@ -298,7 +299,8 @@ public class BattleScript : MonoBehaviour
     {
         if (status.applyType.Equals(StatusApplyType.damage))
         {
-            int damage = Mathf.RoundToInt(character.GetStat(StatName.hp).baseValue * ((float)status.powerPercent / 100));
+            //base value car on veut appliquer le poison sur la stat hpmax reelle pas la boostée
+            int damage = Mathf.RoundToInt(character.stats.hp.baseValue * ((float)status.powerPercent / 100));
             yield return StartCoroutine(TakeDamage(damage));
         }
         else if (status.applyType.Equals(StatusApplyType.modifier))
@@ -314,7 +316,7 @@ public class BattleScript : MonoBehaviour
 
     public void RemoveStatus(string statusId)
     {
-        Status status = StatusCollection.Instance.FindStatusFromId(statusId);
+        Status status = statusCollection.FindStatusFromId(statusId);
         if (status.applyType.Equals(StatusApplyType.modifier))
             character.GetStat(status.statName).modifiers.Remove(status.powerPercent);
         else if (status.applyType.Equals(StatusApplyType.disableCommands))
@@ -327,7 +329,7 @@ public class BattleScript : MonoBehaviour
 
     public void removeMp(Ability ability)
     {
-        character.GetStat(StatName.mpNow).baseValue = Mathf.Clamp(character.GetStat(StatName.mpNow).baseValue - ability.mpCost, 0, character.GetStat(StatName.mp).baseValue);
+        character.stats.mpNow.baseValue = Mathf.Clamp(character.stats.mpNow.GetValue() - ability.mpCost, 0, character.stats.mp.GetValue());
     }
 
     bool AmIAPlayer()

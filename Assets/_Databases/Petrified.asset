@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4f22ba49366243ad90cd499c026ad52, type: 3}
+  m_Name: Petrified
+  m_EditorClassIdentifier: 
+  id: 
+  name: 
+  type: 
+  successRatePercent: 0
+  description: 
+  applyMoment: 0
+  applyType: 0
+  statName: 0
+  powerPercent: 0
+  maxTurns: 0
+  removesStatusesOnAdd: []
+  blockedByStatuses: []

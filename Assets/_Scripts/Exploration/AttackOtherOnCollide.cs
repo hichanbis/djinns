@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class AttackOtherOnCollide : MonoBehaviour
 {
+    public Game currentGame;
     public SaveData exploSaveData;
     //public string uniqueIdentifier;             // A unique string set by a scene designer to identify what is being saved.
     //private string key;
@@ -90,7 +91,7 @@ public class AttackOtherOnCollide : MonoBehaviour
             ExploSaveData.Instance.EnemyKilledIndexes.Add(index);
             exploSaveData.Save("Enemy" + index + "Dead", true);
 
-            Game.current.position = new Vector3Serializer(playerPosition);
+            currentGame.position = playerPosition;
             sceneController.FadeAndLoadScene("BattleTest");
         } 
         yield return null;

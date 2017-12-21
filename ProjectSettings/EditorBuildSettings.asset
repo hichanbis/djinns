@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/BattleTest.unity
     guid: eecf2b23be7fa8b48a5e9dea3ef6f429
+  - enabled: 1
+    path: Assets/_Scenes/BalaFireFestival.unity
+    guid: f7a17232d833e403c92b456b0b9571d2

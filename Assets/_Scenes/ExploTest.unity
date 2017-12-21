@@ -36,10 +36,10 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 1
+  m_ReflectionIntensity: 0.604
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1812394315}
-  m_IndirectSpecularColor: {r: 0.43491885, g: 0.44827807, b: 0.40172705, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 0.604}
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -48,7 +48,7 @@ LightmapSettings:
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
-    m_IndirectOutputScale: 1
+    m_IndirectOutputScale: 0.51
     m_AlbedoBoost: 1
     m_TemporalCoherenceThreshold: 1
     m_EnvironmentLightingMode: 1
@@ -56,9 +56,9 @@ LightmapSettings:
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 8
-    m_Resolution: 2
-    m_BakeResolution: 40
-    m_TextureWidth: 1024
+    m_Resolution: 1
+    m_BakeResolution: 20
+    m_TextureWidth: 512
     m_TextureHeight: 1024
     m_AO: 0
     m_AOMaxDistance: 1
@@ -87,8 +87,7 @@ LightmapSettings:
     m_PVRFilteringAtrousColorSigma: 1
     m_PVRFilteringAtrousNormalSigma: 1
     m_PVRFilteringAtrousPositionSigma: 1
-  m_LightingDataAsset: {fileID: 112000002, guid: fc6e81a277a9d41499ca00b2a41d12c7,
-    type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_ShadowMaskMode: 0
 --- !u!196 &5
 NavMeshSettings:
@@ -202,19 +201,19 @@ Terrain:
   m_Enabled: 1
   serializedVersion: 3
   m_TerrainData: {fileID: 15600000, guid: b53e2485e4d4042919980d2078722e0c, type: 2}
-  m_TreeDistance: 2000
+  m_TreeDistance: 0
   m_TreeBillboardDistance: 5
   m_TreeCrossFadeLength: 5
   m_TreeMaximumFullLODCount: 50
-  m_DetailObjectDistance: 125
-  m_DetailObjectDensity: 0.08
+  m_DetailObjectDistance: 44
+  m_DetailObjectDensity: 0.058
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 70
   m_HeightmapMaximumLOD: 0
   m_CastShadows: 1
   m_DrawHeightmap: 1
   m_DrawTreesAndFoliage: 1
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_MaterialType: 1
   m_LegacySpecular:
     serializedVersion: 2
@@ -235,7 +234,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 33
+  m_RootOrder: 32
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &80569736
 GameObject:
@@ -308,7 +307,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: 3
+  m_RenderingPath: 2
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -397,7 +396,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 80569736}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 646b5bc27a658f447b1d929fd5ffbd70, type: 3}
   m_Name: 
@@ -743,6 +742,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 26
       objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 6507963685681744d83447ff92a6d636, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6507963685681744d83447ff92a6d636, type: 2}
   m_IsPrefabParent: 0
@@ -784,6 +787,10 @@ Prefab:
     - target: {fileID: 487220, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
       propertyPath: m_RootOrder
       value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 125820, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
@@ -830,6 +837,10 @@ Prefab:
     - target: {fileID: 125820, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
       propertyPath: m_Name
       value: Plants_group2 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 125820, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
@@ -977,6 +988,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 125820, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
   m_IsPrefabParent: 0
@@ -1073,74 +1088,13 @@ Prefab:
       propertyPath: m_RootOrder
       value: 23
       objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 6bdfdf74341c0374dba764c695ee162e, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6bdfdf74341c0374dba764c695ee162e, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &633136808
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 633136810}
-  - component: {fileID: 633136809}
-  m_Layer: 0
-  m_Name: Directional light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!108 &633136809
-Light:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 633136808}
-  m_Enabled: 1
-  serializedVersion: 8
-  m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
-  m_Range: 10
-  m_SpotAngle: 30
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_Lightmapping: 4
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
---- !u!4 &633136810
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 633136808}
-  m_LocalRotation: {x: 0.44695324, y: 0.0035128994, z: -0.0017551886, w: 0.8945487}
-  m_LocalPosition: {x: 379.4, y: 61.4, z: 165.27}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 32
-  m_LocalEulerAnglesHint: {x: 53.097004, y: 0.45000002, z: 0}
 --- !u!1001 &671290913
 Prefab:
   m_ObjectHideFlags: 0
@@ -1179,6 +1133,10 @@ Prefab:
     - target: {fileID: 406244, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
       propertyPath: m_RootOrder
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
@@ -1358,6 +1316,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group1 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
   m_IsPrefabParent: 0
@@ -1403,6 +1365,10 @@ Prefab:
     - target: {fileID: 194652, guid: 6507963685681744d83447ff92a6d636, type: 2}
       propertyPath: m_Name
       value: Plants_group4 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 6507963685681744d83447ff92a6d636, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6507963685681744d83447ff92a6d636, type: 2}
@@ -1478,6 +1444,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group6 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
   m_IsPrefabParent: 0
@@ -1524,6 +1494,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group1 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
   m_IsPrefabParent: 0
@@ -1569,6 +1543,10 @@ Prefab:
     - target: {fileID: 125820, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
       propertyPath: m_Name
       value: Plants_group2 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 125820, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f7b43a26cd86bf74fad0997410c77dba, type: 2}
@@ -1678,6 +1656,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group4 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 6507963685681744d83447ff92a6d636, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6507963685681744d83447ff92a6d636, type: 2}
   m_IsPrefabParent: 0
@@ -1714,7 +1696,7 @@ Transform:
   - {fileID: 393680213}
   - {fileID: 1048891392}
   m_Father: {fileID: 0}
-  m_RootOrder: 34
+  m_RootOrder: 33
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1048891391
 Prefab:
@@ -1809,6 +1791,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group6 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
   m_IsPrefabParent: 0
@@ -1854,6 +1840,10 @@ Prefab:
     - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
       propertyPath: m_Name
       value: Plants_group1 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
@@ -1932,6 +1922,10 @@ Prefab:
     - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
       propertyPath: m_Name
       value: Plants_group1 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
@@ -2059,6 +2053,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 22
       objectReference: {fileID: 0}
+    - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
   m_IsPrefabParent: 0
@@ -2133,6 +2131,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group6 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
   m_IsPrefabParent: 0
@@ -2178,6 +2180,10 @@ Prefab:
     - target: {fileID: 194652, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
       propertyPath: m_Name
       value: Plants_group6 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
@@ -2334,6 +2340,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group4 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 6507963685681744d83447ff92a6d636, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6507963685681744d83447ff92a6d636, type: 2}
   m_IsPrefabParent: 0
@@ -2426,6 +2436,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group6 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
   m_IsPrefabParent: 0
@@ -2471,6 +2485,10 @@ Prefab:
     - target: {fileID: 194652, guid: 6507963685681744d83447ff92a6d636, type: 2}
       propertyPath: m_Name
       value: Plants_group4 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 6507963685681744d83447ff92a6d636, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6507963685681744d83447ff92a6d636, type: 2}
@@ -2532,7 +2550,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
       propertyPath: m_Intensity
-      value: 1.23
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
       propertyPath: m_Color.g
@@ -2545,6 +2563,26 @@ Prefab:
     - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
       propertyPath: m_Color.b
       value: 0.294388
+      objectReference: {fileID: 0}
+    - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
+      propertyPath: m_Shadows.m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
+      propertyPath: m_BounceIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 10873498, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
+      propertyPath: m_CullingMask.m_Bits
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6f849bb5305a9d4439fc9c2fd05017cc, type: 2}
@@ -2731,6 +2769,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group1 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
   m_IsPrefabParent: 0
@@ -2777,6 +2819,10 @@ Prefab:
       propertyPath: m_Name
       value: Plants_group6 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 194652, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3a272b99fd12a4c4e836e998aeaf4507, type: 2}
   m_IsPrefabParent: 0
@@ -2822,6 +2868,10 @@ Prefab:
     - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
       propertyPath: m_Name
       value: Plants_group1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 107330, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2558beaf7cec5e4a8491031807f5205, type: 2}

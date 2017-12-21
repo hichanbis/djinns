@@ -9,6 +9,7 @@ using System.Linq;
 
 public class BattleUI : MonoBehaviour
 {
+    public AbilityCollection abilityCollection;
     private BattleManager battleManager;
 
     public GameObject playersInfoPanelTemplate;
@@ -104,8 +105,8 @@ public class BattleUI : MonoBehaviour
 
         Transform playerInfoTr = playersInfoPanel.transform.Find(playerUnit.name + "PlayerInfo").transform;
         playerInfoTr.Find("PlayerName").GetComponentInChildren<Text>().text = playerChar.name;
-        playerInfoTr.Find("HpMp").transform.Find("Hp").GetComponentInChildren<Text>().text = playerChar.GetStat(StatName.hpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.hp).baseValue.ToString();
-        playerInfoTr.Find("HpMp").transform.Find("Mp").GetComponentInChildren<Text>().text = playerChar.GetStat(StatName.mpNow).baseValue.ToString() + " / " + playerChar.GetStat(StatName.mp).baseValue.ToString();
+        playerInfoTr.Find("HpMp").transform.Find("Hp").GetComponentInChildren<Text>().text = playerChar.stats.hpNow.GetValue().ToString() + " / " + playerChar.stats.hp.GetValue().ToString();
+        playerInfoTr.Find("HpMp").transform.Find("Mp").GetComponentInChildren<Text>().text = playerChar.stats.mpNow.GetValue().ToString() + " / " + playerChar.stats.mp.GetValue().ToString();
     }
 
     void UpdatePlayersInfo()
@@ -139,7 +140,7 @@ public class BattleUI : MonoBehaviour
         {
             GameObject playerMagicsPanel = Instantiate(playerMagicsPanelTemplate, battleCanvas.transform, false) as GameObject;
             playerMagicsPanel.name = playerUnit.name + "MagicsPanel";
-            List<Ability> abilities = playerUnit.GetComponent<BattleScript>().character.Abilities;
+            List<Ability> abilities = playerUnit.GetComponent<BattleScript>().character.abilities;
             List<Ability> magics = abilities.Where(a => a.abilityType.Equals(AbilityType.Magic)).ToList();
             foreach (Ability magic in magics)
             {
@@ -169,12 +170,12 @@ public class BattleUI : MonoBehaviour
 
         //Depending on the command
         if (actionName.Equals("Guard"))
-            actionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(AbilityCollection.Instance.FindAbilityFromId("Guard")));
+            actionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(abilityCollection.GetAbilityFromId("Guard")));
         else if (actionName.Equals("Magic"))
             actionButton.GetComponent<Button>().onClick.AddListener(() => DisplayMagicsPanel());
         else if (actionName.Equals("Attack"))
         {
-            actionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(AbilityCollection.Instance.FindAbilityFromId("Attack")));
+            actionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(abilityCollection.GetAbilityFromId("Attack")));
             actionButton.GetComponent<Button>().onClick.AddListener(() => DisplayTargetsPanel(TargetType.Opposite));
         }
 
@@ -266,7 +267,7 @@ public class BattleUI : MonoBehaviour
     {
         foreach (Button button in currentPlayerMagicsPanel.GetComponentsInChildren<Button>())
         {
-            Ability ab = AbilityCollection.Instance.FindAbilityFromName(button.name);
+            Ability ab = abilityCollection.GetAbilityFromName(button.name);
             if (battleManager.currentChoosingUnit.GetComponent<BattleScript>().character.GetStat(StatName.mpNow).baseValue < ab.mpCost)
                 button.interactable = false;
         }

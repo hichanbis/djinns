@@ -17,6 +17,7 @@ public class Stat
         this.modifiers = new List<int>();
     }
 
+    //returns modified value
     public int GetValue()
     {
         int value = baseValue;
