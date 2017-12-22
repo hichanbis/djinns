@@ -139,7 +139,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c673da01191e4db48a139ae24f76804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  session: {fileID: 11400000, guid: 7a82986ba30044915aabe6c67ac8c1d5, type: 2}
+  gameSaveManager: {fileID: 11400000, guid: 2861ff76c892349e2923f32c0399c6dc, type: 2}
+  gameSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   currentGame: {fileID: 11400000, guid: f3532daa4a14d40759d50f50843dcdfb, type: 2}
   currentMenu: 0
 --- !u!4 &1531384264

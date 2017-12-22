@@ -19,6 +19,7 @@ public enum Distance
 [System.Serializable]
 public enum TargetType
 {
+    Undefined,
     Self,
     Opposite,
     Same,

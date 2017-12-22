@@ -4,7 +4,7 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour
 {
-    public Session session;
+    public Game[] gameSlots = new Game[10];
     public Game currentGame;
 
     public enum Menu
@@ -14,6 +14,23 @@ public class MainMenu : MonoBehaviour
         Continue
     }
 
+
+    void Awake()
+    {
+        if (FindObjectOfType(typeof(EventManager)) == null)
+        {
+            Debug.Log("No EventManager found, it is likely the persistent scene is unloaded so it is debug mode");
+            StartCoroutine(LoadDebugPersistentScene());
+            Debug.Log("Ok persistent scene loaded go debug");
+        }
+
+    }
+
+    IEnumerator LoadDebugPersistentScene()
+    {
+        yield return SceneManager.LoadSceneAsync("Persistent", LoadSceneMode.Additive);
+    }
+
     private SceneController sceneController;
     // Reference to the SceneController to actually do the loading and unloading of scenes.
 
@@ -21,7 +38,13 @@ public class MainMenu : MonoBehaviour
     protected void Start()
     {
         sceneController = FindObjectOfType<SceneController>();
-        session.Load();
+
+        for (int i = 0; i < gameSlots.Length; i++)
+        {
+            gameSlots[i] = Game.TryToLoad(i);
+        }
+
+        
     }
 
     public Menu currentMenu;
@@ -61,12 +84,12 @@ public class MainMenu : MonoBehaviour
             GUILayout.Box("Select Slot to overwrite");
             GUILayout.Space(10);
 
-            for (int i = 0; i < session.gameSlots.Length; i++)
+            for (int i = 0; i < gameSlots.Length; i++)
             {
-                Game game = session.gameSlots[i];
+                Game game = gameSlots[i];
                 string buttonLabel;
 
-                if (game.party.Count == 0)
+                if (game == null)
                     buttonLabel = "New game";
                 else
                     buttonLabel = game.getGameDesc();
@@ -74,7 +97,7 @@ public class MainMenu : MonoBehaviour
                 if (GUILayout.Button(buttonLabel))
                 {
                     currentGame.currentScene = "BalaFireFestival";
-                    session.Save(i);
+                    currentGame.Save(i);
                     Debug.Log("New save created at slot " + i);
                     sceneController.FadeAndLoadScene(currentGame.currentScene);
                 }
@@ -86,14 +109,16 @@ public class MainMenu : MonoBehaviour
             GUILayout.Box("Select Save File");
             GUILayout.Space(10);
 			
-            foreach (Game game in session.gameSlots)
+            for (int i = 0; i < gameSlots.Length; i++)
             {
-                if (game.party.Count > 0)
+                Game game = gameSlots[i];
+                if (game != null)
                 {
-                    if (GUILayout.Button(game.getGameDesc()))
+                    if (GUILayout.Button("Slot " + i + ": " + game.getGameDesc()))
                     {
                         //pas sur qu'on puisse faire ça, a mon avis il faut recopier les infos et overwrite, voir faire un load de json dans le current
-                        currentGame = game;
+
+                        currentGame.Load(i);
                         sceneController.FadeAndLoadScene(currentGame.currentScene);
                     }
                 }

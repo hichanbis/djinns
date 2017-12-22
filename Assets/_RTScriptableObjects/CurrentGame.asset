@@ -126,6 +126,31 @@ MonoBehaviour:
       mpCost: 20
       power: 0
       statusIds: []
+    stats:
+      hpNow:
+        baseValue: 0
+        modifiers: 
+      hp:
+        baseValue: 0
+        modifiers: 
+      mpNow:
+        baseValue: 0
+        modifiers: 
+      mp:
+        baseValue: 0
+        modifiers: 
+      strength:
+        baseValue: 0
+        modifiers: 
+      defense:
+        baseValue: 0
+        modifiers: 
+      intelligence:
+        baseValue: 0
+        modifiers: 
+      agility:
+        baseValue: 0
+        modifiers: 
     canSummon: 1
     statuses: []
   currentScene: BalaFireFestival

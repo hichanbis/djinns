@@ -1,5 +1,6 @@
 ﻿using System;
 
+[System.Serializable]
 public struct Stats
 {
     public Stat hpNow;

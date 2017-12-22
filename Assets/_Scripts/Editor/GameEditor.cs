@@ -25,14 +25,14 @@ public class GameEditor : Editor
         {
             AbilityCollection abilityCollection = (AbilityCollection)AssetDatabase.LoadAssetAtPath("Assets/_Databases/StatusCollection", typeof(AbilityCollection));
         
-            Stat hp = new Stat(StatName.hp, 300);
-            Stat hpNow = new Stat(StatName.hpNow, 300);
-            Stat mp = new Stat(StatName.mp, 35);
-            Stat mpNow = new Stat(StatName.mpNow, 35);
-            Stat strength = new Stat(StatName.strength, 10);
-            Stat defense = new Stat(StatName.defense, 10);
-            Stat intelligence = new Stat(StatName.intelligence, 10);
-            Stat agility = new Stat(StatName.agility, 10);
+            Stat hp = new Stat(300);
+            Stat hpNow = new Stat(300);
+            Stat mp = new Stat(35);
+            Stat mpNow = new Stat(35);
+            Stat strength = new Stat(10);
+            Stat defense = new Stat(10);
+            Stat intelligence = new Stat(10);
+            Stat agility = new Stat(10);
             Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
             Character Cassim = new Character(PlayerName.Cassim.ToString(), Element.Wind, abilityCollection.abilities, defaultStats, false);
             game.party.Add(Cassim);
@@ -42,7 +42,7 @@ public class GameEditor : Editor
 
         if (GUILayout.Button("Load From Json"))
         {
-            string json = File.ReadAllText(Application.persistentDataPath + "/savedGame.json"); // loading all the text out of the file into a string, assuming the text is all JSON
+            string json = File.ReadAllText(Application.persistentDataPath + "/currentGame.json"); // loading all the text out of the file into a string, assuming the text is all JSON
             JsonUtility.FromJsonOverwrite(json, game); 
 
             UnityEditor.AssetDatabase.Refresh();
@@ -52,7 +52,7 @@ public class GameEditor : Editor
         {
             string json = JsonUtility.ToJson(game, true);
             Debug.Log(json); 
-            string path = Application.persistentDataPath + "/savedGame.json";
+            string path = Application.persistentDataPath + "/currentGame.json";
             Debug.Log(path);
 
             //Create Directory if it does not exist

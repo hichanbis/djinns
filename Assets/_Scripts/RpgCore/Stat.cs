@@ -6,13 +6,11 @@ using System;
 [System.Serializable]
 public class Stat
 {
-    public StatName name;
     public int baseValue;
     public List<int> modifiers;
 
-    public Stat(StatName name, int baseValue)
+    public Stat(int baseValue)
     {
-        this.name = name;
         this.baseValue = baseValue;
         this.modifiers = new List<int>();
     }

@@ -119,6 +119,8 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator InitBattle()
     {
+        playerUnits = InstantiatePlayerParty();
+        monsterUnits = InstantiateMonsterParty();
         currentTargets = new List<GameObject>();
 
         yield return new WaitForSeconds(1f);
@@ -139,6 +141,8 @@ public class BattleManager : MonoBehaviour
         float spaceBetweenPlayers = 3.5f;
         float xPos = -spaceBetweenPlayers / 2 * (nbPlayers - 1);
         float zPos = -5f;
+
+        Debug.Log(nbPlayers);
 
         for (int i = 0; i < nbPlayers; i++)
         {
@@ -179,14 +183,14 @@ public class BattleManager : MonoBehaviour
             enemy.name = "Enemy" + i;
             List<Ability> basicAbs = new List<Ability>();
             basicAbs.Add(abilityCollection.GetAbilityFromId("Attack"));
-            Stat hp = new Stat(StatName.hp, 100);
-            Stat hpNow = new Stat(StatName.hpNow, 100);
-            Stat mp = new Stat(StatName.mp, 35);
-            Stat mpNow = new Stat(StatName.mpNow, 35);
-            Stat strength = new Stat(StatName.strength, 20);
-            Stat defense = new Stat(StatName.defense, 10);
-            Stat intelligence = new Stat(StatName.intelligence, 10);
-            Stat agility = new Stat(StatName.agility, 10);
+            Stat hp = new Stat(100);
+            Stat hpNow = new Stat(100);
+            Stat mp = new Stat(35);
+            Stat mpNow = new Stat(35);
+            Stat strength = new Stat(20);
+            Stat defense = new Stat(10);
+            Stat intelligence = new Stat(10);
+            Stat agility = new Stat(10);
             Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
             Character character = new Character(enemy.name, Element.Fire, basicAbs, defaultStats, false);
             enemy.GetComponent<BattleScript>().character = character;
@@ -220,17 +224,17 @@ public class BattleManager : MonoBehaviour
                 bool choiceDone = false;
                 while (!choiceDone)
                 {
-                    if (currentUnitAction.ability != null)
+                    if (currentUnitAction.ability != null && !currentUnitAction.ability.abilityType.Equals(TargetType.Undefined))
                     {
                         if (currentUnitAction.ability.targetType.Equals(TargetType.Self))
+                        {
                             choiceDone = true;
+                        }
                         else if (currentUnitAction.targets != null)
                         {
                             choiceDone = true;
-                                
                         }
                     }
-
                     //launch anim for attack preparation here (guard or magic focus)!
 
                     yield return null;
