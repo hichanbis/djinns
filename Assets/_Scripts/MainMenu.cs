@@ -41,7 +41,7 @@ public class MainMenu : MonoBehaviour
 
         for (int i = 0; i < gameSlots.Length; i++)
         {
-            gameSlots[i] = Game.TryToLoad(i);
+            gameSlots[i] = Game.TryToLoadIntoNewGameObject(i);
         }
 
         

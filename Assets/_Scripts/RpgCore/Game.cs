@@ -56,13 +56,18 @@ public class Game : ScriptableObject
     {
         string path = Application.persistentDataPath + "/savedGame." + index + ".json";
 
-        string json = File.ReadAllText(path); // loading all the text out of the file into a string, assuming the text is all JSON
+        string json = File.ReadAllText(path);
         JsonUtility.FromJsonOverwrite(json, this); 
         Debug.Log("json : " + json + " loaded");
 
     }
 
-    public static Game TryToLoad(int index)
+    /*
+     * For game load screen
+     * Tries to load json file at slot index to get the game description 
+     * Could be improved by just parsing json for required fields maybe instead of instantiating new game
+     * */
+    public static Game TryToLoadIntoNewGameObject(int index)
     {
         Game game = null;
         string path = Application.persistentDataPath + "/savedGame." + index + ".json";
