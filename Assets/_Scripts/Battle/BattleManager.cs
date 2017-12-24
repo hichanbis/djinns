@@ -152,12 +152,13 @@ public class BattleManager : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(new Vector3(xPos, 0, 0) - spawnPosition);
             GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, spawnPosition, rotation) as GameObject;
             unitPlayer.GetComponent<Movement>().enabled = false;
+            unitPlayer.GetComponent<Cinemachine.Examples.CharacterMovement>().enabled = false;
             unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
 
             unitPlayer.name = character.name;
             unitPlayer.GetComponent<BattleScript>().character = ObjectCopier.Clone<Character>(character);
             unitPlayer.GetComponent<BattleScript>().enabled = true;
-
+           
             players.Add(unitPlayer);
 
             xPos += spaceBetweenPlayers;

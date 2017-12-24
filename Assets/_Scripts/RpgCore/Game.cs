@@ -11,6 +11,7 @@ public class Game : ScriptableObject
     public List<Character> party;
     public string currentScene;
     public Vector3 position;
+    public int spawnPointIndexInScene;
 
     public string getGameDesc()
     {

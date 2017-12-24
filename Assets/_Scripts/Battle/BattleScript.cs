@@ -34,7 +34,9 @@ public class BattleScript : MonoBehaviour
             battleStatusesDurations.Add(status.id, 0);
         }
 
-        anim = GetComponentInChildren<Animator>();
+        anim = GetComponent<Animator>();
+        if (anim == null)
+            anim = GetComponentInChildren<Animator>();
         anim.runtimeAnimatorController = battleAnimController;
 
 

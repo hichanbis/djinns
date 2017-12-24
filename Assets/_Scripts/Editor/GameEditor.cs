@@ -23,8 +23,9 @@ public class GameEditor : Editor
 
         if (GUILayout.Button("Add character to game"))
         {
-            AbilityCollection abilityCollection = (AbilityCollection)AssetDatabase.LoadAssetAtPath("Assets/_Databases/StatusCollection", typeof(AbilityCollection));
-        
+            AbilityCollection abilityCollection = (AbilityCollection)AssetDatabase.LoadAssetAtPath("Assets/_Databases/AbilityCollection.asset", typeof(AbilityCollection));
+            Debug.Log(abilityCollection);
+
             Stat hp = new Stat(300);
             Stat hpNow = new Stat(300);
             Stat mp = new Stat(35);
@@ -34,7 +35,7 @@ public class GameEditor : Editor
             Stat intelligence = new Stat(10);
             Stat agility = new Stat(10);
             Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
-            Character Cassim = new Character(PlayerName.Cassim.ToString(), Element.Wind, abilityCollection.abilities, defaultStats, false);
+            Character Cassim = new Character(PlayerName.Cassim.ToString(), Element.Wind, abilityCollection.abilities, defaultStats, true);
             game.party.Add(Cassim);
 
             UnityEditor.AssetDatabase.Refresh();
