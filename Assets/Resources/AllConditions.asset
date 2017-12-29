@@ -26,7 +26,7 @@ MonoBehaviour:
   m_Name: TalkedToNPCTest
   m_EditorClassIdentifier: 
   description: TalkedToNPCTest
-  satisfied: 0
+  satisfied: 1
   hash: -1904783053
 --- !u!114 &114664344779308212
 MonoBehaviour:

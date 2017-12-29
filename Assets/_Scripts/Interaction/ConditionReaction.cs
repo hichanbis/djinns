@@ -15,6 +15,5 @@ public class ConditionReaction : Reaction
     protected override void ImmediateReaction ()
     {
         condition.satisfied = satisfied;
-        GameProgress.Instance.satisfiedConditionNames.Add(condition.name);
     }
 }

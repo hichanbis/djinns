@@ -51,29 +51,8 @@ public class GameProgressEditor : Editor
 
         if (GUILayout.Button("Save as Json"))
         {
-            string json = JsonUtility.ToJson(game, true);
-            Debug.Log(json); 
             string path = Application.persistentDataPath + "/currentGame.json";
-            Debug.Log(path);
-
-            //Create Directory if it does not exist
-            if (!Directory.Exists(Path.GetDirectoryName(path)))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-            }
-
-            try
-            {
-                StreamWriter sw = File.CreateText(path); // if file doesnt exist, make the file in the specified path
-                sw.Close();
-                File.WriteAllText(path, json);
-                Debug.Log("Saved Data to: " + path.Replace("/", "\\"));
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning("Failed To Save Data to: " + path.Replace("/", "\\"));
-                Debug.LogWarning("Error: " + e.Message);
-            }
+            game.Save(path);
                 
             UnityEditor.AssetDatabase.Refresh();
           

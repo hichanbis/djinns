@@ -8,7 +8,8 @@ using System;
 [CreateAssetMenu()]
 public class GameProgress : ScriptableObject
 {
-    private static GameProgress instance;              // The singleton instance.
+    private static GameProgress instance;
+    // The singleton instance.
 
     public List<Character> party;
     public string currentScene;
@@ -16,7 +17,8 @@ public class GameProgress : ScriptableObject
     public int spawnPointIndexInScene;
     public List<string> satisfiedConditionNames;
 
-    private const string loadPath = "GameProgress";    // The path within the Resources folder that 
+    private const string loadPath = "GameProgress";
+    // The path within the Resources folder that
 
     public static GameProgress Instance                // The public accessor for the singleton instance.
     {
@@ -24,13 +26,13 @@ public class GameProgress : ScriptableObject
         {
             // If the instance is currently null, try to find an AllConditions instance already in memory.
             if (!instance)
-                instance = FindObjectOfType<GameProgress> ();
+                instance = FindObjectOfType<GameProgress>();
             // If the instance is still null, try to load it from the Resources folder.
             if (!instance)
-                instance = Resources.Load<GameProgress> (loadPath);
+                instance = Resources.Load<GameProgress>(loadPath);
             // If the instance is still null, report that it has not been created yet.
             if (!instance)
-                Debug.LogError ("GameProgress has not been created yet or is not in Resources");
+                Debug.LogError("GameProgress has not been created yet or is not in Resources");
             return instance;
         }
         set { instance = value; }
@@ -52,10 +54,26 @@ public class GameProgress : ScriptableObject
 
     public void Save(int index)
     {
-        string json = JsonUtility.ToJson(this, true);
-        Debug.Log(json); 
         string path = Application.persistentDataPath + "/savedGame." + index + ".json";
-        Debug.Log(path);
+        Save(path);
+    }
+
+    public void Load(int index)
+    {
+        string path = Application.persistentDataPath + "/savedGame." + index + ".json";
+        Load(path);
+    }
+
+    public void Save(string path)
+    {
+        Condition[] conditions = Resources.FindObjectsOfTypeAll(typeof(Condition))as Condition[];
+        foreach (Condition condition in conditions)
+        {
+            if (!condition.name.Equals("") && condition.satisfied && !satisfiedConditionNames.Contains(condition.name))
+                satisfiedConditionNames.Add(condition.name);
+        }
+
+        string json = JsonUtility.ToJson(this, true);
 
         //Create Directory if it does not exist
         if (!Directory.Exists(Path.GetDirectoryName(path)))
@@ -77,17 +95,10 @@ public class GameProgress : ScriptableObject
         }
     }
 
-    public void Load(int index)
+    public void Load(string path)
     {
-        string path = Application.persistentDataPath + "/savedGame." + index + ".json";
-        Load(path);
-
-    }
-
-    public void Load(string path){
         string json = File.ReadAllText(path);
         JsonUtility.FromJsonOverwrite(json, this); 
-        Debug.Log("json : " + json + " loaded");
 
         Condition[] conditions = Resources.FindObjectsOfTypeAll(typeof(Condition))as Condition[];
         foreach (string satisfiedConditionName in this.satisfiedConditionNames)
@@ -102,7 +113,8 @@ public class GameProgress : ScriptableObject
     }
 
     /*
-     * Could be improved by just parsing json for required fields maybe instead of instantiating new game
+     * Must be improved by just parsing json for required fields 
+     * instead of instantiating new game just for that (which is not logic as it is a singleton)
      * */
     public static string TryToGetGameDesc(int index)
     {

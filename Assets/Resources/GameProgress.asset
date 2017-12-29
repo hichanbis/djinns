@@ -173,4 +173,5 @@ MonoBehaviour:
   currentScene: BalaFireFestival
   position: {x: 230, y: 10, z: 200}
   spawnPointIndexInScene: 0
-  satisfiedConditionNames: []
+  satisfiedConditionNames:
+  - TalkedToNPCTest
