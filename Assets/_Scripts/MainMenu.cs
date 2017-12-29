@@ -4,8 +4,7 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour
 {
-    public Game[] gameSlots = new Game[10];
-    public Game currentGame;
+    public string[] gameSlots = new string[10];
 
     public enum Menu
     {
@@ -41,7 +40,7 @@ public class MainMenu : MonoBehaviour
 
         for (int i = 0; i < gameSlots.Length; i++)
         {
-            gameSlots[i] = Game.TryToLoadIntoNewGameObject(i);
+            gameSlots[i] = GameProgress.TryToGetGameDesc(i);
         }
 
         
@@ -86,20 +85,20 @@ public class MainMenu : MonoBehaviour
 
             for (int i = 0; i < gameSlots.Length; i++)
             {
-                Game game = gameSlots[i];
+                string gameDesc = gameSlots[i];
                 string buttonLabel;
 
-                if (game == null)
+                if (gameDesc == null)
                     buttonLabel = "New game";
                 else
-                    buttonLabel = game.getGameDesc();
+                    buttonLabel = gameDesc;
 
                 if (GUILayout.Button(buttonLabel))
                 {
-                    currentGame.currentScene = "BalaFireFestival";
-                    currentGame.Save(i);
+                    GameProgress.Instance.currentScene = "BalaFireFestival";
+                    GameProgress.Instance.Save(i);
                     Debug.Log("New save created at slot " + i);
-                    sceneController.FadeAndLoadScene(currentGame.currentScene);
+                    sceneController.FadeAndLoadScene(GameProgress.Instance.currentScene);
                 }
             }
         }
@@ -111,15 +110,15 @@ public class MainMenu : MonoBehaviour
 			
             for (int i = 0; i < gameSlots.Length; i++)
             {
-                Game game = gameSlots[i];
-                if (game != null)
+                string gameDesc = gameSlots[i];
+                if (gameDesc != null)
                 {
-                    if (GUILayout.Button("Slot " + i + ": " + game.getGameDesc()))
+                    if (GUILayout.Button("Slot " + i + ": " + gameDesc))
                     {
                         //pas sur qu'on puisse faire ça, a mon avis il faut recopier les infos et overwrite, voir faire un load de json dans le current
 
-                        currentGame.Load(i);
-                        sceneController.FadeAndLoadScene(currentGame.currentScene);
+                        GameProgress.Instance.Load(i);
+                        sceneController.FadeAndLoadScene(GameProgress.Instance.currentScene);
                     }
                 }
 

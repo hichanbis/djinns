@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 
 public class Spawner : MonoBehaviour
-{   public Game currentGame;
+{   
     public GameObject vcam;
     public SaveData exploSaveData;
 
@@ -27,12 +27,14 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
-        Character character = currentGame.party[0];
+        Character character = GameProgress.Instance.party[0];
+
+        //if loading from a battle on spawn a l'endroit du battle précedent
 
         //solution à trouver pour le spawn post battle!
-        GameObject spawnPoint = GameObject.Find("SpawnPoint" + currentGame.spawnPointIndexInScene);
+        GameObject spawnPoint = GameObject.Find("SpawnPoint" + GameProgress.Instance.spawnPointIndexInScene);
         if (spawnPoint == null)
-            Debug.LogError("pas de SpawnPoint trouvé à l'index: " + currentGame.spawnPointIndexInScene);
+            Debug.LogError("pas de SpawnPoint trouvé à l'index: " + GameProgress.Instance.spawnPointIndexInScene);
 
         GameObject player = Instantiate(Resources.Load("Player") as GameObject, spawnPoint.transform.position, Quaternion.identity) as GameObject;
         player.name = "Player";

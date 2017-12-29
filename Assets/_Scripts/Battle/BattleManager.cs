@@ -8,7 +8,7 @@ public class BattleManager : MonoBehaviour
 {
     private static BattleManager instance;
 
-    public Game currentGame;
+
     public StatusCollection statusCollection;
     public AbilityCollection abilityCollection;
 
@@ -81,7 +81,6 @@ public class BattleManager : MonoBehaviour
     {
         sceneController = FindObjectOfType<SceneController>();
 
-
         StartCoroutine(BattleStateMachine());
     }
 
@@ -135,7 +134,7 @@ public class BattleManager : MonoBehaviour
     private List<GameObject> InstantiatePlayerParty()
     {
         List<GameObject> players = new List<GameObject>();
-        int nbPlayers = currentGame.party.Count;
+        int nbPlayers = GameProgress.Instance.party.Count;
         if (nbPlayers > 3)
             nbPlayers = 3;
         float spaceBetweenPlayers = 3.5f;
@@ -147,7 +146,7 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < nbPlayers; i++)
         {
             
-            Character character = currentGame.party[i];
+            Character character = GameProgress.Instance.party[i];
             Vector3 spawnPosition = new Vector3(xPos, 0f, zPos);
             Quaternion rotation = Quaternion.LookRotation(new Vector3(xPos, 0, 0) - spawnPosition);
             GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, spawnPosition, rotation) as GameObject;
@@ -500,11 +499,11 @@ public class BattleManager : MonoBehaviour
 
 
             if (player.stats.hpNow.baseValue == 0)
-                currentGame.party[i].stats.hpNow.baseValue = 1;
+                GameProgress.Instance.party[i].stats.hpNow.baseValue = 1;
             else
             {
-                currentGame.party[i].stats.hpNow.baseValue = player.stats.hpNow.baseValue;
-                currentGame.party[i].stats.mpNow.baseValue = player.stats.mpNow.baseValue;
+                GameProgress.Instance.party[i].stats.hpNow.baseValue = player.stats.hpNow.baseValue;
+                GameProgress.Instance.party[i].stats.mpNow.baseValue = player.stats.mpNow.baseValue;
             }
         }
 
