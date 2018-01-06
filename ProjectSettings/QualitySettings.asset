@@ -17,6 +17,7 @@ QualitySettings:
     shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
+    shadowmaskMode: 0
     blendWeights: 1
     textureQuality: 1
     anisotropicTextures: 0
@@ -31,6 +32,7 @@ QualitySettings:
     particleRaycastBudget: 4
     asyncUploadTimeSlice: 2
     asyncUploadBufferSize: 4
+    resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
     name: Good
@@ -43,6 +45,7 @@ QualitySettings:
     shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
+    shadowmaskMode: 0
     blendWeights: 4
     textureQuality: 1
     anisotropicTextures: 1
@@ -57,6 +60,7 @@ QualitySettings:
     particleRaycastBudget: 256
     asyncUploadTimeSlice: 2
     asyncUploadBufferSize: 4
+    resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
     name: Beautiful
@@ -69,6 +73,7 @@ QualitySettings:
     shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
+    shadowmaskMode: 0
     blendWeights: 4
     textureQuality: 0
     anisotropicTextures: 2
@@ -83,22 +88,6 @@ QualitySettings:
     particleRaycastBudget: 1024
     asyncUploadTimeSlice: 2
     asyncUploadBufferSize: 4
+    resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
-  m_PerPlatformDefaultQuality:
-    Android: 1
-    Nintendo 3DS: 2
-    PS3: 2
-    PS4: 2
-    PSM: 2
-    PSP2: 0
-    Samsung TV: 1
-    Standalone: 2
-    Tizen: 1
-    Web: 2
-    WebGL: 2
-    WiiU: 2
-    Windows Store Apps: 2
-    XBOX360: 2
-    XboxOne: 2
-    iPhone: 1
-    tvOS: 1
+  m_PerPlatformDefaultQuality: {}

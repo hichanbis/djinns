@@ -3,7 +3,7 @@ using UnityEngine;
 // This script works as a singleton asset.  That means that
 // it is globally accessible through a static instance
 // reference.  
-public class AllConditions : ResettableScriptableObject
+public class AllConditions : ScriptableObject
 {
     public Condition[] conditions;                      // All the Conditions that exist in the game.
 
@@ -34,7 +34,7 @@ public class AllConditions : ResettableScriptableObject
 
 
     // This function will be called at Start once per run of the game.
-    public override void Reset ()
+    public void Reset ()
     {
         // If there are no conditions, do nothing.
         if (conditions == null)

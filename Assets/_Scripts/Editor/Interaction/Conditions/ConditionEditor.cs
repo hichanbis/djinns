@@ -76,11 +76,18 @@ public class ConditionEditor : Editor
     // This is displayed for each Condition when the AllConditions asset is selected.
     private void AllConditionsAssetGUI()
     {
+        // Pull the information from the target into the serializedObject.
+        serializedObject.Update();
+
+
         EditorGUILayout.BeginHorizontal(GUI.skin.box);
         EditorGUI.indentLevel++;
 
         // Display the description of the Condition.
         EditorGUILayout.LabelField(condition.description);
+
+        // Display the toggle for the satisfied bool.
+        EditorGUILayout.PropertyField(satisfiedProperty, GUIContent.none);
 
         // Display a button showing a '-' that if clicked removes this Condition from the AllConditions asset.
         if (GUILayout.Button("-", GUILayout.Width(conditionButtonWidth)))
@@ -88,6 +95,9 @@ public class ConditionEditor : Editor
 
         EditorGUI.indentLevel--;
         EditorGUILayout.EndHorizontal();
+
+        // Push all changes made on the serializedObject back to the target.
+        serializedObject.ApplyModifiedProperties();
     }
 
 

@@ -6,5 +6,15 @@ using System;
 [System.Serializable]
 public enum StatName
 {
-    hp, hpNow, mp, mpNow, strength, defense, intelligence, agility, speed, criticalHit, none
+    hp,
+    hpNow,
+    mp,
+    mpNow,
+    strength,
+    defense,
+    intelligence,
+    agility,
+    speed,
+    criticalHit,
+    none
 }

@@ -28,7 +28,7 @@ public class Status
 {
     public string id;
     public string name;
-    public StatusType type;
+    public StatusType statusType;
     public int successRatePercent;
     public string description;
     public StatusApplyMoment applyMoment;

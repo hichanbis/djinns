@@ -117,6 +117,11 @@ public class AllConditionsEditor : Editor
             newConditionDescription = "New Condition";
         }
         EditorGUILayout.EndHorizontal ();
+
+        if (GUILayout.Button ("Reset"))
+        {
+            allConditions.Reset();
+        }
     }
 
 

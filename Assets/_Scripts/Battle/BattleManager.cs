@@ -24,7 +24,6 @@ public class BattleManager : MonoBehaviour
   
     public bool backToMainMenu;
     public bool restartBattle;
-    public bool chosen;
     public bool victoryAcknowledged;
     private bool battleEnd;
     public bool targetImpactReached;
@@ -216,6 +215,7 @@ public class BattleManager : MonoBehaviour
             currentChoosingUnit = battlingUnits[i];
             currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("Idle");
             currentUnitAction = new BattleAction();
+            currentUnitAction.ability = null;
             if (IsGameObjectAPlayer(currentChoosingUnit))
             {
                 StartCoroutine(currentChoosingUnit.GetComponent<BattleScript>().LaunchChoiceAnim());
@@ -224,10 +224,11 @@ public class BattleManager : MonoBehaviour
                 bool choiceDone = false;
                 while (!choiceDone)
                 {
-                    if (currentUnitAction.ability != null && !currentUnitAction.ability.abilityType.Equals(TargetType.Undefined))
+                    if (currentUnitAction.ability != null)
                     {
                         if (currentUnitAction.ability.targetType.Equals(TargetType.Self))
                         {
+                            Debug.Log("choiceDone");
                             choiceDone = true;
                         }
                         else if (currentUnitAction.targets != null)

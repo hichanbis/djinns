@@ -3,17 +3,14 @@
     {
       "id": "Poison",
       "name": "Poison",
-      "type": "Ailment",
       "successRatePercent": 30,
       "description": "Damages at the end of every turn. (wears off).",
-      "applyMoment": "endTurn",
-      "applyType": "damage",
-      "statName": "hpNow",
+      "statusType": 0,
+      "applyMoment": 0,
+      "applyType": 0,
+      "statName": 1,
       "powerPercent": -10,
       "maxTurns": "3",
-      "removesStatusesOnAdd": [
-        
-      ],
       "blockedByStatuses": [
         "Petrified",
         "Venom",
@@ -23,12 +20,12 @@
     {
       "id": "Toxic",
       "name": "Toxic",
-      "type": "Ailment",
       "successRatePercent": 30,
       "description": "Greatly Damages at the end of every turn (wears off).",
-      "applyMoment": "endTurn",
-      "applyType": "damage",
-      "statName": "hpNow",
+      "statusType": 0,
+      "applyMoment": 0,
+      "applyType": 0,
+      "statName": 1,
       "powerPercent": -20,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -42,12 +39,12 @@
     {
       "id": "Venom",
       "name": "Venom",
-      "type": "Ailment",
       "successRatePercent": 30,
       "description": "Greatly Damages at the end of every turn",
-      "applyMoment": "endTurn",
-      "applyType": "damage",
-      "statName": "hpNow",
+      "statusType": 0,
+      "applyMoment": 0,
+      "applyType": 0,
+      "statName": 1,
       "powerPercent": -20,
       "maxTurns": "999",
       "removesStatusesOnAdd": [
@@ -61,17 +58,14 @@
     {
       "id": "Regen",
       "name": "Regen",
-      "type": "Support",
       "successRatePercent": 100,
       "description": "Resplenishes character's HP every turn",
-      "applyMoment": "endTurn",
-      "applyType": "damage",
-      "statName": "hpNow",
+      "statusType": 1,
+      "applyMoment": 0,
+      "applyType": 0,
+      "statName": 1,
       "powerPercent": 20,
       "maxTurns": "3",
-      "removesStatusesOnAdd": [
-        
-      ],
       "blockedByStatuses": [
         "Petrified"
       ]
@@ -79,17 +73,14 @@
     {
       "id": "RegenM",
       "name": "RegenM",
-      "type": "Support",
       "successRatePercent": 100,
       "description": "Refills character's MP every turn",
-      "applyMoment": "endTurn",
-      "applyType": "damage",
-      "statName": "hpNow",
+      "statusType": 1,
+      "applyMoment": 0,
+      "applyType": 0,
+      "statName": 1,
       "powerPercent": 5,
       "maxTurns": "3",
-      "removesStatusesOnAdd": [
-        
-      ],
       "blockedByStatuses": [
         "Petrified"
       ]
@@ -97,12 +88,12 @@
     {
       "id": "Sleep",
       "name": "Sleep",
-      "type": "Ailment",
       "successRatePercent": 30,
       "description": "Prevents all actions (wears off or get hit).",
-      "applyMoment": "add",
-      "applyType": "disableCommands",
-      "statName": "none",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 1,
+      "statName": 10,
       "powerPercent": 0,
       "maxTurns": "999",
       "removesStatusesOnAdd": [
@@ -116,12 +107,12 @@
     {
       "id": "Freeze",
       "name": "Freeze",
-      "type": "Ailment",
       "successRatePercent": 30,
       "description": "Prevents all actions (wears off).",
-      "applyMoment": "add",
-      "applyType": "disableCommands",
-      "statName": "none",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 1,
+      "statName": 10,
       "powerPercent": 0,
       "maxTurns": "999",
       "removesStatusesOnAdd": [
@@ -135,31 +126,28 @@
     {
       "id": "Petrified",
       "name": "Petrified",
-      "type": "Ailment",
       "successRatePercent": 30,
       "description": "Prevents all actions, kills character after three turns if not cured.",
-      "applyMoment": "add",
-      "applyType": "disableCommands",
-      "statName": "none",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 1,
+      "statName": 10,
       "powerPercent": 0,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
         "Berserk",
         "Sleep"
-      ],
-      "blockedByStatuses": [
-        
       ]
     },
     {
       "id": "Berserk",
       "name": "Berserk",
-      "type": "Ailment",
       "successRatePercent": 30,
       "description": "Attacks a random target with increased strength",
-      "applyMoment": "add",
-      "applyType": "disableCommands",
-      "statName": "none",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 1,
+      "statName": 10,
       "powerPercent": 0,
       "maxTurns": "999",
       "removesStatusesOnAdd": [
@@ -174,17 +162,14 @@
     {
       "id": "Mute",
       "name": "Mute",
-      "type": "Ailment",
       "successRatePercent": 30,
       "description": "Prevents magic casting.",
-      "applyMoment": "add",
-      "applyType": "disableMagic",
-      "statName": "none",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 2,
+      "statName": 10,
       "powerPercent": 0,
       "maxTurns": "3",
-      "removesStatusesOnAdd": [
-        
-      ],
       "blockedByStatuses": [
         "Sleep",
         "Freeze",
@@ -194,17 +179,14 @@
     {
       "id": "Martyr",
       "name": "Martyr",
-      "type": "Ailment",
       "successRatePercent": 30,
       "description": "Triples the chance to inflict critical hit damage. Kill character after three turns if fight is not over",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "criticalHit",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 9,
       "powerPercent": 300,
       "maxTurns": "3",
-      "removesStatusesOnAdd": [
-        
-      ],
       "blockedByStatuses": [
         "Sleep",
         "Freeze",
@@ -214,12 +196,12 @@
     {
       "id": "Heavy",
       "name": "Heavy",
-      "type": "Ailment",
       "successRatePercent": 100,
       "description": "Reduces character's ability to evade physical attacks.",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "agility",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 7,
       "powerPercent": -30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -232,12 +214,12 @@
     {
       "id": "Fragile",
       "name": "Fragile",
-      "type": "Ailment",
       "successRatePercent": 100,
       "description": "Reduces character's defense",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "defense",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 5,
       "powerPercent": -30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -250,12 +232,12 @@
     {
       "id": "Slow",
       "name": "Slow",
-      "type": "Ailment",
       "successRatePercent": 100,
       "description": "Reduces character's speed",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "speed",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 8,
       "powerPercent": -30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -268,12 +250,12 @@
     {
       "id": "Dull",
       "name": "Dull",
-      "type": "Ailment",
       "successRatePercent": 100,
       "description": "Reduces character's intelligence",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "intelligence",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 6,
       "powerPercent": -30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -286,12 +268,12 @@
     {
       "id": "Weak",
       "name": "Weak",
-      "type": "Ailment",
       "successRatePercent": 100,
       "description": "Reduces character's strength",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "strength",
+      "statusType": 0,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 4,
       "powerPercent": -30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -304,12 +286,12 @@
     {
       "id": "Light",
       "name": "Light",
-      "type": "Support",
       "successRatePercent": 100,
       "description": "Increases character's ability to evade physical attacks",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "agility",
+      "statusType": 1,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 7,
       "powerPercent": 30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -322,12 +304,12 @@
     {
       "id": "Robust",
       "name": "Robust",
-      "type": "Support",
       "successRatePercent": 100,
       "description": "Increases character's defense",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "defense",
+      "statusType": 1,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 5,
       "powerPercent": 30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -340,12 +322,12 @@
     {
       "id": "Haste",
       "name": "Haste",
-      "type": "Support",
       "successRatePercent": 100,
       "description": "Increases character's speed",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "speed",
+      "statusType": 1,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 8,
       "powerPercent": 30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -358,12 +340,12 @@
     {
       "id": "Focus",
       "name": "Focus",
-      "type": "Support",
       "successRatePercent": 100,
       "description": "Increases character's intelligence",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "intelligence",
+      "statusType": 1,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 6,
       "powerPercent": 30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -376,12 +358,12 @@
     {
       "id": "Strong",
       "name": "Strong",
-      "type": "Support",
       "successRatePercent": 100,
       "description": "Increases character's strength",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "strength",
+      "statusType": 1,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 4,
       "powerPercent": 30,
       "maxTurns": "3",
       "removesStatusesOnAdd": [
@@ -394,20 +376,14 @@
     {
       "id": "Guard",
       "name": "Guard",
-      "type": "Support",
       "successRatePercent": 100,
       "description": "Guard postion doubles the character's defense for the current turn",
-      "applyMoment": "add",
-      "applyType": "modifier",
-      "statName": "defense",
+      "statusType": 1,
+      "applyMoment": 1,
+      "applyType": 3,
+      "statName": 5,
       "powerPercent": 100,
-      "maxTurns": "1",
-      "removesStatusesOnAdd": [
-        
-      ],
-      "blockedByStatuses": [
-        
-      ]
+      "maxTurns": "1"
     }
   ]
 }
