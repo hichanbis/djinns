@@ -23,7 +23,7 @@ public class TargetCircle : MonoBehaviour
 
     public void DisplayCircle()
     {
-        line.SetVertexCount(segments + 1);
+        line.positionCount = segments + 1;
 
         float x;
         float y = yheight;
@@ -44,7 +44,7 @@ public class TargetCircle : MonoBehaviour
 
     public void HideCircle()
     {
-        line.SetVertexCount(0);
+        line.positionCount = 0;
     }
 
 }
