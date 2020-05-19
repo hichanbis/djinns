@@ -21,7 +21,7 @@ public class GameProgressEditor : Editor
     {
         DrawDefaultInspector();
 
-        if (GUILayout.Button("Add character to game"))
+        if (GUILayout.Button("Add Cassim character to game"))
         {
             AbilityCollection abilityCollection = (AbilityCollection)AssetDatabase.LoadAssetAtPath("Assets/_Databases/AbilityCollection.asset", typeof(AbilityCollection));
             Debug.Log(abilityCollection);
@@ -36,27 +36,54 @@ public class GameProgressEditor : Editor
             Stat agility = new Stat(10);
             Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
             Character Cassim = new Character(PlayerName.Cassim.ToString(), Element.Wind, abilityCollection.abilities, defaultStats, true);
+            game.party = new List<Character>();
             game.party.Add(Cassim);
 
             UnityEditor.AssetDatabase.Refresh();
         }
 
-        if (GUILayout.Button("Load From Json"))
+        if (GUILayout.Button("Load From StartGameProgress"))
+        {
+            game.LoadFromStartGameProgress();
+            UnityEditor.AssetDatabase.Refresh();
+        }
+
+        if (GUILayout.Button("Load From DebugGameProgress"))
+        {
+            game.LoadFromDebugGameProgress();
+            UnityEditor.AssetDatabase.Refresh();
+        }
+
+        if (GUILayout.Button("Load From currentGame.Json"))
         {
             string path = Application.persistentDataPath + "/currentGame.json";
-            game.Load(path);
+            game.LoadFromFile(path);
 
             UnityEditor.AssetDatabase.Refresh();
         }
 
-        if (GUILayout.Button("Save as Json"))
+        if (GUILayout.Button("Save as currentGame.Json"))
         {
             string path = Application.persistentDataPath + "/currentGame.json";
-            game.Save(path);
+            game.SaveToFile(path);
                 
             UnityEditor.AssetDatabase.Refresh();
           
         }
+
+        if (GUILayout.Button("Reset values"))
+        {
+            //game.Reset();
+            game.party = new List<Character>();
+            game.currentScene = null;
+            game.position = new Vector3();
+            game.spawnPointIndexInScene = new int();
+            game.satisfiedConditionNames = new List<string>();
+            UnityEditor.AssetDatabase.Refresh();
+
+        }
+
+
 
     }
 

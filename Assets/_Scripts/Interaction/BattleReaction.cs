@@ -4,6 +4,7 @@ public class BattleReaction : DelayedReaction
 {
     private SceneController sceneController;
     private Transform playerTr;
+    public GameProgress gameProgress;
 
     protected override void SpecificInit()
     {
@@ -14,7 +15,7 @@ public class BattleReaction : DelayedReaction
 
     protected override void ImmediateReaction()
     {
-        GameProgress.Instance.position = playerTr.position;
+        gameProgress.position = playerTr.position;
         sceneController.FadeAndLoadScene("BattleTest");
     }
 }

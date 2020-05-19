@@ -8,10 +8,10 @@ public class Character
 {
     public string name;
     public Element element;
-    public List<Ability> abilities;
+    public List<Ability> abilities; // changer pour liste string ids
     public Stats stats;
     public bool canSummon;
-    public List<Status> statuses;
+    public List<Status> statuses; // changer pour liste string ids
 
     public Character(string name, Element element, List<Ability> abilities, Stats stats, bool canSummon)
     {

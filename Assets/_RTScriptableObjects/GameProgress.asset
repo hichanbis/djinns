@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beb98f97d5da640a1a26a37404f10918, type: 3}
+  m_Name: GameProgress
+  m_EditorClassIdentifier: 
+  party:
+  - name: Cassim
+    element: 4
+    abilities:
+    - id: Attack
+      name: Attack
+      description: Deals physical damage to an enemy
+      abilityType: 1
+      element: 4
+      distance: 0
+      targetType: 1
+      mpCost: 0
+      power: -20
+      statusIds: []
+    - id: Guard
+      name: Guard
+      description: Raises self defense
+      abilityType: 1
+      element: 4
+      distance: 0
+      targetType: 0
+      mpCost: 0
+      power: 0
+      statusIds:
+      - Guard
+    stats:
+      hpNow:
+        baseValue: 300
+        modifiers: 
+      hp:
+        baseValue: 300
+        modifiers: 
+      mpNow:
+        baseValue: 35
+        modifiers: 
+      mp:
+        baseValue: 35
+        modifiers: 
+      strength:
+        baseValue: 10
+        modifiers: 
+      defense:
+        baseValue: 10
+        modifiers: 
+      intelligence:
+        baseValue: 10
+        modifiers: 
+      agility:
+        baseValue: 10
+        modifiers: 
+    canSummon: 0
+    statuses: []
+  currentScene: BalaFireFestival
+  position: {x: 230.78835, y: 9.997636, z: 206.31696}
+  spawnPointIndexInScene: 0
+  satisfiedConditionNames:
+  - TalkedToNPCBattle
+  - TalkedToNPCDialogueTest
+  allConditions: {fileID: 11400000, guid: dd0db184d620f41b6a4c6ee20f24aefb, type: 2}

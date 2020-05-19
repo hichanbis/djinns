@@ -28,6 +28,8 @@ public class SaveDataEditor : Editor
 
     public override void OnInspectorGUI ()
     {
+        DrawDefaultInspector();
+
         // Display all the values for each data type.
         KeyValuePairListsGUI ("Bools", saveData.boolKeyValuePairLists, boolSpecificGUI);
         KeyValuePairListsGUI ("Integers", saveData.intKeyValuePairLists, intSpecificGUI);

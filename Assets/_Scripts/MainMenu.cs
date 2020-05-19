@@ -4,6 +4,7 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour
 {
+    public GameProgress gameProgress;
     public string[] gameSlots = new string[10];
 
     public enum Menu
@@ -16,9 +17,9 @@ public class MainMenu : MonoBehaviour
 
     void Awake()
     {
-        if (FindObjectOfType(typeof(EventManager)) == null)
+        if (FindObjectOfType(typeof(GameManager)) == null)
         {
-            Debug.Log("No EventManager found, it is likely the persistent scene is unloaded so it is debug mode");
+            Debug.Log("No GameManager found, it is likely the persistent scene is unloaded so it is debug mode");
             StartCoroutine(LoadDebugPersistentScene());
             Debug.Log("Ok persistent scene loaded go debug");
         }
@@ -95,10 +96,10 @@ public class MainMenu : MonoBehaviour
 
                 if (GUILayout.Button(buttonLabel))
                 {
-                    GameProgress.Instance.currentScene = "BalaFireFestival";
-                    GameProgress.Instance.Save(i);
+                    gameProgress.LoadFromStartGameProgress();
+                    gameProgress.Save(i);
                     Debug.Log("New save created at slot " + i);
-                    sceneController.FadeAndLoadScene(GameProgress.Instance.currentScene);
+                    sceneController.FadeAndLoadScene(gameProgress.currentScene);
                 }
             }
         }
@@ -117,8 +118,8 @@ public class MainMenu : MonoBehaviour
                     {
                         //pas sur qu'on puisse faire ça, a mon avis il faut recopier les infos et overwrite, voir faire un load de json dans le current
 
-                        GameProgress.Instance.Load(i);
-                        sceneController.FadeAndLoadScene(GameProgress.Instance.currentScene);
+                        gameProgress.Load(i);
+                        sceneController.FadeAndLoadScene(gameProgress.currentScene);
                     }
                 }
 

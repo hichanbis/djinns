@@ -8,7 +8,7 @@ public class BattleManager : MonoBehaviour
 {
     private static BattleManager instance;
 
-
+    public GameProgress gameProgress;
     public StatusCollection statusCollection;
     public AbilityCollection abilityCollection;
 
@@ -61,10 +61,10 @@ public class BattleManager : MonoBehaviour
             instance = this;
         }
 
-        if (FindObjectOfType(typeof(EventManager)) == null)
+        if (FindObjectOfType(typeof(GameManager)) == null)
         {
-            Debug.Log("No EventManager found, it is likely the persistent scene is unloaded so it is debug mode");
-            SceneManager.LoadSceneAsync("Persistent", LoadSceneMode.Additive);
+            Debug.Log("No GameManager found, it is likely the persistent scene is unloaded so it is debug mode");
+            StartCoroutine(LoadDebugPersistentScene());
             Debug.Log("Ok persistent scene loaded go debug");
         }
 
@@ -133,7 +133,7 @@ public class BattleManager : MonoBehaviour
     private List<GameObject> InstantiatePlayerParty()
     {
         List<GameObject> players = new List<GameObject>();
-        int nbPlayers = GameProgress.Instance.party.Count;
+        int nbPlayers = gameProgress.party.Count;
         if (nbPlayers > 3)
             nbPlayers = 3;
         float spaceBetweenPlayers = 3.5f;
@@ -145,7 +145,7 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < nbPlayers; i++)
         {
             
-            Character character = GameProgress.Instance.party[i];
+            Character character = gameProgress.party[i];
             Vector3 spawnPosition = new Vector3(xPos, 0f, zPos);
             Quaternion rotation = Quaternion.LookRotation(new Vector3(xPos, 0, 0) - spawnPosition);
             GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, spawnPosition, rotation) as GameObject;
@@ -500,11 +500,11 @@ public class BattleManager : MonoBehaviour
 
 
             if (player.stats.hpNow.baseValue == 0)
-                GameProgress.Instance.party[i].stats.hpNow.baseValue = 1;
+                gameProgress.party[i].stats.hpNow.baseValue = 1;
             else
             {
-                GameProgress.Instance.party[i].stats.hpNow.baseValue = player.stats.hpNow.baseValue;
-                GameProgress.Instance.party[i].stats.mpNow.baseValue = player.stats.mpNow.baseValue;
+                gameProgress.party[i].stats.hpNow.baseValue = player.stats.hpNow.baseValue;
+                gameProgress.party[i].stats.mpNow.baseValue = player.stats.mpNow.baseValue;
             }
         }
 

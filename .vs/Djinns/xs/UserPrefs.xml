@@ -1,0 +1,69 @@
+﻿<Properties StartupConfiguration="{8E702D4C-080E-7A38-0EC9-41243DA8E46C}|" RefactoringSettings.EnableRefactorings="True">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/Dialogue/DialogueManager.cs">
+    <Files>
+      <File FileName="Assets/_Scripts/RpgCore/GameProgress.cs" Line="89" Column="6" IsPinned="True" />
+      <File FileName="Assets/_Scripts/GameManager.cs" Line="31" Column="5" />
+      <File FileName="Assets/_Scripts/MainMenu.cs" Line="122" Column="70" />
+      <File FileName="Assets/_Scripts/Battle/BattleManager.cs" Line="463" Column="22" />
+      <File FileName="Assets/_Scripts/Interaction/AllConditions.cs" Line="1" Column="1" />
+      <File FileName="Assets/_Scripts/Battle/BattleScript.cs" Line="60" Column="12" />
+      <File FileName="Assets/_Scripts/RpgCore/Character.cs" Line="6" Column="22" />
+      <File FileName="Assets/_Scripts/Editor/GameProgressEditor.cs" Line="68" Column="28" />
+      <File FileName="Assets/_Scripts/Exploration/Spawner.cs" Line="31" Column="32" />
+      <File FileName="Assets/_Scripts/Exploration/AttackOtherOnCollide.cs" Line="11" Column="38" />
+      <File FileName="Assets/_Scripts/Interaction/BattleReaction.cs" Line="7" Column="38" />
+      <File FileName="Assets/_Scripts/Editor/SaveDataEditor.cs" Line="34" Column="87" />
+      <File FileName="Assets/_Scripts/Battle/BattleEventMessages.cs" Line="1" Column="1" />
+      <File FileName="Assets/_Scripts/Interaction/DialogueReaction.cs" Line="17" Column="37" />
+      <File FileName="Assets/_Scripts/Dialogue/DialogueManager.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Djinns" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="_Scripts" expanded="True">
+                <Node name="Battle" expanded="True" />
+                <Node name="DataPersistence" expanded="True" />
+                <Node name="Dialogue" expanded="True">
+                  <Node name="DialogueManager.cs" selected="True" />
+                </Node>
+                <Node name="Editor" expanded="True">
+                  <Node name="Interaction" expanded="True">
+                    <Node name="Conditions" expanded="True" />
+                  </Node>
+                </Node>
+                <Node name="Exploration" expanded="True" />
+                <Node name="Interaction" expanded="True" />
+                <Node name="RpgCore" expanded="True" />
+                <Node name="SceneControl" expanded="True" />
+                <Node name="Util" expanded="True" />
+              </Node>
+              <Node name="CinemachineExamples" expanded="True">
+                <Node name="Shared" expanded="True">
+                  <Node name="Models" expanded="True">
+                    <Node name="UnityCharacter" expanded="True">
+                      <Node name="Scripts" expanded="True" />
+                    </Node>
+                  </Node>
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="Djinns" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="47e972e2-dabe-4928-be72-4ac987e23ec7" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

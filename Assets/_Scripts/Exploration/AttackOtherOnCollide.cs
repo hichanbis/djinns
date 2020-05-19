@@ -8,6 +8,7 @@ public class AttackOtherOnCollide : MonoBehaviour
 {
  
     public SaveData exploSaveData;
+    public GameProgress gameProgress; 
     //public string uniqueIdentifier;             // A unique string set by a scene designer to identify what is being saved.
     //private string key;
     private bool canAttack;
@@ -15,6 +16,7 @@ public class AttackOtherOnCollide : MonoBehaviour
     private int nbTriggered = 0;
     private SceneController sceneController;
     private Vector3 playerPosition;
+    
     // A string to identify what is being saved.  This should be set using information about the data as well as the uniqueIdentifier.
 
 
@@ -91,7 +93,7 @@ public class AttackOtherOnCollide : MonoBehaviour
             ExploSaveData.Instance.EnemyKilledIndexes.Add(index);
             exploSaveData.Save("Enemy" + index + "Dead", true);
 
-            GameProgress.Instance.position = playerPosition;
+            gameProgress.position = playerPosition;
             sceneController.FadeAndLoadScene("BattleTest");
         } 
         yield return null;

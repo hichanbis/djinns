@@ -8,36 +8,20 @@ using System;
 [CreateAssetMenu()]
 public class GameProgress : ScriptableObject
 {
-    private static GameProgress instance;
-    // The singleton instance.
-
     public List<Character> party;
     public string currentScene;
     public Vector3 position;
     public int spawnPointIndexInScene;
-    public List<string> satisfiedConditionNames;
-
+    public List<string> satisfiedConditionNames = new List<string>();
+    
     private const string loadPath = "GameProgress";
     // The path within the Resources folder that
 
-    public static GameProgress Instance                // The public accessor for the singleton instance.
-    {
-        get
-        {
-            // If the instance is currently null, try to find an AllConditions instance already in memory.
-            if (!instance)
-                instance = FindObjectOfType<GameProgress>();
-            // If the instance is still null, try to load it from the Resources folder.
-            if (!instance)
-                instance = Resources.Load<GameProgress>(loadPath);
-            // If the instance is still null, report that it has not been created yet.
-            if (!instance)
-                Debug.LogError("GameProgress has not been created yet or is not in Resources");
-            return instance;
-        }
-        set { instance = value; }
-    }
 
+    public void LoadFromStartGameProgress()
+    {
+        LoadFromGameProgressAsset("StartGameProgress");
+    }
 
     public string getGameDesc()
     {
@@ -52,26 +36,69 @@ public class GameProgress : ScriptableObject
         return partyDesc;
     }
 
+    public void LoadFromDebugGameProgress()
+    {
+        LoadFromGameProgressAsset("DebugGameProgress");
+    }
+
+    private void LoadFromGameProgressAsset(string name)
+    {
+        GameProgress gameProgress = Resources.Load<GameProgress>(name);
+
+        string json = JsonUtility.ToJson(gameProgress, true);
+        JsonUtility.FromJsonOverwrite(json, this);
+
+        SetConditionsToSavedStatusAfterLoad();
+    }
+
+    public void LoadFromFile(string path)
+    {
+        string json = File.ReadAllText(path);
+        JsonUtility.FromJsonOverwrite(json, this);
+
+        SetConditionsToSavedStatusAfterLoad();
+    }
+
+    public void SetConditionsToSavedStatusAfterLoad()
+    {
+        Condition[] conditions = Resources.FindObjectsOfTypeAll(typeof(Condition)) as Condition[];
+        foreach (string satisfiedConditionName in this.satisfiedConditionNames)
+        {
+            foreach (Condition condition in conditions)
+            {
+                if (condition.name.Equals(satisfiedConditionName))
+                    condition.satisfied = true;
+            }
+
+        }
+    }
+
     public void Save(int index)
     {
         string path = Application.persistentDataPath + "/savedGame." + index + ".json";
-        Save(path);
+        SaveToFile(path);
     }
 
     public void Load(int index)
     {
         string path = Application.persistentDataPath + "/savedGame." + index + ".json";
-        Load(path);
+        LoadFromFile(path);
     }
 
-    public void Save(string path)
+    public void SetSatisfiedConditionsBeforeSave()
     {
-        Condition[] conditions = Resources.FindObjectsOfTypeAll(typeof(Condition))as Condition[];
+        Condition[] conditions = Resources.FindObjectsOfTypeAll(typeof(Condition)) as Condition[];
+
         foreach (Condition condition in conditions)
         {
             if (!condition.name.Equals("") && condition.satisfied && !satisfiedConditionNames.Contains(condition.name))
                 satisfiedConditionNames.Add(condition.name);
         }
+    }
+
+    public void SaveToFile(string path)
+    {
+        SetSatisfiedConditionsBeforeSave();
 
         string json = JsonUtility.ToJson(this, true);
 
@@ -95,21 +122,14 @@ public class GameProgress : ScriptableObject
         }
     }
 
-    public void Load(string path)
+
+    public void Reset()
     {
-        string json = File.ReadAllText(path);
-        JsonUtility.FromJsonOverwrite(json, this); 
-
-        Condition[] conditions = Resources.FindObjectsOfTypeAll(typeof(Condition))as Condition[];
-        foreach (string satisfiedConditionName in this.satisfiedConditionNames)
-        {
-            foreach (Condition condition in conditions)
-            {
-                if (condition.name.Equals(satisfiedConditionName))
-                    condition.satisfied = true;
-            }
-
-        }
+        party = new List<Character>();
+        currentScene = null;
+        position = new Vector3();
+        spawnPointIndexInScene = new int();
+        satisfiedConditionNames = new List<string>();
     }
 
     /*
@@ -120,12 +140,13 @@ public class GameProgress : ScriptableObject
     {
         string gameDesc = null;
         string path = Application.persistentDataPath + "/savedGame." + index + ".json";
+        Debug.Log(path);
 
         if (File.Exists(path))
         {
             GameProgress game = ScriptableObject.CreateInstance<GameProgress>();
             string json = File.ReadAllText(path); // loading all the text out of the file into a string, assuming the text is all JSON
-            JsonUtility.FromJsonOverwrite(json, game); 
+            JsonUtility.FromJsonOverwrite(json, game);
             Debug.Log("json : " + json + " loaded");
             gameDesc = game.getGameDesc();
         }

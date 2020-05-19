@@ -5,15 +5,16 @@ using UnityEngine.SceneManagement;
 
 
 public class Spawner : MonoBehaviour
-{   
+{
+    public GameProgress gameProgress;
     public GameObject vcam;
     public SaveData exploSaveData;
 
     void Awake()
     {
-        if (FindObjectOfType(typeof(EventManager)) == null)
+        if (FindObjectOfType(typeof(GameManager)) == null)
         {
-            Debug.Log("No EventManager found, it is likely the persistent scene is unloaded so it is debug mode");
+            Debug.Log("No GameManager found, it is likely the persistent scene is unloaded so it is debug mode");
             StartCoroutine(LoadDebugPersistentScene());
             Debug.Log("Ok persistent scene loaded go debug");
         }
@@ -27,14 +28,14 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
-        Character character = GameProgress.Instance.party[0];
+        Character character = gameProgress.party[0];
 
         //if loading from a battle on spawn a l'endroit du battle précedent
 
         //solution à trouver pour le spawn post battle!
-        GameObject spawnPoint = GameObject.Find("SpawnPoint" + GameProgress.Instance.spawnPointIndexInScene);
+        GameObject spawnPoint = GameObject.Find("SpawnPoint" + gameProgress.spawnPointIndexInScene);
         if (spawnPoint == null)
-            Debug.LogError("pas de SpawnPoint trouvé à l'index: " + GameProgress.Instance.spawnPointIndexInScene);
+            Debug.LogError("pas de SpawnPoint trouvé à l'index: " + gameProgress.spawnPointIndexInScene);
 
         GameObject player = Instantiate(Resources.Load("Player") as GameObject, spawnPoint.transform.position, Quaternion.identity) as GameObject;
         player.name = "Player";
