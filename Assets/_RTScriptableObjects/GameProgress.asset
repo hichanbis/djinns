@@ -67,7 +67,4 @@ MonoBehaviour:
   currentScene: BalaFireFestival
   position: {x: 230.78835, y: 9.997636, z: 206.31696}
   spawnPointIndexInScene: 0
-  satisfiedConditionNames:
-  - TalkedToNPCBattle
-  - TalkedToNPCDialogueTest
-  allConditions: {fileID: 11400000, guid: dd0db184d620f41b6a4c6ee20f24aefb, type: 2}
+  satisfiedConditionNames: []

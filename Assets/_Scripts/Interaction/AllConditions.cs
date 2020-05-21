@@ -1,8 +1,12 @@
+using System;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 // This script works as a singleton asset.  That means that
 // it is globally accessible through a static instance
-// reference.  
+// reference.
+[Serializable]
 public class AllConditions : ScriptableObject
 {
     public Condition[] conditions;                      // All the Conditions that exist in the game.
@@ -20,21 +24,20 @@ public class AllConditions : ScriptableObject
         {
             // If the instance is currently null, try to find an AllConditions instance already in memory.
             if (!instance)
-                instance = FindObjectOfType<AllConditions> ();
+                instance = FindObjectOfType<AllConditions>();
             // If the instance is still null, try to load it from the Resources folder.
             if (!instance)
-                instance = Resources.Load<AllConditions> (loadPath);
+                instance = Resources.Load<AllConditions>(loadPath);
             // If the instance is still null, report that it has not been created yet.
             if (!instance)
-                Debug.LogError ("AllConditions has not been created yet.  Go to Assets > Create > AllConditions.");
+                Debug.LogError("AllConditions has not been created yet.  Go to Assets > Create > AllConditions.");
             return instance;
         }
         set { instance = value; }
     }
 
-
     // This function will be called at Start once per run of the game.
-    public void Reset ()
+    public void Reset()
     {
         // If there are no conditions, do nothing.
         if (conditions == null)
@@ -49,7 +52,7 @@ public class AllConditions : ScriptableObject
 
 
     // This is called from ConditionCollections when they are being checked by an Interactable that has been clicked on.
-    public static bool CheckCondition (Condition requiredCondition)
+    public static bool CheckCondition(Condition requiredCondition)
     {
         // Cache the condition array.
         Condition[] allConditions = Instance.conditions;

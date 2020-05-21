@@ -1,5 +1,24 @@
 ﻿<Properties StartupConfiguration="{8E702D4C-080E-7A38-0EC9-41243DA8E46C}|" RefactoringSettings.EnableRefactorings="True">
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/Interaction/AllConditions.cs">
+    <Files>
+      <File FileName="Assets/_Scripts/Interaction/Condition.cs" Line="21" Column="11" />
+      <File FileName="Assets/_Scripts/RpgCore/GameProgress.cs" Line="36" Column="11" />
+      <File FileName="Assets/_Scripts/GameManager.cs" Line="8" Column="38" />
+      <File FileName="Assets/_Scripts/RpgCore/SavableScriptableObject.cs" Line="17" Column="30" />
+      <File FileName="Assets/_Scripts/Editor/Interaction/Conditions/AllConditionsEditor.cs" Line="124" Column="10" />
+      <File FileName="Assets/_Scripts/Editor/Interaction/Conditions/ConditionEditor.cs" Line="211" Column="1" />
+      <File FileName="Assets/_Scripts/Editor/GameProgressEditor.cs" Line="66" Column="13" />
+      <File FileName="Assets/_Scripts/Exploration/EnableInteraction.cs" Line="14" Column="49" />
+      <File FileName="Assets/_Scripts/Interaction/Interactable.cs" Line="25" Column="54" />
+      <File FileName="Assets/_Scripts/Interaction/ConditionCollection.cs" Line="10" Column="42" />
+      <File FileName="Assets/_Scripts/Editor/Interaction/Conditions/ConditionCollectionEditor.cs" Line="135" Column="69" />
+      <File FileName="Assets/_Scripts/Interaction/ConditionReaction.cs" Line="17" Column="41" />
+      <File FileName="Assets/_Scripts/Interaction/ConditionReaction.cs" Line="17" Column="1" />
+      <File FileName="Assets/_Scripts/RpgCore/Character.cs" Line="8" Column="2" />
+      <File FileName="Assets/_Scripts/Util/NewClass.cs" Line="37" Column="2" />
+      <File FileName="Assets/_Scripts/RpgCore/Ability.cs" Line="1" Column="1" />
+      <File FileName="Assets/_Scripts/Interaction/AllConditions.cs" Line="22" Column="6" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
@@ -7,22 +26,22 @@
             <Node name="Assets" expanded="True">
               <Node name="_Animations" expanded="True">
                 <Node name="Props Animations" expanded="True">
-                  <Node name="Scripts" expanded="True">
-                    <Node name="DetectionTrigger.cs" selected="True" />
-                  </Node>
+                  <Node name="Scripts" expanded="True" />
                 </Node>
               </Node>
               <Node name="_Scripts" expanded="True">
-                <Node name="Battle" expanded="True" />
                 <Node name="DataPersistence" expanded="True" />
                 <Node name="Dialogue" expanded="True" />
                 <Node name="Editor" expanded="True">
+                  <Node name="Abstracts" expanded="True" />
                   <Node name="Interaction" expanded="True">
                     <Node name="Conditions" expanded="True" />
                   </Node>
                 </Node>
                 <Node name="Exploration" expanded="True" />
-                <Node name="Interaction" expanded="True" />
+                <Node name="Interaction" expanded="True">
+                  <Node name="AllConditions.cs" selected="True" />
+                </Node>
                 <Node name="RpgCore" expanded="True" />
                 <Node name="SceneControl" expanded="True" />
                 <Node name="Util" expanded="True" />
@@ -44,6 +63,9 @@
           </Node>
         </State>
       </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
       <Pad Id="MonoDevelop.UnitTesting.TestPad">
         <State name="__root__">
           <Node name="Djinns" expanded="True" selected="True" />
@@ -53,7 +75,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="47e972e2-dabe-4928-be72-4ac987e23ec7" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="00b892a3-13b3-4e8f-bd5b-9a4824066fc5" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -1,0 +1,328 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8464d995e3cf44d79bc319373701b72, type: 3}
+  m_Name: StatusCollection
+  m_EditorClassIdentifier: 
+  statuses:
+  - id: Poison
+    name: Poison
+    type: 0
+    successRatePercent: 30
+    description: Damages at the end of every turn. (wears off).
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: -10
+    maxTurns: 3
+    removesStatusesOnAdd: []
+    blockedByStatuses:
+    - Petrified
+    - Venom
+    - Toxic
+  - id: Toxic
+    name: Toxic
+    type: 0
+    successRatePercent: 30
+    description: Greatly Damages at the end of every turn (wears off).
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: -20
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Poison
+    blockedByStatuses:
+    - Petrified
+    - Venom
+  - id: Venom
+    name: Venom
+    type: 0
+    successRatePercent: 30
+    description: Greatly Damages at the end of every turn
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: -20
+    maxTurns: 999
+    removesStatusesOnAdd:
+    - Poison
+    - Toxic
+    blockedByStatuses:
+    - Petrified
+  - id: Regen
+    name: Regen
+    type: 0
+    successRatePercent: 100
+    description: Resplenishes character's HP every turn
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 20
+    maxTurns: 3
+    removesStatusesOnAdd: []
+    blockedByStatuses:
+    - Petrified
+  - id: RegenM
+    name: RegenM
+    type: 0
+    successRatePercent: 100
+    description: Refills character's MP every turn
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 5
+    maxTurns: 3
+    removesStatusesOnAdd: []
+    blockedByStatuses:
+    - Petrified
+  - id: Sleep
+    name: Sleep
+    type: 0
+    successRatePercent: 30
+    description: Prevents all actions (wears off or get hit).
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 0
+    maxTurns: 999
+    removesStatusesOnAdd:
+    - Berserk
+    blockedByStatuses:
+    - Freeze
+    - Petrified
+  - id: Freeze
+    name: Freeze
+    type: 0
+    successRatePercent: 30
+    description: Prevents all actions (wears off).
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 0
+    maxTurns: 999
+    removesStatusesOnAdd:
+    - Berserk
+    - Sleep
+    blockedByStatuses:
+    - Petrified
+  - id: Petrified
+    name: Petrified
+    type: 0
+    successRatePercent: 30
+    description: Prevents all actions, kills character after three turns if not cured.
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 0
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Berserk
+    - Sleep
+    blockedByStatuses: []
+  - id: Berserk
+    name: Berserk
+    type: 0
+    successRatePercent: 30
+    description: Attacks a random target with increased strength
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 0
+    maxTurns: 999
+    removesStatusesOnAdd:
+    - Freeze
+    blockedByStatuses:
+    - Sleep
+    - Freeze
+    - Petrified
+  - id: Mute
+    name: Mute
+    type: 0
+    successRatePercent: 30
+    description: Prevents magic casting.
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 0
+    maxTurns: 3
+    removesStatusesOnAdd: []
+    blockedByStatuses:
+    - Sleep
+    - Freeze
+    - Petrified
+  - id: Martyr
+    name: Martyr
+    type: 0
+    successRatePercent: 30
+    description: Triples the chance to inflict critical hit damage. Kill character
+      after three turns if fight is not over
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 300
+    maxTurns: 3
+    removesStatusesOnAdd: []
+    blockedByStatuses:
+    - Sleep
+    - Freeze
+    - Petrified
+  - id: Heavy
+    name: Heavy
+    type: 0
+    successRatePercent: 100
+    description: Reduces character's ability to evade physical attacks.
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: -30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Light
+    blockedByStatuses:
+    - Petrified
+  - id: Fragile
+    name: Fragile
+    type: 0
+    successRatePercent: 100
+    description: Reduces character's defense
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: -30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Robust
+    blockedByStatuses:
+    - Petrified
+  - id: Slow
+    name: Slow
+    type: 0
+    successRatePercent: 100
+    description: Reduces character's speed
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: -30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Haste
+    blockedByStatuses:
+    - Petrified
+  - id: Dull
+    name: Dull
+    type: 0
+    successRatePercent: 100
+    description: Reduces character's intelligence
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: -30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Focus
+    blockedByStatuses:
+    - Petrified
+  - id: Weak
+    name: Weak
+    type: 0
+    successRatePercent: 100
+    description: Reduces character's strength
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: -30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Strong
+    blockedByStatuses:
+    - Petrified
+  - id: Light
+    name: Light
+    type: 0
+    successRatePercent: 100
+    description: Increases character's ability to evade physical attacks
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Heavy
+    blockedByStatuses:
+    - Petrified
+  - id: Robust
+    name: Robust
+    type: 0
+    successRatePercent: 100
+    description: Increases character's defense
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Fragile
+    blockedByStatuses:
+    - Petrified
+  - id: Haste
+    name: Haste
+    type: 0
+    successRatePercent: 100
+    description: Increases character's speed
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Slow
+    blockedByStatuses:
+    - Petrified
+  - id: Focus
+    name: Focus
+    type: 0
+    successRatePercent: 100
+    description: Increases character's intelligence
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Dull
+    blockedByStatuses:
+    - Petrified
+  - id: Strong
+    name: Strong
+    type: 0
+    successRatePercent: 100
+    description: Increases character's strength
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 30
+    maxTurns: 3
+    removesStatusesOnAdd:
+    - Weak
+    blockedByStatuses:
+    - Petrified
+  - id: Guard
+    name: Guard
+    type: 0
+    successRatePercent: 100
+    description: Guard postion doubles the character's defense for the current turn
+    applyMoment: 0
+    applyType: 0
+    statName: 0
+    powerPercent: 100
+    maxTurns: 1
+    removesStatusesOnAdd: []
+    blockedByStatuses: []

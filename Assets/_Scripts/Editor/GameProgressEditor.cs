@@ -56,16 +56,14 @@ public class GameProgressEditor : Editor
 
         if (GUILayout.Button("Load From currentGame.Json"))
         {
-            string path = Application.persistentDataPath + "/currentGame.json";
-            game.LoadFromFile(path);
+            game.Load(10);
 
             UnityEditor.AssetDatabase.Refresh();
         }
 
         if (GUILayout.Button("Save as currentGame.Json"))
         {
-            string path = Application.persistentDataPath + "/currentGame.json";
-            game.SaveToFile(path);
+            game.Save(10);
                 
             UnityEditor.AssetDatabase.Refresh();
           
