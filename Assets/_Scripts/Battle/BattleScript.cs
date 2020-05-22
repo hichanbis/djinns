@@ -30,8 +30,8 @@ public class BattleScript : MonoBehaviour
         battleStatusesDurations = new Dictionary<string, int>();
         //pour l'instant ça c toujours vide donc on rentre pas dans le foreach
         foreach (Status status in character.statuses)
-        {   
-            battleStatusesDurations.Add(status.id, 0);
+        {
+            battleStatusesDurations.Add(status.name, 0);
         }
 
         anim = GetComponent<Animator>();
@@ -76,7 +76,7 @@ public class BattleScript : MonoBehaviour
         if (battleAction.ability.abilityType.Equals(AbilityType.Magic))
             trigger = "CastMagic";
         else
-            trigger = battleAction.ability.id;
+            trigger = battleAction.ability.name;
 
         AnimatorControllerParameter[] animParams = anim.parameters;
         if (!Array.Exists(animParams, animParam => animParam.name.Equals(trigger)))
@@ -88,7 +88,7 @@ public class BattleScript : MonoBehaviour
 
         anim.SetTrigger(trigger);
 
-       
+
 
         //wait for anim to start
         while (!anim.GetCurrentAnimatorStateInfo(0).IsName(trigger))
@@ -99,7 +99,7 @@ public class BattleScript : MonoBehaviour
         //en attendant de creer l'animation event
         if (trigger.Equals("CastMagic"))
             BattleManager.Instance.targetImpactReached = true;
-        
+
         //wait for anim to finish
         while (anim.GetCurrentAnimatorStateInfo(0).IsName(trigger))
         {
@@ -219,7 +219,7 @@ public class BattleScript : MonoBehaviour
                 expectedState = "MeleeReadyHit";
             else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                 expectedState = "IdleHit";
-            
+
             anim.SetTrigger("Hit");
             while (!anim.GetCurrentAnimatorStateInfo(0).IsName(expectedState))
                 yield return null;
@@ -247,16 +247,16 @@ public class BattleScript : MonoBehaviour
     {
         status.successRatePercent = 100; //hack for debug
         bool blocked = false;
-        foreach (string blockerStatusId in status.blockedByStatuses)
+        foreach (Status blockerStatus in status.blockedByStatuses)
         {
             foreach (string presentStatusId in battleStatusesDurations.Keys.ToList())
             {
-                if (blockerStatusId.Equals(presentStatusId))
+                if (blockerStatus.name.Equals(presentStatusId))
                     blocked = true;
             }
         }
-        Debug.Log("Contains key" + battleStatusesDurations.ContainsKey(status.id));
-        return !battleStatusesDurations.ContainsKey(status.id) && Rng.GetSuccess(status.successRatePercent) && !blocked;
+        Debug.Log("Contains key" + battleStatusesDurations.ContainsKey(status.name));
+        return !battleStatusesDurations.ContainsKey(status.name) && Rng.GetSuccess(status.successRatePercent) && !blocked;
 
     }
 
@@ -265,17 +265,17 @@ public class BattleScript : MonoBehaviour
     {
         foreach (string presentStatusId in battleStatusesDurations.Keys.ToList())
         {
-            foreach (string statusIdToRemove in status.removesStatusesOnAdd)
+            foreach (Status statusToRemove in status.removesStatusesOnAdd)
             {
-                if (statusIdToRemove.Equals(presentStatusId))
+                if (statusToRemove.name.Equals(presentStatusId))
                     RemoveStatus(presentStatusId);
             }
         }
 
-        battleStatusesDurations.Add(status.id, 0);
+        battleStatusesDurations.Add(status.name, 0);
         if (status.applyMoment.Equals(StatusApplyMoment.add))
             yield return StartCoroutine(ApplyStatus(status));
-        
+
     }
 
     //on end turn
@@ -284,7 +284,7 @@ public class BattleScript : MonoBehaviour
 
         foreach (string statusId in battleStatusesDurations.Keys.ToList())
         {
-            Status status = statusCollection.FindStatusFromId(statusId);
+            Status status = statusCollection.GetStatusFromId(statusId);
             if (status.applyMoment.Equals(StatusApplyMoment.endTurn))
             {
                 yield return StartCoroutine(ApplyStatus(status));
@@ -318,7 +318,7 @@ public class BattleScript : MonoBehaviour
 
     public void RemoveStatus(string statusId)
     {
-        Status status = statusCollection.FindStatusFromId(statusId);
+        Status status = statusCollection.GetStatusFromId(statusId);
         if (status.applyType.Equals(StatusApplyType.modifier))
             character.GetStat(status.statName).modifiers.Remove(status.powerPercent);
         else if (status.applyType.Equals(StatusApplyType.disableCommands))

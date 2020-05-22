@@ -23,7 +23,7 @@ public class GameProgressEditor : Editor
 
         if (GUILayout.Button("Add Cassim character to game"))
         {
-            AbilityCollection abilityCollection = (AbilityCollection)AssetDatabase.LoadAssetAtPath("Assets/_Databases/AbilityCollection.asset", typeof(AbilityCollection));
+            AbilityCollection abilityCollection = (AbilityCollection)AssetDatabase.LoadAssetAtPath("Assets/_Databases/Abilities/AbilityCollection.asset", typeof(AbilityCollection));
             Debug.Log(abilityCollection);
 
             Stat hp = new Stat(300);
@@ -35,7 +35,7 @@ public class GameProgressEditor : Editor
             Stat intelligence = new Stat(10);
             Stat agility = new Stat(10);
             Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
-            Character Cassim = new Character(PlayerName.Cassim.ToString(), Element.Wind, abilityCollection.abilities, defaultStats, true);
+            Character Cassim = new Character(PlayerName.Cassim.ToString(), Element.Wind, abilityCollection.abilities, defaultStats);
             game.party = new List<Character>();
             game.party.Add(Cassim);
 

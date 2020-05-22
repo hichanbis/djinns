@@ -10,16 +10,14 @@ public class Character
     public Element element;
     public List<Ability> abilities; // changer pour liste string ids
     public Stats stats;
-    public bool canSummon;
     public List<Status> statuses; // changer pour liste string ids
 
-    public Character(string name, Element element, List<Ability> abilities, Stats stats, bool canSummon)
+    public Character(string name, Element element, List<Ability> abilities, Stats stats)
     {
         this.name = name;
         this.element = element;
         this.abilities = abilities;
         this.stats = stats;
-        this.canSummon = canSummon;
         this.statuses = new List<Status>() { };
     }
 
@@ -50,6 +48,23 @@ public class Character
             return null;
         
     }
+
+    internal void RestoreStatuses(StatusCollection statusCollection)
+    {
+        for (int i = 0; i < statuses.Count; i++)
+        {
+            statuses[i] = statusCollection.GetStatusFromId(statuses[i].id);
+        }
+    }
+
+    public void RestoreAbilities(AbilityCollection abilityCollection)
+    {
+        for (int i = 0; i < abilities.Count; i++)
+        {
+            abilities[i] = abilityCollection.GetAbilityFromId(abilities[i].id);
+        }
+    }
+
 
     public override string ToString()
     {

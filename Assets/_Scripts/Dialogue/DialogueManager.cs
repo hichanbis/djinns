@@ -27,11 +27,14 @@ public class DialogueManager : MonoBehaviour
 
     public IEnumerator PlayDialogueCr(string dialogueId)
     {
+        yield return null;
+        validated = false;
         dialogueCanvas.SetActive(true);
         setTalkerName("Cassim");
         sentence.text = "Bonjour ca va? \n Je suis sensé lire le dialogue " + dialogueId;
+        yield return new WaitForSeconds(1f);
         yield return StartCoroutine(WaitForValidation());
-        validated = false;
+        
         dialogueCanvas.SetActive(false);
     }
 
@@ -42,6 +45,7 @@ public class DialogueManager : MonoBehaviour
         {
             yield return null;
         }
+        validated = false;
     }
 
     void setTalkerName(string name)
@@ -52,6 +56,8 @@ public class DialogueManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        // seulement si state = dialogue normalement
         if (Input.GetButtonDown("Submit"))
         {
             validated = true;

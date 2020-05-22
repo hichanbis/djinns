@@ -16,27 +16,11 @@ MonoBehaviour:
   - name: Cassim
     element: 4
     abilities:
-    - id: Attack
-      name: Attack
-      description: Deals physical damage to an enemy
-      abilityType: 1
-      element: 4
-      distance: 0
-      targetType: 1
-      mpCost: 0
-      power: -20
-      statusIds: []
-    - id: Guard
-      name: Guard
-      description: Raises self defense
-      abilityType: 1
-      element: 4
-      distance: 0
-      targetType: 0
-      mpCost: 0
-      power: 0
-      statusIds:
-      - Guard
+    - {fileID: 11400000, guid: 9b73c3fd844f34ce28a1eb87eaf0cd34, type: 2}
+    - {fileID: 11400000, guid: af2cafb0feed7417ea2458191a623283, type: 2}
+    - {fileID: 11400000, guid: 23ae6094dcbdd42d3b8379c3aec6d7dd, type: 2}
+    - {fileID: 11400000, guid: f25b07780a9484de1baf98fd9a403d6a, type: 2}
+    - {fileID: 11400000, guid: 4367acf10e7254dfbada7fe93b9323f4, type: 2}
     stats:
       hpNow:
         baseValue: 300
@@ -62,9 +46,11 @@ MonoBehaviour:
       agility:
         baseValue: 10
         modifiers: 
-    canSummon: 0
-    statuses: []
+    statuses:
+    - {fileID: 11400000, guid: f28a6e95d0aeb4b30bdf539714100faa, type: 2}
   currentScene: BalaFireFestival
   position: {x: 230.78835, y: 9.997636, z: 206.31696}
   spawnPointIndexInScene: 0
-  satisfiedConditionNames: []
+  satisfiedConditionNames:
+  - TalkedToNPCBattle
+  - TalkedToNPCDialogueTest

@@ -61,9 +61,9 @@ public class BattleManager : MonoBehaviour
             instance = this;
         }
 
-        if (FindObjectOfType(typeof(GameManager)) == null)
+        if (FindObjectOfType(typeof(GameProgressSaver)) == null)
         {
-            Debug.Log("No GameManager found, it is likely the persistent scene is unloaded so it is debug mode");
+            Debug.Log("No GameProgressSaver found, it is likely the persistent scene is unloaded so it is debug mode");
             StartCoroutine(LoadDebugPersistentScene());
             Debug.Log("Ok persistent scene loaded go debug");
         }
@@ -154,7 +154,7 @@ public class BattleManager : MonoBehaviour
             unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
 
             unitPlayer.name = character.name;
-            unitPlayer.GetComponent<BattleScript>().character = ObjectCopier.Clone<Character>(character);
+            unitPlayer.GetComponent<BattleScript>().character = character;
             unitPlayer.GetComponent<BattleScript>().enabled = true;
            
             players.Add(unitPlayer);
@@ -186,12 +186,12 @@ public class BattleManager : MonoBehaviour
             Stat hpNow = new Stat(100);
             Stat mp = new Stat(35);
             Stat mpNow = new Stat(35);
-            Stat strength = new Stat(20);
-            Stat defense = new Stat(10);
+            Stat strength = new Stat(10);
+            Stat defense = new Stat(5);
             Stat intelligence = new Stat(10);
             Stat agility = new Stat(10);
             Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
-            Character character = new Character(enemy.name, Element.Fire, basicAbs, defaultStats, false);
+            Character character = new Character(enemy.name, Element.Fire, basicAbs, defaultStats);
             enemy.GetComponent<BattleScript>().character = character;
             enemies.Add(enemy);
             xPos += spaceBetweenEnemies;
@@ -241,7 +241,7 @@ public class BattleManager : MonoBehaviour
                     yield return null;
                 }
 
-                if (currentUnitAction.ability.id.Equals("Guard"))
+                if (currentUnitAction.ability.name.Equals("Guard"))
                     currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("Guard");
                 else if (currentUnitAction.ability.abilityType.Equals(AbilityType.Melee))
                     currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MeleeReady");
@@ -286,7 +286,7 @@ public class BattleManager : MonoBehaviour
 
             currentActingUnit = battleAction.fromUnit;
 
-            //si unit source est détruite, dead ou paralysé par l'attaque précedente on skip sa turn action
+            //si unit source est d?truite, dead ou paralys? par l'attaque pr?cedente on skip sa turn action
             if (battleAction.fromUnit == null || battleAction.fromUnit.GetComponent<BattleScript>().dead)
                 continue;
 
@@ -294,12 +294,12 @@ public class BattleManager : MonoBehaviour
 
             Debug.Log("avant launch");
 
-            if (!battleAction.ability.id.Equals("Guard"))
+            if (!battleAction.ability.name.Equals("Guard"))
             {
                 targetImpactReached = false;
                 StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAbilityWithAnim(battleAction));
            
-                //targetImpactReached est setté par un animEvent
+                //targetImpactReached est sett? par un animEvent
                 while (!targetImpactReached)
                     yield return null;
             }
@@ -309,7 +309,7 @@ public class BattleManager : MonoBehaviour
             yield return StartCoroutine(WaitForAllDamageToBeTaken(battleAction));
             yield return StartCoroutine(WaitForAllStatusToBeAdded(battleAction));
         
-            if (!battleAction.ability.id.Equals("Guard"))
+            if (!battleAction.ability.name.Equals("Guard"))
             {
                 while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                 {
@@ -357,10 +357,9 @@ public class BattleManager : MonoBehaviour
         CoroutineJoin coroutineJoinStatuses = new CoroutineJoin(this);
         foreach (GameObject target in battleAction.targets.ToList())
         {
-            foreach (string statusName in battleAction.ability.statusIds)
+            foreach (Status status in battleAction.ability.statuses)
             {
-                Debug.Log(statusName);
-                Status status = statusCollection.FindStatusFromId(statusName);
+                Debug.Log(status);
                 if (target.GetComponent<BattleScript>().CanAddStatus(status))
                     coroutineJoinStatuses.StartSubtask(target.GetComponent<BattleScript>().AddStatus(status));
             }
@@ -451,7 +450,7 @@ public class BattleManager : MonoBehaviour
         {
             if (IsGameObjectAPlayer(battleAction.fromUnit))
             {
-                if (!battleAction.ability.id.Equals("Revive"))
+                if (!battleAction.ability.name.Equals("Revive"))
                     battleAction.targets = new List<GameObject>() { GetAlivePlayerUnits().First() };
 
             }
@@ -472,7 +471,7 @@ public class BattleManager : MonoBehaviour
 
         ImpactHpMpAfterVictory();
 
-        // + impact status que l'on veut conserver après bataille (poison au minimum)
+        // + impact status que l'on veut conserver apr?s bataille (poison au minimum)
 
         battleEnd = true;
     }

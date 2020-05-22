@@ -40,7 +40,7 @@ public class AbilityCollectionEditor : Editor
 
         if (GUILayout.Button("Load Collection From Json"))
         {
-            string json = File.ReadAllText(Application.dataPath + "/_Databases/AbilityCollection.json"); // loading all the text out of the file into a string, assuming the text is all JSON
+            string json = File.ReadAllText(Application.dataPath + "/_Databases/Abilities/AbilityCollection.json"); // loading all the text out of the file into a string, assuming the text is all JSON
             JsonUtility.FromJsonOverwrite(json, abilityCollection); 
 
             UnityEditor.AssetDatabase.Refresh();
@@ -50,7 +50,7 @@ public class AbilityCollectionEditor : Editor
         {
             string json = JsonUtility.ToJson(abilityCollection, true);
             Debug.Log(json); 
-            string path = Application.dataPath + "/_Databases/AbilityCollection.json";
+            string path = Application.dataPath + "/_Databases/Abilities/AbilityCollection.json";
             Debug.Log(path);
 
             //Create Directory if it does not exist

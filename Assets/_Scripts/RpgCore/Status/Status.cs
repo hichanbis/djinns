@@ -1,19 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
+using UnityEngine;
 
+[System.Serializable]
 public enum StatusApplyMoment
 {
     endTurn,
     add
 }
 
+[System.Serializable]
 public enum StatusType
 {
     ailment,
     support
 }
 
+[System.Serializable]
 public enum StatusApplyType
 {
     damage,
@@ -23,11 +27,10 @@ public enum StatusApplyType
     addStatus
 }
 
-[System.Serializable]
-public class Status
+[CreateAssetMenu()]
+public class Status : ScriptableObject
 {
     public string id;
-    public string name;
     public StatusType statusType;
     public int successRatePercent;
     public string description;
@@ -36,16 +39,12 @@ public class Status
     public StatName statName;
     public int powerPercent;
     public int maxTurns;
-    public List<string> removesStatusesOnAdd;
-    public List<string> blockedByStatuses;
-
-    public Status()
-    {
-    }
+    public List<Status> removesStatusesOnAdd;
+    public List<Status> blockedByStatuses;
 
     public override string ToString()
     {
-        return string.Format("[Status:{0} rate:{1}% moment:{2} type:{3} stat:{4} pow:{5}% maxTurns:{6}]", id, successRatePercent, applyMoment, applyType, statName, powerPercent, maxTurns);
+        return string.Format("[Status:{0} rate:{1}% moment:{2} type:{3} stat:{4} pow:{5}% maxTurns:{6}]", name, successRatePercent, applyMoment, applyType, statName, powerPercent, maxTurns);
     }
 
 }

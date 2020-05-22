@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52e9d858ce5034730b4d0127d155f157, type: 3}
+  m_Name: Toxic
+  m_EditorClassIdentifier: 
+  id: Toxic
+  statusType: 0
+  successRatePercent: 30
+  description: Greatly Damages at the end of every turn (wears off).
+  applyMoment: 0
+  applyType: 0
+  statName: 1
+  powerPercent: -20
+  maxTurns: 3
+  removesStatusesOnAdd:
+  - {fileID: 11400000, guid: 00327e4202a5c4f84a4e4bbe070b2bb5, type: 2}
+  blockedByStatuses: []

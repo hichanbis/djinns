@@ -12,7 +12,7 @@ public class Spawner : MonoBehaviour
 
     void Awake()
     {
-        if (FindObjectOfType(typeof(GameManager)) == null)
+        if (FindObjectOfType(typeof(GameProgressSaver)) == null)
         {
             Debug.Log("No GameManager found, it is likely the persistent scene is unloaded so it is debug mode");
             StartCoroutine(LoadDebugPersistentScene());

@@ -28,7 +28,7 @@ MonoBehaviour:
   m_Name: TalkedToNPCBattle
   m_EditorClassIdentifier: 
   description: TalkedToNPCBattle
-  satisfied: 0
+  satisfied: 1
   hash: -527018407
 --- !u!114 &114690743720028898
 MonoBehaviour:

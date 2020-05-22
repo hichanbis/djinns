@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 [CreateAssetMenu()]
 public class GameProgress : SavableScriptableObject
@@ -28,6 +29,22 @@ public class GameProgress : SavableScriptableObject
     {
         SetSatisfiedConditionsBeforeSave();
         base.Save(index);
+    }
+
+    public void RestoreCharactersAbilities(AbilityCollection abilityCollection)
+    {
+        foreach (Character character in party)
+        {
+            character.RestoreAbilities(abilityCollection);
+        }
+    }
+
+    public void RestoreCharactersStatuses(StatusCollection statusCollection)
+    {
+        foreach (Character character in party)
+        {
+            character.RestoreStatuses(statusCollection);
+        }
     }
 
     public override void Load(int index)

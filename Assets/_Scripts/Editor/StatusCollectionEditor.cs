@@ -40,7 +40,7 @@ public class StatusCollectionEditor : Editor
 
         if (GUILayout.Button("Load Collection From Json"))
         {
-            string json = File.ReadAllText(Application.dataPath + "/_Databases/StatusCollection.json"); // loading all the text out of the file into a string, assuming the text is all JSON
+            string json = File.ReadAllText(Application.dataPath + "/_Databases/Statuses/StatusCollection.json"); // loading all the text out of the file into a string, assuming the text is all JSON
             JsonUtility.FromJsonOverwrite(json, statusCollection); 
 
             UnityEditor.AssetDatabase.Refresh();
@@ -50,7 +50,7 @@ public class StatusCollectionEditor : Editor
         {
             string json = JsonUtility.ToJson(statusCollection, true);
             Debug.Log(json); 
-            string path = Application.dataPath + "/_Databases/StatusCollection.json";
+            string path = Application.dataPath + "/_Databases/Statuses/StatusCollection.json";
             Debug.Log(path);
 
             //Create Directory if it does not exist
