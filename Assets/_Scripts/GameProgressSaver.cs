@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class GameProgressSaver : MonoBehaviour
 {
-    private static GameProgressSaver instance;
     public GameProgress gameProgress;
     public AbilityCollection abilityCollection;
     public StatusCollection statusCollection;
+    public CharacterDataCollection characterDataCollection;
+    public AllConditions allConditions;
 
     void Awake()
     {
@@ -31,38 +32,65 @@ public class GameProgressSaver : MonoBehaviour
 
     }
 
-    void SaveGame()
+    void QuickSaveGame()
     {
-        for (int i = 0; i < gameProgress.party.Count; i++)
-        {
-            CharacterSaveData characterSaveData = new CharacterSaveData();
-            string path = "slot10" + Path.DirectorySeparatorChar + gameProgress.party[i].name + ".data.json";
-
-            for (int j = 0; j < gameProgress.party[i].abilities.Count; j++)
-            {
-                characterSaveData.abilityIds.Add(gameProgress.party[i].abilities[j].id);
-            }
-
-            for (int j = 0; j < gameProgress.party[i].statuses.Count; j++)
-            {
-                characterSaveData.statusIds.Add(gameProgress.party[i].statuses[j].id);
-            }
-
-
-            SaveLoad.SaveToFile<CharacterSaveData>(characterSaveData, path);
-        }
-
-        gameProgress.Save(10);
+        string path = "quickSave" + Path.DirectorySeparatorChar + "gameprogress.json";
+        SaveGame(path);
     }
 
-    void LoadGame()
+    void SaveGame(string path)
     {
-        gameProgress.Load(10);
-
-        for (int i = 0; i < gameProgress.party.Count; i++)
+        //setter la position à partir du player transform...
+        GameObject player = GameObject.Find("Player");
+        if (player)
         {
-            string path = "slot10" + Path.DirectorySeparatorChar + gameProgress.party[i].name + ".data.json";
-            CharacterSaveData characterSaveData = SaveLoad.LoadFromFile<CharacterSaveData>(path);
+            gameProgress.transform = player.transform;
+        }
+
+        GameProgressSaveData gameProgressSaveData = new GameProgressSaveData(gameProgress);
+        SaveLoad.SaveToFile<GameProgressSaveData>(gameProgressSaveData, path);
+    }
+
+    void QuickLoadGame()
+    {
+        string path = "quickSave" + Path.DirectorySeparatorChar + "gameprogress.json";
+        LoadGame(path);
+    }
+
+    void LoadGame(string path)
+    {
+        GameProgressSaveData gameProgressSaveData = SaveLoad.LoadFromFile<GameProgressSaveData>(path);
+
+        //restore fields
+        gameProgress.currentScene = gameProgressSaveData.currentScene;
+
+        gameProgress.transform.position = gameProgressSaveData.position;
+        gameProgress.transform.rotation = gameProgressSaveData.rotation;
+
+        //restore player transform position...
+        GameObject player = GameObject.Find("Player");
+        if (player)
+        {
+            player.transform.position = gameProgress.transform.position;
+            player.transform.rotation = gameProgress.transform.rotation;
+        }
+
+        //restore satisfied conditions
+        gameProgress.satisfiedConditions.Clear();
+
+        foreach (string satisfiedConditionName in gameProgressSaveData.satisfiedConditionNames)
+        {
+            gameProgress.satisfiedConditions.Add(allConditions.GetConditionFromName(satisfiedConditionName));
+        }
+
+        gameProgress.spawnPointIndexInScene = gameProgressSaveData.spawnPointIndexInScene;
+
+        //restore party of characters
+        gameProgress.party.Clear();
+        for (int i = 0; i < gameProgressSaveData.party.Count; i++)
+        {
+            CharacterSaveData characterSaveData = gameProgressSaveData.party[i];
+            gameProgress.party.Add(characterDataCollection.GetCharacterFromId(characterSaveData.id));
 
             gameProgress.party[i].abilities.Clear();
             for (int j = 0; j < characterSaveData.abilityIds.Count; j++)
@@ -75,9 +103,6 @@ public class GameProgressSaver : MonoBehaviour
             {
                 gameProgress.party[i].statuses.Add(statusCollection.GetStatusFromId(characterSaveData.statusIds[j]));
             }
-
-
-            SaveLoad.SaveToFile<CharacterSaveData>(characterSaveData, path);
         }
     }
 
@@ -94,12 +119,12 @@ public class GameProgressSaver : MonoBehaviour
 
         if (Input.GetButtonDown("QuickSave"))
         {
-            SaveGame();
+            QuickSaveGame();
         }
 
         if (Input.GetButtonDown("QuickLoad"))
         {
-            LoadGame();
+            QuickLoadGame();
         }
     }
 }

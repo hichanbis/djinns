@@ -47,6 +47,12 @@ public class Status : ScriptableObject
         return string.Format("[Status:{0} rate:{1}% moment:{2} type:{3} stat:{4} pow:{5}% maxTurns:{6}]", name, successRatePercent, applyMoment, applyType, statName, powerPercent, maxTurns);
     }
 
+
+    //public void Apply(Character c)
+    //{
+
+    //}
+
 }
 
 

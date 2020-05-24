@@ -153,7 +153,7 @@ public class BattleManager : MonoBehaviour
             unitPlayer.GetComponent<Cinemachine.Examples.CharacterMovement>().enabled = false;
             unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
 
-            unitPlayer.name = character.name;
+            unitPlayer.name = character.id;
             unitPlayer.GetComponent<BattleScript>().character = character;
             unitPlayer.GetComponent<BattleScript>().enabled = true;
            
@@ -191,7 +191,11 @@ public class BattleManager : MonoBehaviour
             Stat intelligence = new Stat(10);
             Stat agility = new Stat(10);
             Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
-            Character character = new Character(enemy.name, Element.Fire, basicAbs, defaultStats);
+            Character character = ScriptableObject.CreateInstance<Character>();
+            character.name = enemy.name;
+            character.element = Element.Fire;
+            character.abilities = basicAbs;
+            character.stats = defaultStats;
             enemy.GetComponent<BattleScript>().character = character;
             enemies.Add(enemy);
             xPos += spaceBetweenEnemies;

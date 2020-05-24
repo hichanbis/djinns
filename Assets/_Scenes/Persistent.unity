@@ -1074,6 +1074,8 @@ MonoBehaviour:
   gameProgress: {fileID: 11400000, guid: 64ffea93478774154a1b7ae3181233c5, type: 2}
   abilityCollection: {fileID: 11400000, guid: 1dcf2c253c1aa4b598d8b53643753a6a, type: 2}
   statusCollection: {fileID: 11400000, guid: 8194543a0bef348d88c1940d08e2d3f4, type: 2}
+  characterDataCollection: {fileID: 11400000, guid: 5642ff62d900e4b71b867bb5b6eb4635,
+    type: 2}
 --- !u!4 &1620454768
 Transform:
   m_ObjectHideFlags: 0

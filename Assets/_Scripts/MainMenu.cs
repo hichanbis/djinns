@@ -97,7 +97,7 @@ public class MainMenu : MonoBehaviour
                 if (GUILayout.Button(buttonLabel))
                 {
                     gameProgress.LoadFromStartGameProgress();
-                    gameProgress.Save(i);
+                    //gameProgress.Save(i);
                     Debug.Log("New save created at slot " + i);
                     sceneController.FadeAndLoadScene(gameProgress.currentScene);
                 }
@@ -118,7 +118,7 @@ public class MainMenu : MonoBehaviour
                     {
                         //pas sur qu'on puisse faire ça, a mon avis il faut recopier les infos et overwrite, voir faire un load de json dans le current
 
-                        gameProgress.Load(i);
+                        //gameProgress.Load(i);
                         sceneController.FadeAndLoadScene(gameProgress.currentScene);
                     }
                 }

@@ -36,6 +36,11 @@ public class AllConditions : ScriptableObject
         set { instance = value; }
     }
 
+    public Condition GetConditionFromName(string name)
+    {
+        return Array.Find(conditions, c => c.name.Equals(name));
+    }
+
     // This function will be called at Start once per run of the game.
     public void Reset()
     {

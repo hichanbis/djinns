@@ -104,7 +104,7 @@ public class BattleUI : MonoBehaviour
         Character playerChar = playerUnit.GetComponent<BattleScript>().character;
 
         Transform playerInfoTr = playersInfoPanel.transform.Find(playerUnit.name + "PlayerInfo").transform;
-        playerInfoTr.Find("PlayerName").GetComponentInChildren<Text>().text = playerChar.name;
+        playerInfoTr.Find("PlayerName").GetComponentInChildren<Text>().text = playerChar.id;
         playerInfoTr.Find("HpMp").transform.Find("Hp").GetComponentInChildren<Text>().text = playerChar.stats.hpNow.GetValue().ToString() + " / " + playerChar.stats.hp.GetValue().ToString();
         playerInfoTr.Find("HpMp").transform.Find("Mp").GetComponentInChildren<Text>().text = playerChar.stats.mpNow.GetValue().ToString() + " / " + playerChar.stats.mp.GetValue().ToString();
     }
@@ -159,7 +159,7 @@ public class BattleUI : MonoBehaviour
         magicActionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(magic));
         if (!magic.targetType.Equals(TargetType.Self))
             magicActionButton.GetComponent<Button>().onClick.AddListener(() => DisplayTargetsPanel(magic.targetType));
-        
+
     }
 
     void AddActionButtonToTheActionsPanel(string actionName, GameObject playerActionsPanel)
@@ -275,7 +275,7 @@ public class BattleUI : MonoBehaviour
 
     private void DisplayTargetsPanel(TargetType targetType)
     {
-       
+
         DeActivateCurrentPlayerActionsPanel();
         DeActivateCurrentPlayerMagicsPanel();
 

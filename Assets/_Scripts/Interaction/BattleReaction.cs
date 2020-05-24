@@ -15,7 +15,7 @@ public class BattleReaction : DelayedReaction
 
     protected override void ImmediateReaction()
     {
-        gameProgress.position = playerTr.position;
+        gameProgress.transform = playerTr;
         sceneController.FadeAndLoadScene("BattleTest");
     }
 }

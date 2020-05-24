@@ -4,20 +4,20 @@ using System.IO;
 using System;
 
 [CreateAssetMenu()]
-public class GameProgress : SavableScriptableObject
+public class GameProgress : ScriptableObject
 {
     public List<Character> party;
     public string currentScene;
-    public Vector3 position;
+    public Transform transform;
     public int spawnPointIndexInScene;
-    public List<string> satisfiedConditionNames = new List<string>();
+    public List<Condition> satisfiedConditions = new List<Condition>();
 
     public string getGameDesc()
     {
         string partyDesc = "";
         for (int i = 0; i < party.Count; i++)
         {
-            partyDesc += party[i].name;
+            partyDesc += party[i].id;
             if (i < party.Count - 1)
                 partyDesc += " / ";
         }
@@ -25,12 +25,7 @@ public class GameProgress : SavableScriptableObject
         return partyDesc;
     }
 
-    public override void Save(int index)
-    {
-        SetSatisfiedConditionsBeforeSave();
-        base.Save(index);
-    }
-
+   
     public void RestoreCharactersAbilities(AbilityCollection abilityCollection)
     {
         foreach (Character character in party)
@@ -45,12 +40,6 @@ public class GameProgress : SavableScriptableObject
         {
             character.RestoreStatuses(statusCollection);
         }
-    }
-
-    public override void Load(int index)
-    {
-        base.Load(index);
-        SetConditionsToSavedStatusAfterLoad();
     }
 
     public void LoadFromStartGameProgress()
@@ -70,9 +59,10 @@ public class GameProgress : SavableScriptableObject
         string json = JsonUtility.ToJson(gameProgress, true);
         JsonUtility.FromJsonOverwrite(json, this);
 
-        SetConditionsToSavedStatusAfterLoad();
+        //SetConditionsToSavedStatusAfterLoad();
     }
 
+    /*
     public void SetConditionsToSavedStatusAfterLoad()
     {
         Condition[] conditions = Resources.FindObjectsOfTypeAll(typeof(Condition)) as Condition[];
@@ -96,17 +86,7 @@ public class GameProgress : SavableScriptableObject
             if (!condition.name.Equals("") && condition.satisfied && !satisfiedConditionNames.Contains(condition.name))
                 satisfiedConditionNames.Add(condition.name);
         }
-    }
-
-    public void Reset()
-    {
-        party = new List<Character>();
-        currentScene = null;
-        position = new Vector3();
-        spawnPointIndexInScene = new int();
-        satisfiedConditionNames = new List<string>();
-    }
-
+    }*/
 
     public static string TryToGetGameDesc(int index)
     {

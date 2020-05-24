@@ -13,41 +13,7 @@ MonoBehaviour:
   m_Name: GameProgress
   m_EditorClassIdentifier: 
   party:
-  - name: Cassim
-    element: 4
-    abilities:
-    - {fileID: 11400000, guid: 9b73c3fd844f34ce28a1eb87eaf0cd34, type: 2}
-    - {fileID: 11400000, guid: af2cafb0feed7417ea2458191a623283, type: 2}
-    - {fileID: 11400000, guid: 23ae6094dcbdd42d3b8379c3aec6d7dd, type: 2}
-    - {fileID: 11400000, guid: f25b07780a9484de1baf98fd9a403d6a, type: 2}
-    - {fileID: 11400000, guid: 4367acf10e7254dfbada7fe93b9323f4, type: 2}
-    stats:
-      hpNow:
-        baseValue: 300
-        modifiers: 
-      hp:
-        baseValue: 300
-        modifiers: 
-      mpNow:
-        baseValue: 35
-        modifiers: 
-      mp:
-        baseValue: 35
-        modifiers: 
-      strength:
-        baseValue: 10
-        modifiers: 
-      defense:
-        baseValue: 10
-        modifiers: 
-      intelligence:
-        baseValue: 10
-        modifiers: 
-      agility:
-        baseValue: 10
-        modifiers: 
-    statuses:
-    - {fileID: 11400000, guid: f28a6e95d0aeb4b30bdf539714100faa, type: 2}
+  - {fileID: 11400000, guid: 8199b9717854948b8b9053e704fd1ac5, type: 2}
   currentScene: BalaFireFestival
   position: {x: 230.78835, y: 9.997636, z: 206.31696}
   spawnPointIndexInScene: 0

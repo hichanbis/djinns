@@ -2,24 +2,14 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-
-[System.Serializable]
-public class Character
+[CreateAssetMenu()]
+public class Character : ScriptableObject
 {
-    public string name;
+    public string id;
     public Element element;
-    public List<Ability> abilities; // changer pour liste string ids
+    public List<Ability> abilities = new List<Ability>();
     public Stats stats;
-    public List<Status> statuses; // changer pour liste string ids
-
-    public Character(string name, Element element, List<Ability> abilities, Stats stats)
-    {
-        this.name = name;
-        this.element = element;
-        this.abilities = abilities;
-        this.stats = stats;
-        this.statuses = new List<Status>() { };
-    }
+    public List<Status> statuses = new List<Status>();
 
     public Ability GetAbility(string name)
     {
@@ -46,7 +36,7 @@ public class Character
             return this.stats.intelligence;
         else
             return null;
-        
+
     }
 
     internal void RestoreStatuses(StatusCollection statusCollection)
@@ -68,7 +58,7 @@ public class Character
 
     public override string ToString()
     {
-        return string.Format("[Character: name={0}, statuses={1}]", name, statuses.Count > 0 ? string.Join(" / ", statuses.ConvertAll(x => Convert.ToString(x)).ToArray()) : null);
+        return string.Format("[Character: id={0}, statuses={1}]", id, statuses.Count > 0 ? string.Join(" / ", statuses.ConvertAll(x => Convert.ToString(x)).ToArray()) : null);
     }
 
 }

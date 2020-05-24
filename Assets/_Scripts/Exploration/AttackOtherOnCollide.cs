@@ -15,7 +15,7 @@ public class AttackOtherOnCollide : MonoBehaviour
     private string enemyName;
     private int nbTriggered = 0;
     private SceneController sceneController;
-    private Vector3 playerPosition;
+    private Transform playerTransform;
     
     // A string to identify what is being saved.  This should be set using information about the data as well as the uniqueIdentifier.
 
@@ -33,7 +33,7 @@ public class AttackOtherOnCollide : MonoBehaviour
             //nbHit to make sure I don't call the methods twice
             if (nbTriggered == 0)
             {
-                playerPosition = transform.position;
+                playerTransform = transform;
                 canAttack = true;
                 enemyName = other.name;
                 nbTriggered++;
@@ -44,7 +44,7 @@ public class AttackOtherOnCollide : MonoBehaviour
             //nbHit to make sure I don't call the methods twice
             if (nbTriggered == 0)
             {
-                playerPosition = other.transform.position;
+                playerTransform = other.transform;
                 canAttack = true;
                 enemyName = gameObject.name;
                 nbTriggered++;
@@ -69,16 +69,16 @@ public class AttackOtherOnCollide : MonoBehaviour
         if (gameObject.CompareTag("Player") && canAttack && Input.GetButtonDown("Submit"))
         {
             canAttack = false;
-            StartCoroutine(LaunchAttackOnOther(BattleAdvantage.Player, enemyName, transform.position));
+            StartCoroutine(LaunchAttackOnOther(BattleAdvantage.Player, enemyName, transform));
         }
         else if (gameObject.CompareTag("Enemy") && canAttack)
         {
             canAttack = false;
-            StartCoroutine(LaunchAttackOnOther(BattleAdvantage.Enemy, gameObject.name, playerPosition));
+            StartCoroutine(LaunchAttackOnOther(BattleAdvantage.Enemy, gameObject.name, playerTransform));
         }
     }
 
-    IEnumerator LaunchAttackOnOther(BattleAdvantage battleAdvantage, String enemyName, Vector3 playerPosition)
+    IEnumerator LaunchAttackOnOther(BattleAdvantage battleAdvantage, String enemyName, Transform playerTransform)
     {
         if (battleAdvantage.Equals(BattleAdvantage.Enemy))
             yield return new WaitForSeconds(UnityEngine.Random.Range(1f, 4f));
@@ -93,7 +93,7 @@ public class AttackOtherOnCollide : MonoBehaviour
             ExploSaveData.Instance.EnemyKilledIndexes.Add(index);
             exploSaveData.Save("Enemy" + index + "Dead", true);
 
-            gameProgress.position = playerPosition;
+            gameProgress.transform = playerTransform;
             sceneController.FadeAndLoadScene("BattleTest");
         } 
         yield return null;
