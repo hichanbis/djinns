@@ -44,7 +44,8 @@ public class GameProgressSaver : MonoBehaviour
         GameObject player = GameObject.Find("Player");
         if (player)
         {
-            gameProgress.transform = player.transform;
+            gameProgress.position = player.transform.position;
+            gameProgress.rotation = player.transform.rotation;
         }
 
         GameProgressSaveData gameProgressSaveData = new GameProgressSaveData(gameProgress);
@@ -64,15 +65,17 @@ public class GameProgressSaver : MonoBehaviour
         //restore fields
         gameProgress.currentScene = gameProgressSaveData.currentScene;
 
-        gameProgress.transform.position = gameProgressSaveData.position;
-        gameProgress.transform.rotation = gameProgressSaveData.rotation;
+        //load scene if different than current
+
+        gameProgress.position = gameProgressSaveData.position;
+        gameProgress.rotation = gameProgressSaveData.rotation;
 
         //restore player transform position...
         GameObject player = GameObject.Find("Player");
         if (player)
         {
-            player.transform.position = gameProgress.transform.position;
-            player.transform.rotation = gameProgress.transform.rotation;
+            player.transform.position = gameProgress.position;
+            player.transform.rotation = gameProgress.rotation;
         }
 
         //restore satisfied conditions

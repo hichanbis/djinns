@@ -13,58 +13,9 @@ MonoBehaviour:
   m_Name: StartGameProgress
   m_EditorClassIdentifier: 
   party:
-  - name: Cassim
-    element: 4
-    abilities:
-    - id: Attack
-      name: Attack
-      description: Deals physical damage to an enemy
-      abilityType: 1
-      element: 4
-      distance: 0
-      targetType: 1
-      mpCost: 0
-      power: -20
-      statusIds: []
-    - id: Guard
-      name: Guard
-      description: Raises self defense
-      abilityType: 1
-      element: 4
-      distance: 0
-      targetType: 0
-      mpCost: 0
-      power: 0
-      statusIds:
-      - Guard
-    stats:
-      hpNow:
-        baseValue: 300
-        modifiers: 
-      hp:
-        baseValue: 300
-        modifiers: 
-      mpNow:
-        baseValue: 35
-        modifiers: 
-      mp:
-        baseValue: 35
-        modifiers: 
-      strength:
-        baseValue: 10
-        modifiers: 
-      defense:
-        baseValue: 10
-        modifiers: 
-      intelligence:
-        baseValue: 10
-        modifiers: 
-      agility:
-        baseValue: 10
-        modifiers: 
-    canSummon: 0
-    statuses: []
+  - {fileID: 11400000, guid: 8199b9717854948b8b9053e704fd1ac5, type: 2}
   currentScene: BalaFireFestival
-  position: {x: 230.78835, y: 9.997636, z: 206.31696}
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
   spawnPointIndexInScene: 0
-  satisfiedConditionNames: []
+  satisfiedConditions: []

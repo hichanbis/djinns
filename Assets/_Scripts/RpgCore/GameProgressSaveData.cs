@@ -22,8 +22,8 @@ public class GameProgressSaveData
         }
 
         currentScene = gameProgress.currentScene;
-        position = gameProgress.transform.position;
-        rotation = gameProgress.transform.rotation;
+        position = gameProgress.position;
+        rotation = gameProgress.rotation;
         spawnPointIndexInScene = gameProgress.spawnPointIndexInScene;
 
         satisfiedConditionNames = new List<string>();

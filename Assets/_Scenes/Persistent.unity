@@ -1076,6 +1076,7 @@ MonoBehaviour:
   statusCollection: {fileID: 11400000, guid: 8194543a0bef348d88c1940d08e2d3f4, type: 2}
   characterDataCollection: {fileID: 11400000, guid: 5642ff62d900e4b71b867bb5b6eb4635,
     type: 2}
+  allConditions: {fileID: 11400000, guid: dd0db184d620f41b6a4c6ee20f24aefb, type: 2}
 --- !u!4 &1620454768
 Transform:
   m_ObjectHideFlags: 0

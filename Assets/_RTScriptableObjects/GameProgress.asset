@@ -15,8 +15,9 @@ MonoBehaviour:
   party:
   - {fileID: 11400000, guid: 8199b9717854948b8b9053e704fd1ac5, type: 2}
   currentScene: BalaFireFestival
-  position: {x: 230.78835, y: 9.997636, z: 206.31696}
+  position: {x: 225.0953, y: 10.420036, z: 226.36298}
+  rotation: {x: -0.000000009410971, y: 0.9910075, z: -4.3488893e-10, w: -0.13380647}
   spawnPointIndexInScene: 0
-  satisfiedConditionNames:
-  - TalkedToNPCBattle
-  - TalkedToNPCDialogueTest
+  satisfiedConditions:
+  - {fileID: 114664344779308212, guid: dd0db184d620f41b6a4c6ee20f24aefb, type: 2}
+  - {fileID: 114690743720028898, guid: dd0db184d620f41b6a4c6ee20f24aefb, type: 2}

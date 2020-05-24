@@ -8,7 +8,8 @@ public class GameProgress : ScriptableObject
 {
     public List<Character> party;
     public string currentScene;
-    public Transform transform;
+    public Vector3 position;
+    public Quaternion rotation;
     public int spawnPointIndexInScene;
     public List<Condition> satisfiedConditions = new List<Condition>();
 

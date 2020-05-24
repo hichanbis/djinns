@@ -52,7 +52,8 @@ public class GameProgressEditor : Editor
         {
             game.party = new List<Character>();
             game.currentScene = null;
-            game.transform = null;
+            game.position = new Vector3();
+            game.rotation = new Quaternion();
             game.spawnPointIndexInScene = new int();
             game.satisfiedConditions = new List<Condition>();
             UnityEditor.AssetDatabase.Refresh();

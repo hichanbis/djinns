@@ -93,7 +93,8 @@ public class AttackOtherOnCollide : MonoBehaviour
             ExploSaveData.Instance.EnemyKilledIndexes.Add(index);
             exploSaveData.Save("Enemy" + index + "Dead", true);
 
-            gameProgress.transform = playerTransform;
+            gameProgress.position = playerTransform.position;
+            gameProgress.rotation = playerTransform.rotation;
             sceneController.FadeAndLoadScene("BattleTest");
         } 
         yield return null;
