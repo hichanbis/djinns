@@ -48,6 +48,14 @@ public class GameProgressSaver : MonoBehaviour
             gameProgress.rotation = player.transform.rotation;
         }
 
+        //save satisfied conditions in gameProgress
+        gameProgress.satisfiedConditions.Clear();
+        foreach (Condition condition in allConditions.conditions)
+        {
+            if (condition.satisfied)
+                gameProgress.satisfiedConditions.Add(condition);
+        }
+
         GameProgressSaveData gameProgressSaveData = new GameProgressSaveData(gameProgress);
         SaveLoad.SaveToFile<GameProgressSaveData>(gameProgressSaveData, path);
     }
@@ -83,7 +91,9 @@ public class GameProgressSaver : MonoBehaviour
 
         foreach (string satisfiedConditionName in gameProgressSaveData.satisfiedConditionNames)
         {
-            gameProgress.satisfiedConditions.Add(allConditions.GetConditionFromName(satisfiedConditionName));
+            Condition condition = allConditions.GetConditionFromName(satisfiedConditionName);
+            condition.satisfied = true;
+            gameProgress.satisfiedConditions.Add(condition);
         }
 
         gameProgress.spawnPointIndexInScene = gameProgressSaveData.spawnPointIndexInScene;
