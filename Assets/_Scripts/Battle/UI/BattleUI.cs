@@ -33,7 +33,7 @@ public class BattleUI : MonoBehaviour
 
     private UnityAction playerUnitsExistListener;
     private UnityAction playerMustChooseAbilityListener;
-    private UnityAction rageAppliedListener;
+    private UnityAction UpdatePlayersInfoListener;
     private UnityAction winListener;
     private UnityAction loseListener;
     private UnityAction cancelTargetListener;
@@ -41,6 +41,10 @@ public class BattleUI : MonoBehaviour
 
     public GameObject battleCanvas, victoryCanvas, gameOverCanvas;
 
+    private void Awake()
+    {
+   
+    }
 
     // Use this for initialization
     void Start()
@@ -63,8 +67,8 @@ public class BattleUI : MonoBehaviour
         playerMustChooseAbilityListener = new UnityAction(ActivateCurrentPlayerActionsPanel);
         EventManager.StartListening(BattleEventMessages.PlayerChoiceExpected.ToString(), playerMustChooseAbilityListener);
 
-        rageAppliedListener = new UnityAction(UpdatePlayersInfo);
-        EventManager.StartListening(BattleEventMessages.DamageApplied.ToString(), rageAppliedListener);
+        UpdatePlayersInfoListener = new UnityAction(UpdatePlayersInfo);
+        EventManager.StartListening(BattleEventMessages.PlayerHpChanged.ToString(), UpdatePlayersInfoListener);
 
         winListener = new UnityAction(DisplayWinCanvas);
         EventManager.StartListening(BattleEventMessages.Victory.ToString(), winListener);
@@ -102,7 +106,6 @@ public class BattleUI : MonoBehaviour
     void UpdatePlayerInfo(GameObject playerUnit)
     {
         Character playerChar = playerUnit.GetComponent<BattleScript>().character;
-
         Transform playerInfoTr = playersInfoPanel.transform.Find(playerUnit.name + "PlayerInfo").transform;
         playerInfoTr.Find("PlayerName").GetComponentInChildren<Text>().text = playerChar.id;
         playerInfoTr.Find("HpMp").transform.Find("Hp").GetComponentInChildren<Text>().text = playerChar.stats.hpNow.GetValue().ToString() + " / " + playerChar.stats.hp.GetValue().ToString();
@@ -111,6 +114,7 @@ public class BattleUI : MonoBehaviour
 
     void UpdatePlayersInfo()
     {
+        
         playerUnits = battleManager.playerUnits;
         for (int i = 0; i < playerUnits.Count; i++)
         {
@@ -268,7 +272,7 @@ public class BattleUI : MonoBehaviour
         foreach (Button button in currentPlayerMagicsPanel.GetComponentsInChildren<Button>())
         {
             Ability ab = abilityCollection.GetAbilityFromName(button.name);
-            if (battleManager.currentChoosingUnit.GetComponent<BattleScript>().character.GetStat(StatName.mpNow).baseValue < ab.mpCost)
+            if (battleManager.currentChoosingUnit.GetComponent<BattleScript>().character.GetStat(StatName.mpNow).GetValue() < ab.mpCost)
                 button.interactable = false;
         }
     }

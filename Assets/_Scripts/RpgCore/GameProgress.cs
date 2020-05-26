@@ -26,23 +26,6 @@ public class GameProgress : ScriptableObject
         return partyDesc;
     }
 
-   
-    public void RestoreCharactersAbilities(AbilityCollection abilityCollection)
-    {
-        foreach (Character character in party)
-        {
-            character.RestoreAbilities(abilityCollection);
-        }
-    }
-
-    public void RestoreCharactersStatuses(StatusCollection statusCollection)
-    {
-        foreach (Character character in party)
-        {
-            character.RestoreStatuses(statusCollection);
-        }
-    }
-
     public void LoadFromStartGameProgress()
     {
         LoadFromGameProgressAsset("StartGameProgress");
@@ -60,34 +43,8 @@ public class GameProgress : ScriptableObject
         string json = JsonUtility.ToJson(gameProgress, true);
         JsonUtility.FromJsonOverwrite(json, this);
 
-        //SetConditionsToSavedStatusAfterLoad();
+     
     }
-
-    /*
-    public void SetConditionsToSavedStatusAfterLoad()
-    {
-        Condition[] conditions = Resources.FindObjectsOfTypeAll(typeof(Condition)) as Condition[];
-        foreach (string satisfiedConditionName in this.satisfiedConditionNames)
-        {
-            foreach (Condition condition in conditions)
-            {
-                if (condition.name.Equals(satisfiedConditionName))
-                    condition.satisfied = true;
-            }
-
-        }
-    }
-
-    public void SetSatisfiedConditionsBeforeSave()
-    {
-        Condition[] conditions = Resources.FindObjectsOfTypeAll(typeof(Condition)) as Condition[];
-
-        foreach (Condition condition in conditions)
-        {
-            if (!condition.name.Equals("") && condition.satisfied && !satisfiedConditionNames.Contains(condition.name))
-                satisfiedConditionNames.Add(condition.name);
-        }
-    }*/
 
     public static string TryToGetGameDesc(int index)
     {

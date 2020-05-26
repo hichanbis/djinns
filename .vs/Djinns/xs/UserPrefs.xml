@@ -1,23 +1,17 @@
 ﻿<Properties StartupConfiguration="{8E702D4C-080E-7A38-0EC9-41243DA8E46C}|" RefactoringSettings.EnableRefactorings="True">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/Editor/Interaction/Conditions/ConditionEditor.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/RpgCore/Status/Status.cs">
     <Files>
-      <File FileName="Assets/_Scripts/RpgCore/Character.cs" Line="11" Column="24" />
-      <File FileName="Assets/_Scripts/RpgCore/GameProgressSaveData.cs" Line="16" Column="45" />
-      <File FileName="Assets/_Scripts/GameProgressSaver.cs" Line="51" Column="26" />
-      <File FileName="Assets/_Scripts/RpgCore/CharacterSaveData.cs" Line="15" Column="12" />
-      <File FileName="Assets/_Scripts/Battle/BattleManager.cs" Line="198" Column="43" />
-      <File FileName="Assets/_Scripts/RpgCore/Ability/AbilityCollection.cs" Line="1" Column="1" />
-      <File FileName="Assets/_Scripts/RpgCore/CharacterDataCollection.cs" Line="14" Column="6" />
-      <File FileName="Assets/_Scripts/RpgCore/GameProgress.cs" Line="89" Column="10" />
-      <File FileName="Assets/_Scripts/Interaction/AllConditions.cs" Line="41" Column="45" />
-      <File FileName="Assets/_Scripts/MainMenu.cs" Line="121" Column="27" />
-      <File FileName="Assets/_Scripts/Editor/GameProgressEditor.cs" Line="56" Column="46" />
-      <File FileName="Assets/_Scripts/Exploration/AttackOtherOnCollide.cs" Line="97" Column="62" />
-      <File FileName="Assets/_Scripts/Interaction/BattleReaction.cs" Line="19" Column="51" />
-      <File FileName="Assets/_Scripts/Interaction/ConditionReaction.cs" Line="1" Column="1" />
-      <File FileName="Assets/_Scripts/Editor/Abstracts/EditorWithSubEditors.cs" Line="1" Column="1" />
-      <File FileName="Assets/_Scripts/Editor/Interaction/Conditions/ConditionCollectionEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/_Scripts/Editor/Interaction/Conditions/ConditionEditor.cs" Line="1" Column="1" />
+      <File FileName="Assets/_Scripts/Battle/BattleScript.cs" Line="282" Column="40" />
+      <File FileName="Assets/_Scripts/Battle/UI/BattleUI.cs" Line="109" Column="9" />
+      <File FileName="Assets/_Scripts/RpgCore/Stat.cs" Line="43" Column="50" />
+      <File FileName="Assets/_Scripts/Battle/BattleManager.cs" Line="199" Column="47" />
+      <File FileName="Assets/_Scripts/Battle/BattleCamera.cs" />
+      <File FileName="Assets/_Scripts/RpgCore/Character.cs" />
+      <File FileName="Assets/_Scripts/RpgCore/GameProgress.cs" />
+      <File FileName="Assets/_Scripts/RpgCore/Stats.cs" Line="1" Column="1" />
+      <File FileName="Assets/_Scripts/Battle/BattleEventMessages.cs" />
+      <File FileName="Assets/_Scripts/Util/EventManager.cs" Line="51" Column="34" />
+      <File FileName="Assets/_Scripts/RpgCore/Status/Status.cs" Line="54" Column="5" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -30,22 +24,24 @@
                 </Node>
               </Node>
               <Node name="_Scripts" expanded="True">
-                <Node name="Battle" expanded="True" />
+                <Node name="Battle" expanded="True">
+                  <Node name="UI" expanded="True" />
+                </Node>
                 <Node name="DataPersistence" expanded="True" />
                 <Node name="Dialogue" expanded="True" />
                 <Node name="Editor" expanded="True">
                   <Node name="Abstracts" expanded="True" />
                   <Node name="Interaction" expanded="True">
-                    <Node name="Conditions" expanded="True">
-                      <Node name="ConditionEditor.cs" selected="True" />
-                    </Node>
+                    <Node name="Conditions" expanded="True" />
                   </Node>
                 </Node>
                 <Node name="Exploration" expanded="True" />
                 <Node name="Interaction" expanded="True" />
                 <Node name="RpgCore" expanded="True">
                   <Node name="Ability" expanded="True" />
-                  <Node name="Status" expanded="True" />
+                  <Node name="Status" expanded="True">
+                    <Node name="Status.cs" selected="True" />
+                  </Node>
                 </Node>
                 <Node name="SceneControl" expanded="True" />
                 <Node name="Util" expanded="True" />
@@ -62,7 +58,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="cad259d4-f124-48a2-b600-39538692f1fa" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="96bf4cc5-c7b9-4e57-b137-5960ec622abd" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

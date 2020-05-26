@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Guard
   m_EditorClassIdentifier: 
   id: Guard
-  statusType: 0
+  statusType: 1
   successRatePercent: 100
   description: Guard postion doubles the character's defense for the current turn
-  applyMoment: 1
   applyType: 3
   statName: 5
   powerPercent: 100
   maxTurns: 1
+  currentTurns: 0
   removesStatusesOnAdd: []
   blockedByStatuses: []

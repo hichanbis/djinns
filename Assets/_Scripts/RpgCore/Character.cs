@@ -10,6 +10,8 @@ public class Character : ScriptableObject
     public List<Ability> abilities = new List<Ability>();
     public Stats stats;
     public List<Status> statuses = new List<Status>();
+    public bool canAct;
+    public bool canCast;
 
     public Ability GetAbility(string name)
     {
@@ -39,26 +41,13 @@ public class Character : ScriptableObject
 
     }
 
-    internal void RestoreStatuses(StatusCollection statusCollection)
-    {
-        for (int i = 0; i < statuses.Count; i++)
-        {
-            statuses[i] = statusCollection.GetStatusFromId(statuses[i].id);
-        }
-    }
-
-    public void RestoreAbilities(AbilityCollection abilityCollection)
-    {
-        for (int i = 0; i < abilities.Count; i++)
-        {
-            abilities[i] = abilityCollection.GetAbilityFromId(abilities[i].id);
-        }
-    }
-
 
     public override string ToString()
     {
         return string.Format("[Character: id={0}, statuses={1}]", id, statuses.Count > 0 ? string.Join(" / ", statuses.ConvertAll(x => Convert.ToString(x)).ToArray()) : null);
     }
+
+   
+
 
 }

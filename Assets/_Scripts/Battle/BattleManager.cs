@@ -21,7 +21,7 @@ public class BattleManager : MonoBehaviour
     public List<GameObject> currentTargets;
     public BattleAction currentUnitAction;
     public List<BattleAction> turnActions = new List<BattleAction>();
-  
+
     public bool backToMainMenu;
     public bool restartBattle;
     public bool victoryAcknowledged;
@@ -144,8 +144,8 @@ public class BattleManager : MonoBehaviour
 
         for (int i = 0; i < nbPlayers; i++)
         {
-            
-            Character character = gameProgress.party[i];
+
+            Character character = ScriptableObject.Instantiate<Character>(gameProgress.party[i]);
             Vector3 spawnPosition = new Vector3(xPos, 0f, zPos);
             Quaternion rotation = Quaternion.LookRotation(new Vector3(xPos, 0, 0) - spawnPosition);
             GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, spawnPosition, rotation) as GameObject;
@@ -154,9 +154,9 @@ public class BattleManager : MonoBehaviour
             unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
 
             unitPlayer.name = character.id;
-            unitPlayer.GetComponent<BattleScript>().character = character;
+            unitPlayer.GetComponent<BattleScript>().SetCharacter(character);
             unitPlayer.GetComponent<BattleScript>().enabled = true;
-           
+
             players.Add(unitPlayer);
 
             xPos += spaceBetweenPlayers;
@@ -191,12 +191,12 @@ public class BattleManager : MonoBehaviour
             Stat intelligence = new Stat(10);
             Stat agility = new Stat(10);
             Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
-            Character character = ScriptableObject.CreateInstance<Character>();
+            Character character = ScriptableObject.CreateInstance<Character>(); //recup et clone le SO qui va bien
             character.name = enemy.name;
             character.element = Element.Fire;
             character.abilities = basicAbs;
             character.stats = defaultStats;
-            enemy.GetComponent<BattleScript>().character = character;
+            enemy.GetComponent<BattleScript>().SetCharacter(character);
             enemies.Add(enemy);
             xPos += spaceBetweenEnemies;
         }
@@ -222,6 +222,7 @@ public class BattleManager : MonoBehaviour
             currentUnitAction.ability = null;
             if (IsGameObjectAPlayer(currentChoosingUnit))
             {
+                StartCoroutine(currentChoosingUnit.GetComponent<BattleScript>().NewTurn());
                 StartCoroutine(currentChoosingUnit.GetComponent<BattleScript>().LaunchChoiceAnim());
                 currentUnitAction.fromUnit = currentChoosingUnit;
                 EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
@@ -251,7 +252,7 @@ public class BattleManager : MonoBehaviour
                     currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MeleeReady");
                 else if (currentUnitAction.ability.abilityType.Equals(AbilityType.Magic))
                     currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MagicReady");
-                
+
 
                 turnActions.Add(currentUnitAction);
 
@@ -296,28 +297,28 @@ public class BattleManager : MonoBehaviour
 
             ReassignTargetIfNeeded(battleAction);
 
-            Debug.Log("avant launch");
+            //Debug.Log("avant launch");
 
             if (!battleAction.ability.name.Equals("Guard"))
             {
                 targetImpactReached = false;
                 StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAbilityWithAnim(battleAction));
-           
+
                 //targetImpactReached est sett? par un animEvent
                 while (!targetImpactReached)
                     yield return null;
             }
 
-            Debug.Log("avant dmg taken");
+            //Debug.Log("avant dmg taken");
 
             yield return StartCoroutine(WaitForAllDamageToBeTaken(battleAction));
             yield return StartCoroutine(WaitForAllStatusToBeAdded(battleAction));
-        
+
             if (!battleAction.ability.name.Equals("Guard"))
             {
                 while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                 {
-                    Debug.Log("j'attends idle");
+                    //Debug.Log("j'attends idle");
                     yield return null;
                 }
             }
@@ -327,7 +328,7 @@ public class BattleManager : MonoBehaviour
         currentActingUnit = null;
 
         //Fin d'exec des battleActions
-    
+
         if (!AreAllPlayersDead() && !AreAllEnemiesDead())
         {
             EventManager.TriggerEvent(BattleEventMessages.EndRageStatusTime.ToString());
@@ -347,10 +348,12 @@ public class BattleManager : MonoBehaviour
         foreach (GameObject target in battleAction.targets.ToList())
         {
             int dmg = CalculateDamage(battleAction.fromUnit, battleAction.ability, target);
-
-            //if there are dmg! if poison or guard c un autre delire
+            Debug.Log("CALCULATED DMG" + dmg);
             if (dmg != 0)
-                coroutineJoinTakeDamage.StartSubtask(target.GetComponent<BattleScript>().TakeDamage(dmg));
+            {
+                target.GetComponent<BattleScript>().character.stats.hpNow.SetValue(Mathf.Clamp(target.GetComponent<BattleScript>().character.stats.hpNow.GetValue() + dmg, 0, target.GetComponent<BattleScript>().character.stats.hp.GetValue()));
+                //coroutineJoinTakeDamage.StartSubtask(target.GetComponent<BattleScript>().TakeDamage(dmg));
+            }
         }
         //Wait for all takeDamage End
         yield return coroutineJoinTakeDamage.WaitForAll();
@@ -361,23 +364,23 @@ public class BattleManager : MonoBehaviour
         CoroutineJoin coroutineJoinStatuses = new CoroutineJoin(this);
         foreach (GameObject target in battleAction.targets.ToList())
         {
-            foreach (Status status in battleAction.ability.statuses)
+            foreach (Status status in battleAction.ability.statuses.ToList<Status>())
             {
                 Debug.Log(status);
-                if (target.GetComponent<BattleScript>().CanAddStatus(status))
-                    coroutineJoinStatuses.StartSubtask(target.GetComponent<BattleScript>().AddStatus(status));
+                coroutineJoinStatuses.StartSubtask(target.GetComponent<BattleScript>().AddStatus(ScriptableObject.Instantiate<Status>(status)));
             }
         }
         yield return coroutineJoinStatuses.WaitForAll();
     }
 
+    //To change with new turn call on acting unit
     private IEnumerator WaitForAllEndRageStatusToBeApplied()
     {
-        
+
         CoroutineJoin coroutineJoinEndRage = new CoroutineJoin(this);
         foreach (GameObject unit in GetAllUnits())
         {
-            coroutineJoinEndRage.StartSubtask(unit.GetComponent<BattleScript>().ApplyEndRageStatusEffects());
+            
         }
 
         yield return coroutineJoinEndRage.WaitForAll();
@@ -502,12 +505,12 @@ public class BattleManager : MonoBehaviour
             Character player = playerUnits[i].GetComponent<BattleScript>().character;
 
 
-            if (player.stats.hpNow.baseValue == 0)
-                gameProgress.party[i].stats.hpNow.baseValue = 1;
+            if (player.stats.hpNow.GetValue() == 0)
+                gameProgress.party[i].stats.hpNow.SetValue(1);
             else
             {
-                gameProgress.party[i].stats.hpNow.baseValue = player.stats.hpNow.baseValue;
-                gameProgress.party[i].stats.mpNow.baseValue = player.stats.mpNow.baseValue;
+                gameProgress.party[i].stats.hpNow.SetValue(player.stats.hpNow.GetValue());
+                gameProgress.party[i].stats.mpNow.SetValue(player.stats.mpNow.GetValue());
             }
         }
 

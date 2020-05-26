@@ -6,7 +6,8 @@ using System;
 [System.Serializable]
 public class Stat
 {
-    public int baseValue;
+    [SerializeField]
+    private int baseValue;
     public List<int> modifiers;
 
     public Stat(int baseValue)
@@ -27,6 +28,32 @@ public class Stat
 
         return value;
     }
+
+    //returns base value
+    public int GetBaseValue()
+    {
+        return baseValue;
+    }
+
+    public void SetValue(int value)
+    {
+        if (baseValue == value) return;
+
+        //cannot call delegates before changing the value
+        //so I store the old value for comparison
+        int oldValue = baseValue;
+
+        baseValue = value;
+
+
+        if (OnStatChanged != null)
+            OnStatChanged(value, value - oldValue);
+    }
+
+    public delegate void OnStatChangedDelegate(int value, int dmg);
+    
+    public event OnStatChangedDelegate OnStatChanged;
+
 }
 
 

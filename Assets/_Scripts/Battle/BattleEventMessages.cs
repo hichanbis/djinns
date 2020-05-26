@@ -5,7 +5,7 @@ public enum BattleEventMessages
 {
     Taunt,
     InitBattle,
-    DamageApplied,
+    PlayerHpChanged,
     EndRageStatusTime,
     Victory,
     Failure,

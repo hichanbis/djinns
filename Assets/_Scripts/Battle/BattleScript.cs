@@ -16,30 +16,44 @@ public class BattleScript : MonoBehaviour
     public bool canCast;
     public Animator anim;
     public GameObject damagePopUpPrefab;
-    public bool damageTaken;
-    public bool doneApplied;
     public StatusCollection statusCollection;
-    public Dictionary<string, int> battleStatusesDurations;
-
-
+  
     void Start()
     {
         dead = false;
         canAct = true;
         canCast = true;
-        battleStatusesDurations = new Dictionary<string, int>();
-        //pour l'instant ça c toujours vide donc on rentre pas dans le foreach
-        foreach (Status status in character.statuses)
-        {
-            battleStatusesDurations.Add(status.name, 0);
-        }
 
         anim = GetComponent<Animator>();
         if (anim == null)
             anim = GetComponentInChildren<Animator>();
         anim.runtimeAnimatorController = battleAnimController;
 
+    }
 
+    public void SetCharacter(Character character)
+    {
+        this.character = character;
+
+        character.stats.hpNow.OnStatChanged += HpNowChangedHandler;
+    }
+
+    private void HpNowChangedHandler(int hpNow, int dmg)
+    {
+        dmgPopup(dmg);
+        if (AmIAPlayer())
+        {
+            EventManager.TriggerEvent(BattleEventMessages.PlayerHpChanged.ToString());
+        }
+
+        if (dmg > 0)
+        {
+            //anim.SetTrigger("Healed");
+        }
+        else
+        {
+            StartCoroutine(TakeDamageAnim(hpNow));
+        }
     }
 
     //launch anim battleTaunt
@@ -173,24 +187,14 @@ public class BattleScript : MonoBehaviour
         }
     }
 
-    public IEnumerator TakeDamage(int dmg)
+    public IEnumerator TakeDamageAnim(int hpNow)
     {
-
-        character.stats.hpNow.baseValue = Mathf.Clamp(character.stats.hpNow.GetValue() + dmg, 0, character.stats.hp.GetValue());
-        if (character.stats.hpNow.GetValue() == 0)
+        if (hpNow == 0)
         {
             dead = true;
         }
 
-        GameObject damagePopup = Instantiate(damagePopUpPrefab, transform);
-        damagePopup.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
-
-        EventManager.TriggerEvent(BattleEventMessages.DamageApplied.ToString());
-
-        if (dmg > 0)
-            Debug.Log("should launch heal anim");
-        //  anim.SetTrigger("Healed");
-        else if (dead)
+        if (dead)
         {
             string expectedState = "ERROR";
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("Guard"))
@@ -243,95 +247,35 @@ public class BattleScript : MonoBehaviour
     }
 
 
-    public bool CanAddStatus(Status status)
-    {
-        status.successRatePercent = 100; //hack for debug
-        bool blocked = false;
-        foreach (Status blockerStatus in status.blockedByStatuses)
-        {
-            foreach (string presentStatusId in battleStatusesDurations.Keys.ToList())
-            {
-                if (blockerStatus.name.Equals(presentStatusId))
-                    blocked = true;
-            }
-        }
-        Debug.Log("Contains key" + battleStatusesDurations.ContainsKey(status.name));
-        return !battleStatusesDurations.ContainsKey(status.name) && Rng.GetSuccess(status.successRatePercent) && !blocked;
-
-    }
-
     //Adds status and removes status as described in data (heavy removes light, Toxic removes poison, etc.)
     public IEnumerator AddStatus(Status status)
     {
-        foreach (string presentStatusId in battleStatusesDurations.Keys.ToList())
-        {
-            foreach (Status statusToRemove in status.removesStatusesOnAdd)
-            {
-                if (statusToRemove.name.Equals(presentStatusId))
-                    RemoveStatus(presentStatusId);
-            }
-        }
-
-        battleStatusesDurations.Add(status.name, 0);
-        if (status.applyMoment.Equals(StatusApplyMoment.add))
-            yield return StartCoroutine(ApplyStatus(status));
-
+        bool result = status.Add(character);
+        Debug.Log(string.Format("Result of status {0} add: {1}", status, result));
+        yield return null;
     }
 
-    //on end turn
-    public IEnumerator ApplyEndRageStatusEffects()
+    //on new turn
+    public IEnumerator NewTurn()
     {
-
-        foreach (string statusId in battleStatusesDurations.Keys.ToList())
+        foreach (Status status in character.statuses.ToList<Status>())
         {
-            Status status = statusCollection.GetStatusFromId(statusId);
-            if (status.applyMoment.Equals(StatusApplyMoment.endTurn))
-            {
-                yield return StartCoroutine(ApplyStatus(status));
-            }
-
-            battleStatusesDurations[statusId]++;
-
-            if (battleStatusesDurations[statusId] >= status.maxTurns)
-                RemoveStatus(statusId);
+            status.NewTurn(character);
         }
-    }
-
-    public IEnumerator ApplyStatus(Status status)
-    {
-        if (status.applyType.Equals(StatusApplyType.damage))
-        {
-            //base value car on veut appliquer le poison sur la stat hpmax reelle pas la boostée
-            int damage = Mathf.RoundToInt(character.stats.hp.baseValue * ((float)status.powerPercent / 100));
-            yield return StartCoroutine(TakeDamage(damage));
-        }
-        else if (status.applyType.Equals(StatusApplyType.modifier))
-            character.GetStat(status.statName).modifiers.Add(status.powerPercent);
-        else if (status.applyType.Equals(StatusApplyType.disableCommands))
-            canAct = false;
-        else if (status.applyType.Equals(StatusApplyType.disableMagic))
-            canCast = false;
 
         yield return null;
-
+            
     }
 
-    public void RemoveStatus(string statusId)
+    public void dmgPopup(int dmg)
     {
-        Status status = statusCollection.GetStatusFromId(statusId);
-        if (status.applyType.Equals(StatusApplyType.modifier))
-            character.GetStat(status.statName).modifiers.Remove(status.powerPercent);
-        else if (status.applyType.Equals(StatusApplyType.disableCommands))
-            canAct = true;
-        if (status.applyType.Equals(StatusApplyType.disableMagic))
-            canCast = true;
-        battleStatusesDurations.Remove(statusId);
+        GameObject damagePopup = Instantiate(damagePopUpPrefab, transform);
+        damagePopup.GetComponentInChildren<Text>().text = Math.Abs(dmg).ToString();
     }
-
-
+    
     public void removeMp(Ability ability)
     {
-        character.stats.mpNow.baseValue = Mathf.Clamp(character.stats.mpNow.GetValue() - ability.mpCost, 0, character.stats.mp.GetValue());
+        character.stats.mpNow.SetValue(Mathf.Clamp(character.stats.mpNow.GetValue() - ability.mpCost, 0, character.stats.mp.GetValue()));
     }
 
     bool AmIAPlayer()

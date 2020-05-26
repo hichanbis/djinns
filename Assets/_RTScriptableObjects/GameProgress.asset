@@ -15,8 +15,8 @@ MonoBehaviour:
   party:
   - {fileID: 11400000, guid: 8199b9717854948b8b9053e704fd1ac5, type: 2}
   currentScene: BalaFireFestival
-  position: {x: 225.0953, y: 10.420036, z: 226.36298}
-  rotation: {x: -0.000000009410971, y: 0.9910075, z: -4.3488893e-10, w: -0.13380647}
+  position: {x: 230.90219, y: 10.007333, z: 206.74323}
+  rotation: {x: 0.000000010358335, y: 0.99869204, z: -0.000000011847528, w: 0.051129643}
   spawnPointIndexInScene: 0
   satisfiedConditions:
   - {fileID: 114664344779308212, guid: dd0db184d620f41b6a4c6ee20f24aefb, type: 2}
