@@ -9,16 +9,13 @@ public class BattleManager : MonoBehaviour
     private static BattleManager instance;
 
     public GameProgress gameProgress;
+    public BattleUnits battleUnits;
     public StatusCollection statusCollection;
     public AbilityCollection abilityCollection;
 
-    public BattleStates currentState;
-    public List<GameObject> playerUnits = new List<GameObject>();
-    public List<GameObject> monsterUnits = new List<GameObject>();
 
-    public GameObject currentChoosingUnit;
-    public GameObject currentActingUnit;
-    public List<GameObject> currentTargets;
+    public BattleStates currentState;
+    
     public BattleAction currentUnitAction;
     public List<BattleAction> turnActions = new List<BattleAction>();
 
@@ -88,9 +85,6 @@ public class BattleManager : MonoBehaviour
         yield return null;
 
 
-        currentChoosingUnit = null;
-        currentActingUnit = null;
-
         battleEnd = false;
         restartBattle = false;
         backToMainMenu = false;
@@ -108,7 +102,7 @@ public class BattleManager : MonoBehaviour
         yield return null;
 
         if (victoryAcknowledged)
-            sceneController.FadeAndLoadScene("ExploTest");
+            sceneController.FadeAndLoadScene(gameProgress.currentScene);
         else if (backToMainMenu)
             sceneController.FadeAndLoadScene("MainMenu");
         else if (restartBattle)
@@ -117,9 +111,8 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator InitBattle()
     {
-        playerUnits = InstantiatePlayerParty();
-        monsterUnits = InstantiateMonsterParty();
-        currentTargets = new List<GameObject>();
+ 
+        
 
         yield return new WaitForSeconds(1f);
 
@@ -130,78 +123,7 @@ public class BattleManager : MonoBehaviour
         yield return null;
     }
 
-    private List<GameObject> InstantiatePlayerParty()
-    {
-        List<GameObject> players = new List<GameObject>();
-        int nbPlayers = gameProgress.party.Count;
-        if (nbPlayers > 3)
-            nbPlayers = 3;
-        float spaceBetweenPlayers = 3.5f;
-        float xPos = -spaceBetweenPlayers / 2 * (nbPlayers - 1);
-        float zPos = -5f;
-
-        Debug.Log(nbPlayers);
-
-        for (int i = 0; i < nbPlayers; i++)
-        {
-
-            Character character = ScriptableObject.Instantiate<Character>(gameProgress.party[i]);
-            Vector3 spawnPosition = new Vector3(xPos, 0f, zPos);
-            Quaternion rotation = Quaternion.LookRotation(new Vector3(xPos, 0, 0) - spawnPosition);
-            GameObject unitPlayer = Instantiate(Resources.Load("Player") as GameObject, spawnPosition, rotation) as GameObject;
-            unitPlayer.GetComponent<Movement>().enabled = false;
-            unitPlayer.GetComponent<Cinemachine.Examples.CharacterMovement>().enabled = false;
-            unitPlayer.GetComponent<AttackOtherOnCollide>().enabled = false;
-
-            unitPlayer.name = character.id;
-            unitPlayer.GetComponent<BattleScript>().SetCharacter(character);
-            unitPlayer.GetComponent<BattleScript>().enabled = true;
-
-            players.Add(unitPlayer);
-
-            xPos += spaceBetweenPlayers;
-        }
-        return players;
-    }
-
-    private List<GameObject> InstantiateMonsterParty()
-    {
-        List<GameObject> enemies = new List<GameObject>();
-        int nbEnemies = Random.Range(2, 5);
-        //int nbEnemies = 1;
-        float spaceBetweenEnemies = 4;
-        float xPos = -spaceBetweenEnemies / 2 * (nbEnemies - 1);
-        float zPos = 5f;
-
-        for (int i = 0; i < nbEnemies; i++)
-        {
-            Vector3 spawnPosition = new Vector3(xPos, 0f, zPos);
-            Quaternion rotation = Quaternion.LookRotation(new Vector3(xPos, 0, 0) - spawnPosition);
-            GameObject enemy = Instantiate(Resources.Load("Enemy") as GameObject, spawnPosition, rotation) as GameObject;
-            enemy.GetComponent<AttackOtherOnCollide>().enabled = false;
-            enemy.name = "Enemy" + i;
-            List<Ability> basicAbs = new List<Ability>();
-            basicAbs.Add(abilityCollection.GetAbilityFromId("Attack"));
-            Stat hp = new Stat(100);
-            Stat hpNow = new Stat(100);
-            Stat mp = new Stat(35);
-            Stat mpNow = new Stat(35);
-            Stat strength = new Stat(10);
-            Stat defense = new Stat(5);
-            Stat intelligence = new Stat(10);
-            Stat agility = new Stat(10);
-            Stats defaultStats = new Stats(hp, hpNow, mp, mpNow, strength, defense, intelligence, agility);
-            Character character = ScriptableObject.CreateInstance<Character>(); //recup et clone le SO qui va bien
-            character.name = enemy.name;
-            character.element = Element.Fire;
-            character.abilities = basicAbs;
-            character.stats = defaultStats;
-            enemy.GetComponent<BattleScript>().SetCharacter(character);
-            enemies.Add(enemy);
-            xPos += spaceBetweenEnemies;
-        }
-        return enemies;
-    }
+    
 
     IEnumerator ActionChoice()
     {
@@ -211,20 +133,22 @@ public class BattleManager : MonoBehaviour
             yield break;
 
         turnActions = new List<BattleAction>();
-        currentTargets = new List<GameObject>();
-        List<GameObject> battlingUnits = GetAllBattleAbleUnits(); //should filter on dead and disabled
+        battleUnits.SetTargetUnit(battleUnits.enemyUnits.Last<BattleScript>());
+        battleUnits.targetUnits[0].GetComponent<Outline>().enabled = true;
+
+        List<BattleScript> battlingUnits = GetAllBattleAbleUnits(); //should filter on dead and disabled
 
         for (int i = 0; i < battlingUnits.Count; i++)
         {
-            currentChoosingUnit = battlingUnits[i];
-            currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("Idle");
+            battleUnits.currentChoosingUnit = battlingUnits[i];
+            battleUnits.currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("Idle");
             currentUnitAction = new BattleAction();
             currentUnitAction.ability = null;
-            if (IsGameObjectAPlayer(currentChoosingUnit))
+            if (IsGameObjectAPlayer(battleUnits.currentChoosingUnit))
             {
-                StartCoroutine(currentChoosingUnit.GetComponent<BattleScript>().NewTurn());
-                StartCoroutine(currentChoosingUnit.GetComponent<BattleScript>().LaunchChoiceAnim());
-                currentUnitAction.fromUnit = currentChoosingUnit;
+                StartCoroutine(battleUnits.currentChoosingUnit.GetComponent<BattleScript>().NewTurn());
+                StartCoroutine(battleUnits.currentChoosingUnit.GetComponent<BattleScript>().LaunchChoiceAnim());
+                currentUnitAction.fromUnit = battleUnits.currentChoosingUnit;
                 EventManager.TriggerEvent(BattleEventMessages.PlayerChoiceExpected.ToString());
                 bool choiceDone = false;
                 while (!choiceDone)
@@ -234,6 +158,10 @@ public class BattleManager : MonoBehaviour
                         if (currentUnitAction.ability.targetType.Equals(TargetType.Self))
                         {
                             Debug.Log("choiceDone");
+                            choiceDone = true;
+                        }
+                        else if (currentUnitAction.ability.id.Equals("Attack"))
+                        {
                             choiceDone = true;
                         }
                         else if (currentUnitAction.targets != null)
@@ -247,24 +175,24 @@ public class BattleManager : MonoBehaviour
                 }
 
                 if (currentUnitAction.ability.name.Equals("Guard"))
-                    currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("Guard");
+                    battleUnits.currentChoosingUnit.anim.SetTrigger("Guard");
                 else if (currentUnitAction.ability.abilityType.Equals(AbilityType.Melee))
-                    currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MeleeReady");
+                    battleUnits.currentChoosingUnit.anim.SetTrigger("MeleeReady");
                 else if (currentUnitAction.ability.abilityType.Equals(AbilityType.Magic))
-                    currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MagicReady");
+                    battleUnits.currentChoosingUnit.anim.SetTrigger("MagicReady");
 
 
                 turnActions.Add(currentUnitAction);
 
             }
-            else if (!IsGameObjectAPlayer(currentChoosingUnit))
+            else if (!IsGameObjectAPlayer(battleUnits.currentChoosingUnit))
             {
-                List<GameObject> alivePlayerUnits = GetAlivePlayerUnits();
+                List<BattleScript> alivePlayerUnits = GetAlivePlayerUnits();
                 if (alivePlayerUnits.Count > 0)
                 {
-                    BattleAction action = new BattleAction(currentChoosingUnit, new List<GameObject>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, currentChoosingUnit.GetComponent<BattleScript>().character.GetAbility("Attack"));
+                    BattleAction action = new BattleAction(battleUnits.currentChoosingUnit, new List<BattleScript>() { alivePlayerUnits[Random.Range(0, alivePlayerUnits.Count)] }, battleUnits.currentChoosingUnit.GetComponent<BattleScript>().character.GetAbility("Attack"));
                     turnActions.Add(action);
-                    currentChoosingUnit.GetComponent<BattleScript>().anim.SetTrigger("MeleeReady");
+                    battleUnits.currentChoosingUnit.anim.SetTrigger("MeleeReady");
                 }
 
             }
@@ -274,7 +202,7 @@ public class BattleManager : MonoBehaviour
         }
 
         EventManager.TriggerEvent(BattleEventMessages.ActionChoicePhaseDone.ToString());
-        currentChoosingUnit = null;
+        battleUnits.currentChoosingUnit = null;
         yield return new WaitForSeconds(1f);
         currentState = BattleStates.Rage;
     }
@@ -289,10 +217,10 @@ public class BattleManager : MonoBehaviour
             if (AreAllPlayersDead() || AreAllEnemiesDead())
                 break;
 
-            currentActingUnit = battleAction.fromUnit;
+            battleUnits.currentActingUnit = battleAction.fromUnit;
 
             //si unit source est d?truite, dead ou paralys? par l'attaque pr?cedente on skip sa turn action
-            if (battleAction.fromUnit == null || battleAction.fromUnit.GetComponent<BattleScript>().dead)
+            if (battleAction.fromUnit == null || battleAction.fromUnit.dead)
                 continue;
 
             ReassignTargetIfNeeded(battleAction);
@@ -302,7 +230,7 @@ public class BattleManager : MonoBehaviour
             if (!battleAction.ability.name.Equals("Guard"))
             {
                 targetImpactReached = false;
-                StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().LaunchAbilityWithAnim(battleAction));
+                StartCoroutine(battleAction.fromUnit.LaunchAbilityWithAnim(battleAction));
 
                 //targetImpactReached est sett? par un animEvent
                 while (!targetImpactReached)
@@ -316,7 +244,7 @@ public class BattleManager : MonoBehaviour
 
             if (!battleAction.ability.name.Equals("Guard"))
             {
-                while (!battleAction.fromUnit.GetComponent<BattleScript>().anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                while (!battleAction.fromUnit.anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                 {
                     //Debug.Log("j'attends idle");
                     yield return null;
@@ -325,7 +253,7 @@ public class BattleManager : MonoBehaviour
 
         }
 
-        currentActingUnit = null;
+        battleUnits.currentActingUnit = null;
 
         //Fin d'exec des battleActions
 
@@ -345,7 +273,7 @@ public class BattleManager : MonoBehaviour
         //battleManager calculates the damage and send it to targets who withstand the impact
         CoroutineJoin coroutineJoinTakeDamage = new CoroutineJoin(this);
 
-        foreach (GameObject target in battleAction.targets.ToList())
+        foreach (BattleScript target in battleAction.targets.ToList())
         {
             int dmg = CalculateDamage(battleAction.fromUnit, battleAction.ability, target);
             Debug.Log("CALCULATED DMG" + dmg);
@@ -362,7 +290,7 @@ public class BattleManager : MonoBehaviour
     private IEnumerator WaitForAllStatusToBeAdded(BattleAction battleAction)
     {
         CoroutineJoin coroutineJoinStatuses = new CoroutineJoin(this);
-        foreach (GameObject target in battleAction.targets.ToList())
+        foreach (BattleScript target in battleAction.targets.ToList())
         {
             foreach (Status status in battleAction.ability.statuses.ToList<Status>())
             {
@@ -378,9 +306,9 @@ public class BattleManager : MonoBehaviour
     {
 
         CoroutineJoin coroutineJoinEndRage = new CoroutineJoin(this);
-        foreach (GameObject unit in GetAllUnits())
+        foreach (BattleScript unit in GetAllUnits())
         {
-            
+
         }
 
         yield return coroutineJoinEndRage.WaitForAll();
@@ -410,59 +338,59 @@ public class BattleManager : MonoBehaviour
             currentState = BattleStates.ActionChoice;
     }
 
-    private int CalculateDamage(GameObject fromUnit, Ability ability, GameObject target)
+    private int CalculateDamage(BattleScript fromUnit, Ability ability, BattleScript target)
     {
         int rawDmg = 0;
         int dmg = 0;
         int multiplyingStat = 0;
         if (ability.abilityType.Equals(AbilityType.Magic))
-            multiplyingStat = fromUnit.GetComponent<BattleScript>().character.stats.intelligence.GetValue();
+            multiplyingStat = fromUnit.character.stats.intelligence.GetValue();
         else
-            multiplyingStat = fromUnit.GetComponent<BattleScript>().character.stats.strength.GetValue();
+            multiplyingStat = fromUnit.character.stats.strength.GetValue();
         rawDmg = ability.power * multiplyingStat * 6;
         if (ability.targetType.Equals(TargetType.Self) || ability.targetType.Equals(TargetType.Same) || ability.targetType.Equals(TargetType.AllSame))
             dmg = Mathf.CeilToInt(rawDmg / 10); // or reduce magic power....
         else
             //if opposite dmg = rawDmg with defense reduction
-            dmg = Mathf.CeilToInt(rawDmg / (target.GetComponent<BattleScript>().character.stats.defense.GetValue() * 2));
+            dmg = Mathf.CeilToInt(rawDmg / (target.character.stats.defense.GetValue() * 2));
         return dmg;
     }
 
     private void ReassignTargetIfNeeded(BattleAction battleAction)
     {
         if (battleAction.ability.targetType.Equals(TargetType.Self))
-            battleAction.targets = new List<GameObject>() { battleAction.fromUnit };
+            battleAction.targets = new List<BattleScript>() { battleAction.fromUnit };
         else if (battleAction.ability.targetType.Equals(TargetType.AllSame))
         {
             if (IsGameObjectAPlayer(battleAction.fromUnit))
-                battleAction.targets = playerUnits;
+                battleAction.targets = battleUnits.playerUnits;
             else
-                battleAction.targets = monsterUnits;
+                battleAction.targets = battleUnits.enemyUnits;
         }
         else if (battleAction.ability.targetType.Equals(TargetType.AllOpposite))
         {
             if (IsGameObjectAPlayer(battleAction.fromUnit))
-                battleAction.targets = monsterUnits;
+                battleAction.targets = battleUnits.enemyUnits;
             else
-                battleAction.targets = playerUnits;
+                battleAction.targets = battleUnits.playerUnits;
         }
-        else if (battleAction.ability.targetType.Equals(TargetType.Opposite) && (battleAction.targets == null || battleAction.targets[0] == null || battleAction.targets[0].GetComponent<BattleScript>().dead))
+        else if (battleAction.ability.targetType.Equals(TargetType.Opposite) && (battleAction.targets == null || battleAction.targets[0] == null || battleAction.targets[0].dead))
         {
             if (IsGameObjectAPlayer(battleAction.fromUnit))
-                battleAction.targets = new List<GameObject>() { monsterUnits.First() };
+                battleAction.targets = new List<BattleScript>() { battleUnits.enemyUnits.First() };
             else
-                battleAction.targets = new List<GameObject>() { GetAlivePlayerUnits().First() }; //should be random
+                battleAction.targets = new List<BattleScript>() { GetAlivePlayerUnits().First() }; //should be random
         }
         else if (battleAction.ability.targetType.Equals(TargetType.Same) && (battleAction.targets == null || battleAction.targets[0] == null || battleAction.targets[0].GetComponent<BattleScript>().dead))
         {
             if (IsGameObjectAPlayer(battleAction.fromUnit))
             {
                 if (!battleAction.ability.name.Equals("Revive"))
-                    battleAction.targets = new List<GameObject>() { GetAlivePlayerUnits().First() };
+                    battleAction.targets = new List<BattleScript>() { GetAlivePlayerUnits().First() };
 
             }
             else
-                battleAction.targets = new List<GameObject>() { monsterUnits.First() };
+                battleAction.targets = new List<BattleScript>() { battleUnits.enemyUnits.First() };
         }
     }
 
@@ -500,9 +428,9 @@ public class BattleManager : MonoBehaviour
     //Impact the hp to the game party ...
     void ImpactHpMpAfterVictory()
     {
-        for (int i = 0; i < playerUnits.Count; i++)
+        for (int i = 0; i < battleUnits.playerUnits.Count; i++)
         {
-            Character player = playerUnits[i].GetComponent<BattleScript>().character;
+            Character player = battleUnits.playerUnits[i].GetComponent<BattleScript>().character;
 
 
             if (player.stats.hpNow.GetValue() == 0)
@@ -516,26 +444,26 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    public bool IsGameObjectAPlayer(GameObject unit)
+    public bool IsGameObjectAPlayer(BattleScript unit)
     {
         return (System.Enum.IsDefined(typeof(PlayerName), unit.name));
     }
 
     public bool IsCurrentChoosingUnitAPlayer()
     {
-        return (System.Enum.IsDefined(typeof(PlayerName), currentChoosingUnit.name));
+        return (System.Enum.IsDefined(typeof(PlayerName), battleUnits.currentChoosingUnit.name));
     }
 
     bool AreAllPlayersDead()
     {
         int nbPlayersDead = 0;
-        for (int i = 0; i < playerUnits.Count; i++)
+        for (int i = 0; i < battleUnits.playerUnits.Count; i++)
         {
-            if (playerUnits[i].GetComponent<BattleScript>().dead)
+            if (battleUnits.playerUnits[i].GetComponent<BattleScript>().dead)
                 nbPlayersDead++;
         }
 
-        if (nbPlayersDead == playerUnits.Count)
+        if (nbPlayersDead == battleUnits.playerUnits.Count)
             return true;
         else
             return false;
@@ -544,7 +472,7 @@ public class BattleManager : MonoBehaviour
 
     bool AreAllEnemiesDead()
     {
-        return monsterUnits.Count == 0;
+        return battleUnits.enemyUnits.Count == 0;
     }
 
 
@@ -555,7 +483,7 @@ public class BattleManager : MonoBehaviour
 
     public void SetCurrentTargetFromName(string targetName)
     {
-        foreach (GameObject target in currentTargets)
+        foreach (BattleScript target in battleUnits.targetUnits)
         {
             TargetCircle tc = target.GetComponent<TargetCircle>();
             if (tc)
@@ -565,21 +493,21 @@ public class BattleManager : MonoBehaviour
 
         if (targetName.Equals("All Players"))
         {
-            currentTargets = playerUnits;
+            battleUnits.targetUnits = battleUnits.playerUnits;
             EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllPlayers.ToString());
         }
         else if (targetName.Equals("All Enemies"))
         {
-            currentTargets = monsterUnits;
+            battleUnits.targetUnits = battleUnits.enemyUnits;
             EventManager.TriggerEvent(BattleEventMessages.TargetChoiceAllMonsters.ToString());
         }
         else
         {
-            currentTargets = new List<GameObject>() { GetAllUnits().Find(u => u.name.Equals(targetName)) };
+            battleUnits.targetUnits = new List<BattleScript>() { GetAllUnits().Find(u => u.name.Equals(targetName)) };
             EventManager.TriggerEvent(BattleEventMessages.TargetChoiceExpected.ToString());
         }
 
-        foreach (GameObject target in currentTargets)
+        foreach (BattleScript target in battleUnits.targetUnits)
         {
             TargetCircle tc = target.GetComponent<TargetCircle>();
             if (tc)
@@ -588,24 +516,24 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    public List<GameObject> GetAlivePlayerUnits()
+    public List<BattleScript> GetAlivePlayerUnits()
     {
-        return playerUnits.Where(u => !u.GetComponent<BattleScript>().dead).ToList();
+        return battleUnits.playerUnits.Where(u => !u.GetComponent<BattleScript>().dead).ToList();
     }
 
-    public List<GameObject> GetAliveMonsterUnits()
+    public List<BattleScript> GetAliveEnemyUnits()
     {
-        return monsterUnits.Where(u => !u.GetComponent<BattleScript>().dead).ToList();
+        return battleUnits.enemyUnits.Where(u => !u.GetComponent<BattleScript>().dead).ToList();
     }
 
-    public List<GameObject> GetAllUnits()
+    public List<BattleScript> GetAllUnits()
     {
-        return playerUnits.Concat(monsterUnits).ToList();
+        return battleUnits.playerUnits.Concat(battleUnits.enemyUnits).ToList();
     }
 
-    public List<GameObject> GetAllBattleAbleUnits()
+    public List<BattleScript> GetAllBattleAbleUnits()
     {
-        return playerUnits.Concat(monsterUnits).ToList().Where(u => !u.GetComponent<BattleScript>().dead && u.GetComponent<BattleScript>().canAct).ToList();
+        return battleUnits.playerUnits.Concat(battleUnits.enemyUnits).ToList().Where(u => !u.GetComponent<BattleScript>().dead && u.GetComponent<BattleScript>().canAct).ToList();
 
     }
 }

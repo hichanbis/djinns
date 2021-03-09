@@ -4,15 +4,15 @@ using System.Collections.Generic;
 [System.Serializable]
 public class BattleAction
 {
-    public GameObject fromUnit;
-    public List<GameObject> targets;
+    public BattleScript fromUnit;
+    public List<BattleScript> targets;
     public Ability ability;
 
     public BattleAction()
     {
     }
 
-    public BattleAction(GameObject fromUnit, List<GameObject> targets, Ability ability)
+    public BattleAction(BattleScript fromUnit, List<BattleScript> targets, Ability ability)
     {
         this.fromUnit = fromUnit;
         this.targets = targets;

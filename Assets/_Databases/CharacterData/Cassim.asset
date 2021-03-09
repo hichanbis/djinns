@@ -45,3 +45,5 @@ MonoBehaviour:
       baseValue: 10
       modifiers: 
   statuses: []
+  canAct: 0
+  canCast: 0

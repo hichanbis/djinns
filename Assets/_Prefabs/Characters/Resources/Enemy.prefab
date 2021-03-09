@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 136922435824476908}
   - component: {fileID: 114014940582222034}
   - component: {fileID: 120576066953148026}
+  - component: {fileID: 7782019609866683591}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -78,45 +79,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleAnimController: {fileID: 9100000, guid: f65e2ac52f3d04d79b4ae02f1d9b6a10,
     type: 2}
-  character:
-    name: 
-    element: 0
-    abilities: []
-    stats:
-      hpNow:
-        baseValue: 0
-        modifiers: 
-      hp:
-        baseValue: 0
-        modifiers: 
-      mpNow:
-        baseValue: 0
-        modifiers: 
-      mp:
-        baseValue: 0
-        modifiers: 
-      strength:
-        baseValue: 0
-        modifiers: 
-      defense:
-        baseValue: 0
-        modifiers: 
-      intelligence:
-        baseValue: 0
-        modifiers: 
-      agility:
-        baseValue: 0
-        modifiers: 
-    canSummon: 0
-    statuses: []
+  battleUnits: {fileID: 11400000, guid: 1a43b6c4a693a49628708a12225a118e, type: 2}
+  character: {fileID: 0}
   dead: 0
   canAct: 0
   canCast: 0
   anim: {fileID: 0}
   damagePopUpPrefab: {fileID: 1733827680770478, guid: 75dea17b618bf430fa5d721d31b54e74,
     type: 3}
-  damageTaken: 0
-  doneApplied: 0
   statusCollection: {fileID: 0}
 --- !u!136 &136922435824476908
 CapsuleCollider:
@@ -243,6 +213,24 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!114 &7782019609866683591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129516}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0.8773585, g: 0.805095, b: 0.27727836, a: 1}
+  outlineWidth: 1.14
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &1014004720866572
 GameObject:
   m_ObjectHideFlags: 0
@@ -724,6 +712,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+  - {fileID: 2100000, guid: 272cb8af37cc04edc93e0d0b9cb8f285, type: 2}
   - {fileID: 2100000, guid: 272cb8af37cc04edc93e0d0b9cb8f285, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

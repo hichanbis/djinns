@@ -49,6 +49,7 @@ public class Status : ScriptableObject
         return string.Format("[Status:{0} rate:{1}% type:{2} stat:{3} pow:{4}% maxTurns:{5}]", name, successRatePercent, applyType, statName, powerPercent, maxTurns);
     }
 
+    //Necessary as the status are cloned for the turns counter
     public override bool Equals(System.Object obj)
     {
         //Check for null and compare run-time types.

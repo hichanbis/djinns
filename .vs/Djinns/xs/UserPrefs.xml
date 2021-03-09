@@ -1,55 +1,45 @@
 ﻿<Properties StartupConfiguration="{8E702D4C-080E-7A38-0EC9-41243DA8E46C}|" RefactoringSettings.EnableRefactorings="True">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/RpgCore/Status/Status.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/_Scripts/Battle/BattleManager.cs">
     <Files>
-      <File FileName="Assets/_Scripts/Battle/BattleScript.cs" Line="282" Column="40" />
-      <File FileName="Assets/_Scripts/Battle/UI/BattleUI.cs" Line="109" Column="9" />
-      <File FileName="Assets/_Scripts/RpgCore/Stat.cs" Line="43" Column="50" />
-      <File FileName="Assets/_Scripts/Battle/BattleManager.cs" Line="199" Column="47" />
-      <File FileName="Assets/_Scripts/Battle/BattleCamera.cs" />
-      <File FileName="Assets/_Scripts/RpgCore/Character.cs" />
-      <File FileName="Assets/_Scripts/RpgCore/GameProgress.cs" />
-      <File FileName="Assets/_Scripts/RpgCore/Stats.cs" Line="1" Column="1" />
-      <File FileName="Assets/_Scripts/Battle/BattleEventMessages.cs" />
-      <File FileName="Assets/_Scripts/Util/EventManager.cs" Line="51" Column="34" />
-      <File FileName="Assets/_Scripts/RpgCore/Status/Status.cs" Line="54" Column="5" />
+      <File FileName="Assets/_Scripts/Battle/BattleCamera.cs" Line="43" Column="21" />
+      <File FileName="Assets/_Scripts/Battle/BattleManager.cs" Line="20" Column="5" />
+      <File FileName="Assets/_Scripts/Battle/UI/BattleUI.cs" Line="345" Column="46" />
+      <File FileName="Assets/_Scripts/Battle/BattleScript.cs" Line="85" Column="62" />
+      <File FileName="Assets/_Scripts/RpgCore/Status/Status.cs" />
+      <File FileName="Assets/_Scripts/Battle/BattleUnits.cs" Line="12" Column="43" />
+      <File FileName="Assets/_Scripts/Battle/UI/BattleSpawner.cs" Line="16" Column="75" />
+      <File FileName="Assets/_Scripts/Battle/HandleAnimationEvents.cs" />
+      <File FileName="Assets/_Scripts/Battle/BattleAction.cs" Line="7" Column="24" />
+      <File FileName="Assets/SO Architecture/Examples/Scripts/Disabler.cs" Line="16" Column="53" />
+      <File FileName="Assets/SO Architecture/Examples/Scripts/DamageDealerWithEvent.cs" Line="8" Column="26" />
+      <File FileName="Assets/SO Architecture/Events/Game Events/GameEvent.cs" Line="5" Column="5" />
+      <File FileName="Assets/SO Architecture/Examples/Scripts/ObjectAdder.cs" Line="8" Column="37" />
+      <File FileName="Assets/SO Architecture/Collections/GameObjectCollection.cs" Line="9" Column="18" />
+      <File FileName="Assets/SO Architecture/Events/Game Events/GameEventBase.cs" Line="6" Column="71" />
+      <File FileName="Assets/SO Architecture/Events/Game Events/GameObjectGameEvent.cs" Line="1" Column="1" />
+      <File FileName="Assets/SO Architecture/Events/Game Events/IGameEvent.cs" Line="5" Column="27" />
+      <File FileName="Assets/SO Architecture/Events/Game Events/DoubleGameEvent.cs" Line="1" Column="1" />
+      <File FileName="Assets/SO Architecture/Events/Game Events/ShortGameEvent.cs" Line="1" Column="1" />
+      <File FileName="Assets/SO Architecture/Examples/Scripts/DamageDealer.cs" Line="8" Column="45" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Djinns" expanded="True">
             <Node name="Assets" expanded="True">
-              <Node name="_Animations" expanded="True">
-                <Node name="Props Animations" expanded="True">
+              <Node name="_Scripts" expanded="True">
+                <Node name="Battle" expanded="True">
+                  <Node name="BattleManager.cs" selected="True" />
+                </Node>
+              </Node>
+              <Node name="SO Architecture" expanded="True">
+                <Node name="Events" expanded="True">
+                  <Node name="Game Events" expanded="True" />
+                </Node>
+                <Node name="Examples" expanded="True">
                   <Node name="Scripts" expanded="True" />
                 </Node>
               </Node>
-              <Node name="_Scripts" expanded="True">
-                <Node name="Battle" expanded="True">
-                  <Node name="UI" expanded="True" />
-                </Node>
-                <Node name="DataPersistence" expanded="True" />
-                <Node name="Dialogue" expanded="True" />
-                <Node name="Editor" expanded="True">
-                  <Node name="Abstracts" expanded="True" />
-                  <Node name="Interaction" expanded="True">
-                    <Node name="Conditions" expanded="True" />
-                  </Node>
-                </Node>
-                <Node name="Exploration" expanded="True" />
-                <Node name="Interaction" expanded="True" />
-                <Node name="RpgCore" expanded="True">
-                  <Node name="Ability" expanded="True" />
-                  <Node name="Status" expanded="True">
-                    <Node name="Status.cs" selected="True" />
-                  </Node>
-                </Node>
-                <Node name="SceneControl" expanded="True" />
-                <Node name="Util" expanded="True" />
-              </Node>
-              <Node name="Standard Assets" expanded="True">
-                <Node name="Effects" expanded="True" />
-              </Node>
-              <Node name="Top-Dow Desert" expanded="True" />
             </Node>
           </Node>
         </State>
@@ -58,7 +48,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="96bf4cc5-c7b9-4e57-b137-5960ec622abd" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="bac5e017-fae9-4ac8-90f9-3e2f6d753ff5" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

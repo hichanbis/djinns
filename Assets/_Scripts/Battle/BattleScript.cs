@@ -10,6 +10,7 @@ public class BattleScript : MonoBehaviour
 {
     public RuntimeAnimatorController battleAnimController;
 
+    public BattleUnits battleUnits;
     public Character character;
     public bool dead;
     public bool canAct;
@@ -81,7 +82,7 @@ public class BattleScript : MonoBehaviour
         {
             EventManager.TriggerEvent(BattleEventMessages.MeleeAttack.ToString());
 
-            yield return StartCoroutine(battleAction.fromUnit.GetComponent<BattleScript>().RunToTarget(battleAction.targets[0]));
+            yield return StartCoroutine(battleAction.fromUnit.RunToTarget(battleAction.targets[0]));
 
         }
 
@@ -142,9 +143,9 @@ public class BattleScript : MonoBehaviour
     }
 
 
-    public IEnumerator RunToTarget(GameObject target)
+    public IEnumerator RunToTarget(BattleScript target)
     {
-        yield return StartCoroutine(RotateTowardsPoint(gameObject, target.transform.position, 100f));
+        yield return StartCoroutine(RotateTowardsPoint(this, target.transform.position, 100f));
         StartCoroutine(RotateTowardsPoint(target, transform.position, 200f));
 
         anim.SetTrigger("Run");
@@ -157,7 +158,7 @@ public class BattleScript : MonoBehaviour
 
     }
 
-    public IEnumerator RotateTowardsPoint(GameObject objectToMove, Vector3 target, float speed)
+    public IEnumerator RotateTowardsPoint(BattleScript objectToMove, Vector3 target, float speed)
     {
         while (true)
         {
@@ -240,11 +241,14 @@ public class BattleScript : MonoBehaviour
     {
         if (!AmIAPlayer() && dead)
         {
-            BattleManager.Instance.monsterUnits.Remove(gameObject);
+            Debug.Log(battleUnits);
+            Debug.Log(battleUnits.enemyUnits);
+            battleUnits.enemyUnits.Remove(this);
             Destroy(gameObject);
         }
 
     }
+
 
 
     //Adds status and removes status as described in data (heavy removes light, Toxic removes poison, etc.)

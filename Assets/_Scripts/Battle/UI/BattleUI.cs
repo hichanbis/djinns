@@ -11,6 +11,7 @@ public class BattleUI : MonoBehaviour
 {
     public AbilityCollection abilityCollection;
     private BattleManager battleManager;
+    public BattleUnits battleUnits;
 
     public GameObject playersInfoPanelTemplate;
     public GameObject playerActionsPanelTemplate;
@@ -27,7 +28,7 @@ public class BattleUI : MonoBehaviour
     private GameObject playersInfoPanel;
     private Dictionary<string, GameObject> playerActionsPanels;
     private Dictionary<string, GameObject> playerMagicsPanels;
-    private List<GameObject> playerUnits;
+    private List<BattleScript> playerUnits;
     private GameObject targetsPanel;
 
 
@@ -85,7 +86,7 @@ public class BattleUI : MonoBehaviour
 
     void InitializePlayerPanels()
     {
-        playerUnits = battleManager.playerUnits;
+        playerUnits = battleUnits.playerUnits;
         InstantiatePlayersInfoPanel();
 
         InstantiatePlayerActionsPanels();
@@ -103,9 +104,9 @@ public class BattleUI : MonoBehaviour
         UpdatePlayersInfo();
     }
 
-    void UpdatePlayerInfo(GameObject playerUnit)
+    void UpdatePlayerInfo(BattleScript playerUnit)
     {
-        Character playerChar = playerUnit.GetComponent<BattleScript>().character;
+        Character playerChar = playerUnit.character;
         Transform playerInfoTr = playersInfoPanel.transform.Find(playerUnit.name + "PlayerInfo").transform;
         playerInfoTr.Find("PlayerName").GetComponentInChildren<Text>().text = playerChar.id;
         playerInfoTr.Find("HpMp").transform.Find("Hp").GetComponentInChildren<Text>().text = playerChar.stats.hpNow.GetValue().ToString() + " / " + playerChar.stats.hp.GetValue().ToString();
@@ -115,7 +116,7 @@ public class BattleUI : MonoBehaviour
     void UpdatePlayersInfo()
     {
         
-        playerUnits = battleManager.playerUnits;
+        playerUnits = battleUnits.playerUnits;
         for (int i = 0; i < playerUnits.Count; i++)
         {
             UpdatePlayerInfo(playerUnits[i]);
@@ -124,13 +125,13 @@ public class BattleUI : MonoBehaviour
 
     void InstantiatePlayerActionsPanels()
     {
-        foreach (GameObject playerUnit in playerUnits)
+        foreach (BattleScript playerUnit in playerUnits)
         {
             GameObject playerActionsPanel = Instantiate(playerActionsPanelTemplate, battleCanvas.transform, false) as GameObject;
             playerActionsPanel.name = playerUnit.name + "ActionsPanel";
 
             AddActionButtonToTheActionsPanel("Attack", playerActionsPanel);
-            if (playerUnit.GetComponent<BattleScript>().KnowsMagic())
+            if (playerUnit.KnowsMagic())
                 AddActionButtonToTheActionsPanel("Magic", playerActionsPanel);
 
             AddActionButtonToTheActionsPanel("Guard", playerActionsPanel);
@@ -140,7 +141,7 @@ public class BattleUI : MonoBehaviour
 
     void InstantiatePlayerMagicsPanels()
     {
-        foreach (GameObject playerUnit in playerUnits)
+        foreach (BattleScript playerUnit in playerUnits)
         {
             GameObject playerMagicsPanel = Instantiate(playerMagicsPanelTemplate, battleCanvas.transform, false) as GameObject;
             playerMagicsPanel.name = playerUnit.name + "MagicsPanel";
@@ -180,7 +181,7 @@ public class BattleUI : MonoBehaviour
         else if (actionName.Equals("Attack"))
         {
             actionButton.GetComponent<Button>().onClick.AddListener(() => ClickedAbility(abilityCollection.GetAbilityFromId("Attack")));
-            actionButton.GetComponent<Button>().onClick.AddListener(() => DisplayTargetsPanel(TargetType.Opposite));
+            //actionButton.GetComponent<Button>().onClick.AddListener(() => DisplayTargetsPanel(TargetType.Opposite));
         }
 
     }
@@ -189,7 +190,7 @@ public class BattleUI : MonoBehaviour
     {
         foreach (KeyValuePair<string, GameObject> entry in playerActionsPanels)
         {
-            if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
+            if (entry.Key.Equals(battleUnits.currentChoosingUnit.name))
             {
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
@@ -207,7 +208,7 @@ public class BattleUI : MonoBehaviour
     {
         foreach (KeyValuePair<string, GameObject> entry in playerActionsPanels)
         {
-            if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
+            if (entry.Key.Equals(battleUnits.currentChoosingUnit.name))
             {
                 entry.Value.SetActive(false);
                 cursorRoot.SetActive(false);
@@ -235,7 +236,7 @@ public class BattleUI : MonoBehaviour
     {
         foreach (KeyValuePair<string, GameObject> entry in playerMagicsPanels)
         {
-            if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
+            if (entry.Key.Equals(battleUnits.currentChoosingUnit.name))
             {
                 entry.Value.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(entry.Value.GetComponentsInChildren<Button>().First<Button>().gameObject);
@@ -251,14 +252,14 @@ public class BattleUI : MonoBehaviour
     {
         foreach (KeyValuePair<string, GameObject> entry in playerMagicsPanels)
         {
-            if (entry.Key.Equals(battleManager.currentChoosingUnit.name))
+            if (entry.Key.Equals(battleUnits.currentChoosingUnit.name))
                 entry.Value.SetActive(false);
         }
     }
 
     private void DisplayMagicsPanel()
     {
-        GameObject currentPlayerMagicsPanel = GetPlayerMagicsPanel(battleManager.currentChoosingUnit.name);
+        GameObject currentPlayerMagicsPanel = GetPlayerMagicsPanel(battleUnits.currentChoosingUnit.name);
         DisableMagicsBasedOnMp(currentPlayerMagicsPanel);
         cursorRoot.SetActive(true);
         cursorRoot.transform.SetAsLastSibling();
@@ -272,7 +273,7 @@ public class BattleUI : MonoBehaviour
         foreach (Button button in currentPlayerMagicsPanel.GetComponentsInChildren<Button>())
         {
             Ability ab = abilityCollection.GetAbilityFromName(button.name);
-            if (battleManager.currentChoosingUnit.GetComponent<BattleScript>().character.GetStat(StatName.mpNow).GetValue() < ab.mpCost)
+            if (battleUnits.currentChoosingUnit.character.GetStat(StatName.mpNow).GetValue() < ab.mpCost)
                 button.interactable = false;
         }
     }
@@ -293,12 +294,12 @@ public class BattleUI : MonoBehaviour
     void InstantiateTargetsPanel(TargetType targetType)
     {
         targetsPanel = Instantiate(targetsPanelTemplate, battleCanvas.transform, false) as GameObject;
-        List<GameObject> targets = null;
+        List<BattleScript> targets = null;
 
         if (targetType.Equals(TargetType.Opposite) || targetType.Equals(TargetType.AllOpposite))
-            targets = battleManager.monsterUnits;
+            targets = battleUnits.enemyUnits;
         else
-            targets = battleManager.playerUnits;
+            targets = battleUnits.playerUnits;
 
         if (targetType.Equals(TargetType.AllOpposite) || targetType.Equals(TargetType.AllSame))
         {
@@ -310,13 +311,13 @@ public class BattleUI : MonoBehaviour
             targetButton.GetComponent<Button>().Select();
         }
 
-        foreach (GameObject target in targets)
+        foreach (BattleScript target in targets)
         {
             GameObject targetButton = Instantiate(targetButtonTemplate, targetsPanel.transform, false) as GameObject;
             targetButton.name = target.name;
             targetButton.transform.Find("TargetName").GetComponent<Text>().text = target.name;
             if (targetType.Equals(TargetType.Opposite) || targetType.Equals(TargetType.Same))
-                targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(new List<GameObject>() { target }));
+                targetButton.GetComponent<Button>().onClick.AddListener(() => ClickedTarget(new List<BattleScript>() { target }));
             else if (targetType.Equals(TargetType.AllOpposite) || targetType.Equals(TargetType.AllSame))
             {
                 targetButton.GetComponent<Button>().interactable = false;
@@ -337,11 +338,11 @@ public class BattleUI : MonoBehaviour
         battleManager.SetCurrentTargetFromName(targetsPanel.GetComponentsInChildren<Button>().First<Button>().gameObject.name);
     }
 
-    private void ClickedTarget(List<GameObject> targetUnits)
+    private void ClickedTarget(List<BattleScript> targetUnits)
     {
         Destroy(targetsPanel);
         cursorRoot.SetActive(false);
-        battleManager.currentUnitAction.targets = targetUnits;
+        battleUnits.targetUnits = targetUnits;
     }
 
 
